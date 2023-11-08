@@ -2,8 +2,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import Settings from "screens/Settings";
-import Home from "screens/Home";
+import Settings from "./screens/Settings";
+import Home from "./screens/Home";
 
 import { StackParamList, TabParamList } from "constants/types";
 
