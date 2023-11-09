@@ -5,7 +5,8 @@
     "baseUrl": "src/",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "typeRoots": ["src/constants/env.d"]
   },
   "include": ["**/*.ts", "**/*.tsx"]
 }
