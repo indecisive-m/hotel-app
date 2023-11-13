@@ -7,20 +7,38 @@ import {
   Text,
   View,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { StackParamList, Hotel } from "../constants/types";
+import { StackParamList, Hotel, HotelList } from "../constants/types";
 
 import useGetBearerKey from "../api/useGetBearerKey";
-import useGetHotelDetails from "api/useGetHotelDetails";
 import useGetHotelList from "api/useGetHotelList";
+import { useState } from "react";
+import { QueryClient, useQuery, useQueryClient } from "react-query";
 
 type Props = NativeStackScreenProps<StackParamList, "Home">;
 
 function Home({ navigation }: Props) {
   const { fetchBearerKey } = useGetBearerKey();
   const { fetchHotelList, hotelList } = useGetHotelList();
-  const { fetchHotelDetails } = useGetHotelDetails();
+  const [hotels, setHotels] = useState<HotelList>(hotelList);
+
+  const queryClient = useQueryClient();
+
+  const { data, refetch, error, isLoading } = useQuery({
+    queryKey: ["hotels", 51.51264, 0.10089, 5],
+    queryFn: () => fetchHotelList(51.51264, 0.10089, 5),
+    enabled: false,
+  });
+
+  const onPress = () => {
+    refetch();
+  };
+
+  if (isLoading) {
+    return <ActivityIndicator size={"large"} />;
+  }
 
   const renderedItem: ListRenderItem<Hotel> = ({ item }) => (
     <Pressable
@@ -44,11 +62,12 @@ function Home({ navigation }: Props) {
       <Button title="Get Bearer Key" onPress={fetchBearerKey} />
       <Button
         title="Get Hotel List"
-        onPress={() => fetchHotelList(51.51264, 0.10089, 5)}
+        onPress={onPress}
+        // onPress={() => fetchHotelList(51.51264, 0.10089, 5)}
       />
       <Button
         title="Get Hotel"
-        onPress={() => navigation.navigate("Hotel", { hotelId: "MCLONBHM" })}
+        onPress={() => navigation.navigate("Hotel", { hotelId: "MCLONGHM" })}
       />
 
       <FlatList data={hotelList} renderItem={renderedItem} />

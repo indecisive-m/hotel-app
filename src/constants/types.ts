@@ -55,11 +55,13 @@ export type Price = {
 };
 
 export type Cancellations = {
+  amount: String;
+  deadline: String;
   description: Description;
   type: String;
 };
 export type Policies = {
-  cancellations: Cancellations;
+  cancellations: Cancellations[];
   paymentType: String;
 };
 
