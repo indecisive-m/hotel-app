@@ -6,17 +6,27 @@ import Settings from "./screens/Settings";
 import Home from "./screens/Home";
 
 import { StackParamList, TabParamList } from "constants/types";
+import Hotel from "screens/Hotel";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
+function HomeTabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Settings" component={Settings} />
+    </Tab.Navigator>
+  );
+}
+
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName="Home">
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Settings" component={Settings} />
-      </Tab.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen name="Hotel" component={Hotel} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
