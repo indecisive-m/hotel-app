@@ -9,7 +9,7 @@ const useFetchHotelDetails = async (hotelId: String, adults: Number) => {
 
   try {
     const fetchHotelDetails = await fetch(
-      `${AMADEUS_HOTEL_URL}hotelIds=${hotelId}&adults=${adults}&checkInDate=2023-11-14&roomQuantity=1&paymentPolicy=NONE&bestRateOnly=true`,
+      `${AMADEUS_HOTEL_URL}hotelIds=${hotelId}&adults=${adults}&checkInDate=2023-11-14&roomQuantity=1&paymentPolicy=NONE&bestRateOnly=false`,
       {
         headers: {
           Authorization: `Bearer ${bearerKey}`,
@@ -24,9 +24,9 @@ const useFetchHotelDetails = async (hotelId: String, adults: Number) => {
 
     const results = await fetchHotelDetails.json();
 
-    return { results };
-    //   console.log(res.data[0].offers[0].policies);
-    //   setHotelDetails(res.data[0].offers[0]);
+    const data = results.data[0].offers;
+
+    return { data };
   } catch (error) {
     console.log(error);
   }
