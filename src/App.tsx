@@ -8,12 +8,13 @@ import Home from "./screens/Home";
 
 import { StackParamList, TabParamList } from "constants/types";
 import Hotel from "screens/Hotel";
+import HotelSearchMap from "screens/HotelSearchMap";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 60000 } },
+  defaultOptions: { queries: { staleTime: 1000 * 600 } },
 });
 
 function HomeTabs() {
@@ -32,6 +33,7 @@ export default function App() {
         <Stack.Navigator>
           <Stack.Screen name="Home" component={HomeTabs} />
           <Stack.Screen name="Hotel" component={Hotel} />
+          <Stack.Screen name="HotelSearchMap" component={HotelSearchMap} />
         </Stack.Navigator>
       </NavigationContainer>
     </QueryClientProvider>

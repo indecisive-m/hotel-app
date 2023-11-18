@@ -25,8 +25,9 @@ const useFetchHotelDetails = async (hotelId: String, adults: Number) => {
     const results = await fetchHotelDetails.json();
 
     const data = results.data[0].offers;
+    const hotel = results.data[0].hotel;
 
-    return { data };
+    return { data, hotel };
   } catch (error) {
     console.log(error);
   }

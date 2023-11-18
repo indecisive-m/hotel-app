@@ -21,19 +21,18 @@ type Props = NativeStackScreenProps<StackParamList, "Home">;
 
 function Home({ navigation }: Props) {
   const { fetchBearerKey } = useGetBearerKey();
-  const { fetchHotelList, hotelList } = useGetHotelList();
-  const [hotels, setHotels] = useState<HotelList>(hotelList);
 
   const queryClient = useQueryClient();
 
   const { data, refetch, error, isLoading } = useQuery({
     queryKey: ["hotels", 51.51264, 0.10089, 5],
-    queryFn: () => fetchHotelList(51.51264, 0.10089, 5),
+    queryFn: () => useGetHotelList(51.51264, 0.10089, 5),
     enabled: false,
   });
 
   const onPress = () => {
-    refetch();
+    // refetch();
+    navigation.navigate("HotelSearchMap", { hotelList: data?.data });
   };
 
   if (isLoading) {
@@ -70,7 +69,7 @@ function Home({ navigation }: Props) {
         onPress={() => navigation.navigate("Hotel", { hotelId: "MCLONGHM" })}
       />
 
-      <FlatList data={hotelList} renderItem={renderedItem} />
+      <FlatList data={data?.data} renderItem={renderedItem} />
       <StatusBar style="auto" />
     </View>
   );

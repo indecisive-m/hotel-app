@@ -2,7 +2,8 @@
 
 export type StackParamList = {
   Home: undefined;
-  Hotel: { hotelId: String };
+  Hotel: { hotelId: string };
+  HotelSearchMap: { hotelList: Object[] | undefined };
 };
 
 export type TabParamList = {
@@ -13,18 +14,18 @@ export type TabParamList = {
 // Hotel List API Types
 
 export type GeoCode = {
-  longitude: String;
-  latitude: String;
+  longitude: string;
+  latitude: string;
 };
 
 export type Distance = {
-  value: String;
-  unit: String;
+  value: string;
+  unit: string;
 };
 
 export type Hotel = {
-  name: String;
-  hotelId: String;
+  name: string;
+  hotelId: string;
   geoCode: GeoCode;
   distance: Distance;
 };
@@ -34,13 +35,13 @@ export type HotelList = Hotel[];
 // Hotel Details API Types
 
 export type Description = {
-  text: String;
+  text: string;
 };
 
 export type TypeEstimated = {
-  bedType: String;
-  beds: String;
-  category: String;
+  bedType: string;
+  beds: string;
+  category: string;
 };
 
 export type Room = {
@@ -49,24 +50,24 @@ export type Room = {
 };
 
 export type Price = {
-  currency: String;
-  base: String;
-  total: String;
+  currency: string;
+  base: string;
+  total: string;
 };
 
 export type Cancellations = {
-  amount: String;
-  deadline: String;
+  amount: string;
+  deadline: string;
   description: Description;
-  type: String;
+  type: string;
 };
 export type Policies = {
   cancellations: Cancellations[];
-  paymentType: String;
+  paymentType: string;
 };
 
 export type Offers = {
-  id: String;
+  id: string;
   room: Room;
   price: Price;
   policies: Policies;

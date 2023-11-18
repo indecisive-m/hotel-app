@@ -13,14 +13,12 @@ import { StackParamList, OffersList, Offers } from "../constants/types";
 import { QueryClient, useQuery, useQueryClient } from "react-query";
 import useFetchHotelDetails from "api/useFetchHotelDetails";
 import ImageGallery from "components/ImageGallery";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type Props = NativeStackScreenProps<StackParamList, "Hotel">;
 
 const Hotel = ({ route, navigation }: Props) => {
   const { hotelId } = route.params;
-  //   const { fetchHotelDetails } = useGetHotelDetails(hotelId, 2);
-  //   const { results } = useFetch();
-  const [hotelInfo, setHotelInfo] = useState<Offers>();
 
   const queryClient = useQueryClient();
 
@@ -30,16 +28,33 @@ const Hotel = ({ route, navigation }: Props) => {
   });
 
   if (isLoading) {
-    return <ActivityIndicator />;
+    navigation.setOptions({ headerShown: false });
+    return <ActivityIndicator size={"large"} />;
   }
 
   if (data === undefined) {
-    return <Text>No Details Available</Text>;
+    navigation.setOptions({ headerShown: false });
+    return (
+      <SafeAreaView>
+        <Text>No Details Available</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (isSuccess) {
+    navigation.setOptions({ headerShown: true, title: `${data?.hotel.name}` });
   }
 
   const renderedItem: ListRenderItem<Offers> = ({ item }) => {
     return (
-      <View>
+      <View
+        style={{
+          borderWidth: 1,
+          borderColor: "red",
+          padding: 10,
+          marginTop: 10,
+        }}
+      >
         <Text>{item.id}</Text>
         <Text>{item.price.total}</Text>
         <Text>{item.room.description.text}</Text>
@@ -51,33 +66,8 @@ const Hotel = ({ route, navigation }: Props) => {
 
   return (
     <>
-      {/* <ScrollView style={{ flex: 1 }}>
-        <ImageGallery />
-        <View>
-          <Text style={{ fontSize: 20 }}>{hotelId}</Text>
-          <Text style={{ fontSize: 20 }}>{hotelInfo?.price?.base}</Text>
-          <Text style={{ fontSize: 20 }}>{hotelInfo?.price?.total}</Text>
-          <Text style={{ fontSize: 20 }}>{hotelInfo?.price?.currency}</Text>
-          <Text style={{ fontSize: 20 }}>{hotelInfo?.id}</Text>
-          <Text style={{ fontSize: 20 }}>
-            {hotelInfo?.room?.description?.text}
-          </Text>
-          <Text style={{ fontSize: 20 }}>
-            {hotelInfo?.room?.typeEstimated?.bedType}
-          </Text>
-          <Text style={{ fontSize: 20 }}>
-            {hotelInfo?.policies?.paymentType}
-          </Text>
-          <Text style={{ fontSize: 20 }}>
-            {hotelInfo?.policies?.cancellations[0]?.description?.text}
-          </Text>
-          <Text style={{ fontSize: 20 }}>
-            {hotelInfo?.policies?.cancellations[0]?.type}
-          </Text>
-          <Text>{hotelInfo?.policies?.cancellations[0]?.deadline}</Text>
-          <Text>{hotelInfo?.policies?.cancellations[0]?.amount}</Text>
-        </View>
-      </ScrollView> */}
+      <ImageGallery />
+
       <FlatList
         data={data.data}
         renderItem={renderedItem}
