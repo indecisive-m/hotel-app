@@ -4,13 +4,20 @@
     "slug": "hotel-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Hotel App to use your location.",
+          "isAndroidBackgroundLocationEnabled": true
+        }
+      ]
+    ],
     "experiments": { "tsconfigPaths": true },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -18,12 +25,9 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+    "web": {}
   }
 }

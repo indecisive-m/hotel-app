@@ -20,7 +20,11 @@ const queryClient = new QueryClient({
 function HomeTabs() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
@@ -31,7 +35,11 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeTabs} />
+          <Stack.Screen
+            name="Home"
+            component={HomeTabs}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="Hotel" component={Hotel} />
           <Stack.Screen name="HotelSearchMap" component={HotelSearchMap} />
         </Stack.Navigator>

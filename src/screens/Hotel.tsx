@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, OffersList, Offers } from "../constants/types";
 import { QueryClient, useQuery, useQueryClient } from "react-query";
-import useFetchHotelDetails from "api/useFetchHotelDetails";
+import useGetHotelDetails from "api/useGetHotelDetails";
 import ImageGallery from "components/ImageGallery";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -22,22 +22,27 @@ const Hotel = ({ route, navigation }: Props) => {
 
   const queryClient = useQueryClient();
 
-  const { data, isLoading, status, isSuccess } = useQuery({
+  const { data, isLoading, status, isSuccess, refetch } = useQuery({
     queryKey: ["hotel", hotelId, 2],
-    queryFn: () => useFetchHotelDetails(hotelId, 2),
+    queryFn: () => useGetHotelDetails(hotelId, 2),
   });
 
   if (isLoading) {
     navigation.setOptions({ headerShown: false });
-    return <ActivityIndicator size={"large"} />;
+    return (
+      <ActivityIndicator
+        size={"large"}
+        style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}
+      />
+    );
   }
 
-  if (data === undefined) {
+  if (!data?.data) {
     navigation.setOptions({ headerShown: false });
     return (
-      <SafeAreaView>
+      <View style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}>
         <Text>No Details Available</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 

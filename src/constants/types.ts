@@ -14,8 +14,8 @@ export type TabParamList = {
 // Hotel List API Types
 
 export type GeoCode = {
-  longitude: string;
-  latitude: string;
+  longitude: string | number;
+  latitude: string | number;
 };
 
 export type Distance = {

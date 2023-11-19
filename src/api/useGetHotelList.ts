@@ -23,14 +23,19 @@ const useGetHotelList = async (
     );
 
     const statusCode = fetchHotelList.status;
-    const res = await fetchHotelList.json();
     console.log(statusCode);
 
+    if (statusCode === 401 || statusCode === 400) {
+      throw new Error(`${statusCode}`);
+    }
+
+    const res = await fetchHotelList.json();
     const data = res.data;
 
     return { data };
   } catch (error) {
-    console.log(error);
+    console.log("error in catch");
+    throw new Error(`${error}`);
   }
 };
 
