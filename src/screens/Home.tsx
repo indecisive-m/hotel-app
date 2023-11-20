@@ -18,33 +18,12 @@ import useGetHotelList from "api/useGetHotelList";
 import { useState, useEffect } from "react";
 import { QueryClient, useQuery, useQueryClient } from "react-query";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as Location from "expo-location";
+import NearbyStays from "components/NearbyStays";
 
 type Props = NativeStackScreenProps<StackParamList, "Home">;
 
 function Home({ navigation }: Props) {
   const { fetchBearerKey } = useGetBearerKey();
-  const [localLocation, setLocalLocation] = useState<GeoCode>({
-    latitude: "",
-    longitude: "",
-  });
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        alert("Permission Denied");
-        return;
-      }
-
-      let location = await Location.getLastKnownPositionAsync();
-
-      setLocalLocation({
-        latitude: `${location?.coords.latitude}`,
-        longitude: `${location?.coords.longitude}`,
-      });
-    })();
-  }, []);
 
   const queryClient = useQueryClient();
 
@@ -71,6 +50,7 @@ function Home({ navigation }: Props) {
       <Pressable style={styles.button}>
         <Text style={styles.text}>Search</Text>
       </Pressable>
+      <NearbyStays />
 
       <View style={{ margin: 20 }}>
         <Button title="Get Bearer Key" onPress={fetchBearerKey} />
@@ -93,14 +73,14 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 15,
     padding: 10,
     marginBottom: 20,
   },
   button: {
     borderRadius: 50,
     backgroundColor: "orange",
-    padding: 15,
+    padding: 12,
     justifyContent: "center",
     width: "100%",
   },

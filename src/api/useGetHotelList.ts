@@ -4,9 +4,9 @@ import * as SecureStore from "expo-secure-store";
 import useGetBearerKey from "./useGetBearerKey";
 
 const useGetHotelList = async (
-  latitude: Number,
-  longitude: Number,
-  radius: Number
+  latitude: number | string,
+  longitude: number | string,
+  radius: number
 ) => {
   // const [hotelList, setHotelList] = useState<HotelList>([]);
   const { fetchBearerKey } = useGetBearerKey();

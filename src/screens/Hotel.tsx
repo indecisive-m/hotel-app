@@ -24,7 +24,7 @@ const Hotel = ({ route, navigation }: Props) => {
 
   const { data, isLoading, status, isSuccess, refetch } = useQuery({
     queryKey: ["hotel", hotelId, 2],
-    queryFn: () => useGetHotelDetails(hotelId, 2),
+    queryFn: () => useGetHotelDetails(hotelId, 2, false),
   });
 
   if (isLoading) {

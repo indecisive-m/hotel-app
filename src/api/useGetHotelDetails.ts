@@ -4,12 +4,16 @@ import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from "react";
 import useGetBearerKey from "./useGetBearerKey";
 
-const useGetHotelDetails = async (hotelId: String, adults: Number) => {
+const useGetHotelDetails = async (
+  hotelId: String,
+  adults: Number,
+  bestRate: boolean
+) => {
   const bearerKey = await SecureStore.getItemAsync("Bearer");
 
   try {
     const fetchHotelDetails = await fetch(
-      `${AMADEUS_HOTEL_URL}hotelIds=${hotelId}&adults=${adults}&checkInDate=2023-11-22&roomQuantity=1&paymentPolicy=NONE&bestRateOnly=false`,
+      `${AMADEUS_HOTEL_URL}hotelIds=${hotelId}&adults=${adults}&checkInDate=2023-11-22&roomQuantity=1&paymentPolicy=NONE&bestRateOnly=${bestRate}`,
       {
         headers: {
           Authorization: `Bearer ${bearerKey}`,
