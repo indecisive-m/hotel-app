@@ -9,6 +9,7 @@ import {
   Pressable,
   ActivityIndicator,
   TextInput,
+  ScrollView,
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, Hotel, HotelList, GeoCode } from "../constants/types";
@@ -22,8 +23,12 @@ import NearbyStays from "components/NearbyStays";
 
 type Props = NativeStackScreenProps<StackParamList, "Home">;
 
-function Home({ navigation }: Props) {
+function Explore({ navigation }: Props) {
   const { fetchBearerKey } = useGetBearerKey();
+
+  useEffect(() => {
+    fetchBearerKey();
+  }, []);
 
   const queryClient = useQueryClient();
 
@@ -44,22 +49,25 @@ function Home({ navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput placeholder="Where are you going?" style={styles.input} />
-      <TextInput placeholder="Select dates" style={styles.input} />
-      <TextInput placeholder="How many adults" style={styles.input} />
-      <Pressable style={styles.button}>
-        <Text style={styles.text}>Search</Text>
-      </Pressable>
-      <NearbyStays />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TextInput placeholder="Where are you going?" style={styles.input} />
+        <TextInput placeholder="Select dates" style={styles.input} />
+        <TextInput placeholder="How many adults" style={styles.input} />
+        <Pressable style={styles.button}>
+          <Text style={styles.text}>Search</Text>
+        </Pressable>
+        <NearbyStays />
 
-      <View style={{ margin: 20 }}>
-        <Button title="Get Bearer Key" onPress={fetchBearerKey} />
-        <Button title="Get Hotel List" onPress={onPress} />
-        <Button
-          title="Get Hotel"
-          onPress={() => navigation.navigate("Hotel", { hotelId: "MCLONGHM" })}
-        />
-      </View>
+        <View style={{ margin: 20 }}>
+          <Button title="Get Hotel List" onPress={onPress} />
+          <Button
+            title="Get Hotel"
+            onPress={() =>
+              navigation.navigate("Hotel", { hotelId: "MCLONGHM" })
+            }
+          />
+        </View>
+      </ScrollView>
 
       <StatusBar style="auto" />
     </SafeAreaView>
@@ -91,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Explore;

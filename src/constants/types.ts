@@ -7,7 +7,7 @@ export type StackParamList = {
 };
 
 export type TabParamList = {
-  Home: undefined;
+  Explore: undefined;
   Settings: undefined;
 };
 

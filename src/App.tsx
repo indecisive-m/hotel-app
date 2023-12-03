@@ -2,13 +2,17 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Text } from "react-native";
 
 import Settings from "./screens/Settings";
-import Home from "./screens/Home";
+import Explore from "./screens/Explore";
 
 import { StackParamList, TabParamList } from "constants/types";
 import Hotel from "screens/Hotel";
 import HotelSearchMap from "screens/HotelSearchMap";
+import { useEffect } from "react";
+import useGetBearerKey from "api/useGetBearerKey";
+import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -21,11 +25,37 @@ function HomeTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{ headerShown: false }}
+        name="Explore"
+        component={Explore}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="search-outline"
+              size={26}
+              color={focused ? "orange" : "#d3d3d3"}
+            />
+          ),
+          tabBarActiveTintColor: "orange",
+          tabBarInactiveTintColor: "#d3d3d3",
+        }}
       />
-      <Tab.Screen name="Settings" component={Settings} />
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="settings-outline"
+              size={26}
+              color={focused ? "orange" : "#d3d3d3"}
+            />
+          ),
+          tabBarActiveTintColor: "orange",
+          tabBarInactiveTintColor: "#d3d3d3",
+        }}
+      />
     </Tab.Navigator>
   );
 }

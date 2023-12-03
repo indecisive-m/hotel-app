@@ -15,10 +15,12 @@ import { GeoCode, Hotel } from "constants/types";
 import useGetHotelList from "api/useGetHotelList";
 import { QueryClient, useQueries, useQuery, useQueryClient } from "react-query";
 import useGetHotelDetails from "api/useGetHotelDetails";
+import { Entypo } from "@expo/vector-icons";
 
 const NearbyStays = () => {
   const queryClient = useQueryClient();
   const { width } = useWindowDimensions();
+  const [permission, setPermission] = useState(false);
 
   const [localLocation, setLocalLocation] = useState<GeoCode>({
     latitude: "",
@@ -36,9 +38,8 @@ const NearbyStays = () => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        alert("Permission Denied");
-        return;
+      if (status === "granted") {
+        setPermission(true);
       }
 
       let location = await Location.getLastKnownPositionAsync();
@@ -51,7 +52,61 @@ const NearbyStays = () => {
   }, []);
 
   if (isLoading) {
-    <ActivityIndicator size={"small"} />;
+    return (
+      <View style={styles.container}>
+        <View style={styles.flexContainer}>
+          <View>
+            <Text style={styles.header}>Hotels Nearby</Text>
+            <Text style={styles.text}>Based on your location</Text>
+          </View>
+          <Entypo name="location-pin" style={styles.icon} />
+        </View>
+        <View
+          style={{
+            marginTop: 20,
+            padding: 20,
+            position: "relative",
+            overflow: "hidden",
+            height: 220,
+            backgroundColor: "#d3d3d3",
+            borderRadius: 15,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator size={"small"} />
+        </View>
+      </View>
+    );
+  }
+
+  if (!permission) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.flexContainer}>
+          <View>
+            <Text style={styles.header}>Hotels Nearby</Text>
+            <Text style={styles.text}>Based on your location</Text>
+          </View>
+          <Entypo name="location-pin" style={styles.icon} />
+        </View>
+        <View
+          style={{
+            marginTop: 20,
+            padding: 20,
+            position: "relative",
+            overflow: "hidden",
+            height: 220,
+            backgroundColor: "#d3d3d3",
+            borderRadius: 15,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text>Please allow location permissions</Text>
+        </View>
+      </View>
+    );
   }
   const renderedItem: ListRenderItem<Hotel> = ({ item }) => (
     <View
@@ -90,8 +145,14 @@ const NearbyStays = () => {
   );
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Hotels Nearby</Text>
-      <Text style={styles.text}>Based on your location</Text>
+      <View style={styles.flexContainer}>
+        <View>
+          <Text style={styles.header}>Hotels Nearby</Text>
+          <Text style={styles.text}>Based on your location</Text>
+        </View>
+        <Entypo name="location-pin" style={styles.icon} />
+      </View>
+
       <FlatList
         data={data?.data.slice(0, 5)}
         renderItem={renderedItem}
@@ -109,6 +170,11 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 20,
   },
+  flexContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   header: {
     fontSize: 20,
     paddingBottom: 5,
@@ -119,4 +185,9 @@ const styles = StyleSheet.create({
   list: {
     paddingTop: 10,
   },
+  icon: {
+    color: "orange",
+    fontSize: 36,
+  },
+  image: {},
 });
