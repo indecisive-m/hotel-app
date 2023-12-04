@@ -21,7 +21,7 @@ import { QueryClient, useQuery, useQueryClient } from "react-query";
 import { SafeAreaView } from "react-native-safe-area-context";
 import NearbyStays from "components/NearbyStays";
 
-type Props = NativeStackScreenProps<StackParamList, "Home">;
+type Props = NativeStackScreenProps<StackParamList, "Explore">;
 
 function Explore({ navigation }: Props) {
   const { fetchBearerKey } = useGetBearerKey();
@@ -47,11 +47,17 @@ function Explore({ navigation }: Props) {
     return <ActivityIndicator size={"large"} />;
   }
 
+  const showModal = () => {
+    navigation.navigate("CalendarModal");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <TextInput placeholder="Where are you going?" style={styles.input} />
-        <TextInput placeholder="Select dates" style={styles.input} />
+        <Pressable style={styles.input} onPress={showModal}>
+          <Text style={{ paddingVertical: 5, opacity: 0.5 }}>Select dates</Text>
+        </Pressable>
         <TextInput placeholder="How many adults" style={styles.input} />
         <Pressable style={styles.button}>
           <Text style={styles.text}>Search</Text>

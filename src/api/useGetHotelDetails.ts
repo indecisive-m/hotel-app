@@ -13,7 +13,7 @@ const useGetHotelDetails = async (
 
   try {
     const fetchHotelDetails = await fetch(
-      `${AMADEUS_HOTEL_URL}hotelIds=${hotelId}&adults=${adults}&checkInDate=2023-11-22&roomQuantity=1&paymentPolicy=NONE&bestRateOnly=${bestRate}`,
+      `${AMADEUS_HOTEL_URL}hotelIds=${hotelId}&adults=${adults}&roomQuantity=1&paymentPolicy=NONE&bestRateOnly=${bestRate}`,
       {
         headers: {
           Authorization: `Bearer ${bearerKey}`,

@@ -1,9 +1,10 @@
 // React Navigation Types
 
 export type StackParamList = {
-  Home: undefined;
+  Explore: undefined;
   Hotel: { hotelId: string };
   HotelSearchMap: { hotelList: Object[] | undefined };
+  CalendarModal: undefined;
 };
 
 export type TabParamList = {
