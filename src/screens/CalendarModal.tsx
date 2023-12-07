@@ -2,11 +2,38 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, Hotel, HotelList, GeoCode } from "../constants/types";
-import React from "react";
+import { useMemo, useState } from "react";
 
 type Props = NativeStackScreenProps<StackParamList, "CalendarModal">;
 
 const CalendarModal = ({ navigation }: Props) => {
+  const [markedDates, setMarkedDates] = useState([]);
+
+  const [selected, setSelected] = useState<string>();
+
+  console.log(markedDates);
+
+  const date = new Date();
+
+  const day = date.getDate();
+
+  date.setDate(day + 20);
+
+  const newDate = date.getDate();
+
+  console.log(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+
+  const marked = useMemo(() => {
+    return {
+      [markedDates[0]]: {
+        color: "green",
+        startingDay: true,
+        disableTouchEvent: true,
+      },
+      [selected]: { color: "green", disableTouchEvent: true },
+    };
+  }, [selected]);
+
   return (
     <View style={{ justifyContent: "flex-end", flex: 1 }}>
       <Pressable
@@ -33,7 +60,15 @@ const CalendarModal = ({ navigation }: Props) => {
         />
       </View>
 
-      <Calendar style={{ height: "50%" }} />
+      <Calendar
+        style={{ height: "50%" }}
+        onDayPress={(day) => {
+          setSelected(day.dateString),
+            setMarkedDates([...markedDates, day.dateString]);
+        }}
+        markingType="period"
+        markedDates={marked}
+      />
     </View>
   );
 };
