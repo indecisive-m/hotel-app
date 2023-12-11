@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Calendar } from "react-native-calendars";
+import { Calendar, CalendarUtils } from "react-native-calendars";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, Hotel, HotelList, GeoCode } from "../constants/types";
 import { useMemo, useState } from "react";
@@ -7,32 +7,49 @@ import { useMemo, useState } from "react";
 type Props = NativeStackScreenProps<StackParamList, "CalendarModal">;
 
 const CalendarModal = ({ navigation }: Props) => {
-  const [markedDates, setMarkedDates] = useState([]);
+  const [markedDates, setMarkedDates] = useState<string[]>([]);
 
-  const [selected, setSelected] = useState<string>();
+  console.log("marked dates: " + markedDates);
 
-  console.log(markedDates);
+  const getDaysInBetween = (firstDay: string, secondDay: string) => {
+    const daysArray = [firstDay];
 
-  const date = new Date();
+    while (!daysArray.includes(secondDay)) {
+      daysArray.forEach((day) => {
+        const date = new Date(day);
+        const newDate = date.setDate(date.getDate() + 1);
+        const newDay = CalendarUtils.getCalendarDateString(newDate);
+        console.log("new day = " + newDay);
+        daysArray.push(newDay);
+        console.log("days array = " + daysArray);
+        const newArray = [...new Set(daysArray)];
+        const calendarArray = Array.from(newArray);
+        setMarkedDates(calendarArray);
+      });
+    }
+  };
 
-  const day = date.getDate();
-
-  date.setDate(day + 20);
-
-  const newDate = date.getDate();
-
-  console.log(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+  if (markedDates.length === 2) {
+    getDaysInBetween(markedDates[0], markedDates[1]);
+  }
 
   const marked = useMemo(() => {
-    return {
-      [markedDates[0]]: {
-        color: "green",
-        startingDay: true,
-        disableTouchEvent: true,
-      },
-      [selected]: { color: "green", disableTouchEvent: true },
-    };
-  }, [selected]);
+    const marks = {};
+    markedDates.map((day, index) => {
+      if (index === 0) {
+        marks[`${markedDates[0]}`] = { color: "orange", startingDay: true };
+      } else if (index === markedDates.length - 1) {
+        marks[`${markedDates[index]}`] = {
+          color: "rgb(255, 165, 0)",
+          endingDay: true,
+        };
+      } else {
+        marks[`${markedDates[index]}`] = { color: "rgba(255, 165, 0, 0.5)" };
+      }
+    });
+
+    return marks;
+  }, [markedDates]);
 
   return (
     <View style={{ justifyContent: "flex-end", flex: 1 }}>
@@ -63,8 +80,11 @@ const CalendarModal = ({ navigation }: Props) => {
       <Calendar
         style={{ height: "50%" }}
         onDayPress={(day) => {
-          setSelected(day.dateString),
+          if (markedDates.length > 2) {
+            setMarkedDates([day.dateString]);
+          } else {
             setMarkedDates([...markedDates, day.dateString]);
+          }
         }}
         markingType="period"
         markedDates={marked}
