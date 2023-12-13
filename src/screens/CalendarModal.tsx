@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Calendar, CalendarUtils } from "react-native-calendars";
+import { Calendar, CalendarUtils, DateData } from "react-native-calendars";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, Hotel, HotelList, GeoCode } from "../constants/types";
 import { useMemo, useState } from "react";
@@ -8,6 +8,10 @@ type Props = NativeStackScreenProps<StackParamList, "CalendarModal">;
 
 const CalendarModal = ({ navigation }: Props) => {
   const [markedDates, setMarkedDates] = useState<string[]>([]);
+
+  const dateToday = CalendarUtils.getCalendarDateString(new Date());
+
+  const [minDate, setMinDate] = useState(dateToday);
 
   console.log("marked dates: " + markedDates);
 
@@ -30,21 +34,38 @@ const CalendarModal = ({ navigation }: Props) => {
   };
 
   if (markedDates.length === 2) {
+    console.log("running days ");
     getDaysInBetween(markedDates[0], markedDates[1]);
   }
+
+  const dayPress = (day: DateData) => {
+    if (markedDates.length > 2 || markedDates[0] > day.dateString) {
+      setMarkedDates([day.dateString]);
+
+      console.log("refreshing list");
+    } else {
+      setMarkedDates((prev) => [...prev, day.dateString]);
+    }
+  };
 
   const marked = useMemo(() => {
     const marks = {};
     markedDates.map((day, index) => {
       if (index === 0) {
-        marks[`${markedDates[0]}`] = { color: "orange", startingDay: true };
+        marks[`${markedDates[0]}`] = {
+          color: "hsl(38.82352941176471, 100%, 50%)",
+          startingDay: true,
+        };
       } else if (index === markedDates.length - 1) {
         marks[`${markedDates[index]}`] = {
-          color: "rgb(255, 165, 0)",
+          color: "hsl(38.82352941176471, 100%, 50%)",
           endingDay: true,
         };
       } else {
-        marks[`${markedDates[index]}`] = { color: "rgba(255, 165, 0, 0.5)" };
+        marks[`${markedDates[index]}`] = {
+          color: "hsl(38.82352941176471, 100%, 60%)",
+          textColor: "black",
+        };
       }
     });
 
@@ -79,15 +100,10 @@ const CalendarModal = ({ navigation }: Props) => {
 
       <Calendar
         style={{ height: "50%" }}
-        onDayPress={(day) => {
-          if (markedDates.length > 2) {
-            setMarkedDates([day.dateString]);
-          } else {
-            setMarkedDates([...markedDates, day.dateString]);
-          }
-        }}
+        onDayPress={dayPress}
         markingType="period"
         markedDates={marked}
+        minDate={minDate}
       />
     </View>
   );
