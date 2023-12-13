@@ -13,6 +13,8 @@ import { StackParamList, OffersList, Offers } from "../constants/types";
 import { QueryClient, useQuery, useQueryClient } from "react-query";
 import useGetHotelDetails from "api/useGetHotelDetails";
 import ImageGallery from "components/ImageGallery";
+import { Ionicons } from "@expo/vector-icons";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type Props = NativeStackScreenProps<StackParamList, "Hotel">;
@@ -21,6 +23,8 @@ const Hotel = ({ route, navigation }: Props) => {
   const { hotelId } = route.params;
 
   const queryClient = useQueryClient();
+
+  const roomSize = /\d\d[s][q][m]/gim;
 
   const { data, isLoading, status, isSuccess, refetch } = useQuery({
     queryKey: ["hotel", hotelId, 2],
@@ -51,11 +55,12 @@ const Hotel = ({ route, navigation }: Props) => {
   }
 
   const renderedItem: ListRenderItem<Offers> = ({ item }) => {
+    console.log(item.room.description.text.match(roomSize));
     return (
       <View
         style={{
           borderWidth: 1,
-          borderColor: "red",
+          borderColor: "orange",
           padding: 10,
           marginTop: 10,
         }}
@@ -65,6 +70,15 @@ const Hotel = ({ route, navigation }: Props) => {
         <Text>{item.room.description.text}</Text>
         <Text>{item.room.typeEstimated.bedType}</Text>
         <Text>{item.room.typeEstimated.category}</Text>
+        {item.room.description.text.includes("Wireless" || "internet") && (
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <Ionicons name="wifi" size={26} color={"black"} />
+            <Text>Free Wifi</Text>
+          </View>
+        )}
+        {item.room.description.text.match(roomSize) && (
+          <Text>{item?.room?.description?.text?.match(roomSize)}</Text>
+        )}
       </View>
     );
   };
