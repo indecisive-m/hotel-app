@@ -21,6 +21,7 @@ const Room = ({ route, navigation }: Props) => {
   return (
     <View>
       <Text>Room</Text>
+      <Text>Room description</Text>
       <Text>{roomId}</Text>
     </View>
   );
