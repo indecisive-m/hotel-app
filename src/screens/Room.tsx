@@ -8,23 +8,27 @@ import useGetRoomDetails from "api/useGetRoomDetails";
 type Props = NativeStackScreenProps<StackParamList, "Room">;
 
 const Room = ({ route, navigation }: Props) => {
-  const { roomId } = route.params;
+    const { roomId } = route.params;
 
-  const { data, isLoading, status, isSuccess, refetch } = useQuery({
-    queryKey: ["room", roomId],
-    queryFn: () => useGetRoomDetails(roomId),
-  });
+    const { data, isLoading, status, isSuccess, refetch } = useQuery({
+        queryKey: ["room", roomId],
+        queryFn: () => useGetRoomDetails(roomId),
+    });
 
-  // console.log(data?.data?.offers);
-  // console.log(data?.data?.offers?.room);
-  console.log(data?.data?.offers);
-  return (
-    <View>
-      <Text>Room</Text>
-      <Text>Room description</Text>
-      <Text>{roomId}</Text>
-    </View>
-  );
+    // console.log(data?.data?.offers);
+    // console.log(data?.data?.offers?.room);
+    console.log(data?.data?.offers);
+    return (
+        <View>
+            <Text>Image goes here</Text>
+            <Text>Room</Text>
+            <Text>Room description</Text>
+            <Text>Room size</Text>
+            <Text>Room Price</Text>
+            <Text>Book this room!</Text>
+      // <Text>{roomId}</Text>
+        </View>
+    );
 };
 
 export default Room;
