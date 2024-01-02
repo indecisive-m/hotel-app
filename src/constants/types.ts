@@ -5,6 +5,7 @@ export type StackParamList = {
   Hotel: { hotelId: string };
   HotelSearchMap: { hotelList: Object[] | undefined };
   CalendarModal: undefined;
+  Room: { roomId: string };
 };
 
 export type TabParamList = {

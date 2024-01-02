@@ -20,8 +20,10 @@ import { useState, useEffect } from "react";
 import { QueryClient, useQuery, useQueryClient } from "react-query";
 import { SafeAreaView } from "react-native-safe-area-context";
 import NearbyStays from "components/NearbyStays";
+import { functionalUpdate } from "react-query/types/core/utils";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
+
 
 function Explore({ navigation }: Props) {
   const { fetchBearerKey } = useGetBearerKey();
