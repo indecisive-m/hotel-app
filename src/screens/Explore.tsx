@@ -24,7 +24,6 @@ import { functionalUpdate } from "react-query/types/core/utils";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 
-
 function Explore({ navigation }: Props) {
   const { fetchBearerKey } = useGetBearerKey();
 

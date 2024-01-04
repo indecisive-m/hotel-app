@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList } from "constants/types";
@@ -8,27 +8,37 @@ import useGetRoomDetails from "api/useGetRoomDetails";
 type Props = NativeStackScreenProps<StackParamList, "Room">;
 
 const Room = ({ route, navigation }: Props) => {
-    const { roomId } = route.params;
+  const { roomId } = route.params;
 
-    const { data, isLoading, status, isSuccess, refetch } = useQuery({
-        queryKey: ["room", roomId],
-        queryFn: () => useGetRoomDetails(roomId),
-    });
+  const { data, isLoading, status, isSuccess, refetch } = useQuery({
+    queryKey: ["room", roomId],
+    queryFn: () => useGetRoomDetails(roomId),
+  });
 
-    // console.log(data?.data?.offers);
-    // console.log(data?.data?.offers?.room);
-    console.log(data?.data?.offers);
-    return (
-        <View>
-            <Text>Image goes here</Text>
-            <Text>Room</Text>
-            <Text>Room description</Text>
-            <Text>Room size</Text>
-            <Text>Room Price</Text>
-            <Text>Book this room!</Text>
-      // <Text>{roomId}</Text>
-        </View>
-    );
+  const totalPrice = data?.data?.price?.total;
+  const roomDescription = data?.data?.description?.text;
+  const roomTax = data?.data?.price?.taxes[0]?.amount;
+  const roomTaxCode = data?.data?.price?.taxes[0]?.code;
+
+  if (data) {
+    console.log(totalPrice);
+    console.log(roomDescription);
+    console.log(roomTax);
+    console.log(roomTaxCode);
+  }
+
+  return (
+    <View>
+      <Text>{roomId}</Text>
+      <Text>Room images</Text>
+      <Text>Room description</Text>
+      <Text>Beds</Text>
+      <Text>Price</Text>
+      <Pressable>
+        <Text>Book this room</Text>
+      </Pressable>
+    </View>
+  );
 };
 
 export default Room;
