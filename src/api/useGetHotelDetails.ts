@@ -1,13 +1,10 @@
 import { AMADEUS_HOTEL_URL } from "@env";
-import { OffersList } from "constants/types";
 import * as SecureStore from "expo-secure-store";
-import { useEffect, useState } from "react";
-import useGetBearerKey from "./useGetBearerKey";
 
 const useGetHotelDetails = async (
   hotelId: String,
   adults: Number,
-  bestRate: boolean
+  bestRate: boolean,
 ) => {
   const bearerKey = await SecureStore.getItemAsync("Bearer");
 
@@ -18,15 +15,11 @@ const useGetHotelDetails = async (
         headers: {
           Authorization: `Bearer ${bearerKey}`,
         },
-      }
+      },
     );
 
     const statusCode = fetchHotelDetails.status;
     console.log(statusCode);
-
-    // if (statusCode === 401 || statusCode === 400) {
-    //   throw new Error(`${statusCode}`);
-    // }
 
     const results = await fetchHotelDetails.json();
 

@@ -47,16 +47,11 @@ const Hotel = ({ route, navigation }: Props) => {
   }
 
   if (!data?.data) {
-    navigation.setOptions({ headerShown: false });
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}>
-        <Text>No Details Available</Text>
-      </View>
-    );
+    navigation.navigate("Error");
   }
 
   if (isSuccess) {
-    navigation.setOptions({ headerShown: true, title: `${data?.hotel.name}` });
+    navigation.setOptions({ headerShown: true, title: `${data?.hotel?.name}` });
   }
 
   const renderedItem: ListRenderItem<Offers> = ({ item }) => {

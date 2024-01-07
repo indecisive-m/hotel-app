@@ -8,6 +8,7 @@ export type StackParamList = {
   HotelSearchMap: { hotelList: Object[] | undefined };
   CalendarModal: undefined;
   Room: { roomId: string; bedType: string };
+  Error: undefined;
 };
 
 export type TabParamList = {

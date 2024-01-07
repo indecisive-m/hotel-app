@@ -15,6 +15,7 @@ import useGetBearerKey from "api/useGetBearerKey";
 import { Ionicons } from "@expo/vector-icons";
 import CalendarModal from "screens/CalendarModal";
 import Room from "screens/Room";
+import Error from "screens/Error";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -83,6 +84,11 @@ export default function App() {
             options={{ title: "Room Details" }}
           />
           <Stack.Screen name="HotelSearchMap" component={HotelSearchMap} />
+          <Stack.Screen
+            name="Error"
+            component={Error}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="CalendarModal"
             component={CalendarModal}
