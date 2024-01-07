@@ -1,0 +1,71 @@
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React from "react";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { StackParamList } from "constants/types";
+import { useQuery } from "react-query";
+import useGetRoomDetails from "api/useGetRoomDetails";
+import ImageGallery from "components/ImageGallery";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+type Props = NativeStackScreenProps<StackParamList, "Room">;
+
+const Room = ({ route, navigation }: Props) => {
+  const { roomId } = route.params;
+
+  const { data, isLoading, status, isSuccess, refetch } = useQuery({
+    queryKey: ["room", roomId],
+    queryFn: () => useGetRoomDetails(roomId),
+  });
+
+  const totalPrice = data?.data?.price?.total;
+  const basePrice = data?.data?.price?.base;
+  const roomDescription = data?.data?.description?.text;
+  const roomTax = data?.data?.price?.taxes[0]?.amount;
+  const roomTaxCode = data?.data?.price?.taxes[0]?.code;
+  const guests = data?.data?.guests?.adults;
+  const currency = data?.data?.price?.currency;
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
+  }
+
+  return (
+    <SafeAreaView>
+      <View>
+        <ImageGallery />
+      </View>
+      <Text>hello</Text>
+      <View style={{ backgroundColor: "orange" }}>
+        <Text>{roomId}</Text>
+        <Text>Room images</Text>
+        <Text>{roomDescription}</Text>
+        <Text>Number of guests: {guests}</Text>
+        <View>
+          <Text>Room Price: {basePrice}</Text>
+          <Text>
+            {roomTaxCode}: {roomTax}
+          </Text>
+          <Text>Total Price: {totalPrice}</Text>
+          <Text>All prices in {currency}</Text>
+        </View>
+        <Pressable>
+          <Text>Book this room</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default Room;
+
+const styles = StyleSheet.create({});

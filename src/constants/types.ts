@@ -1,11 +1,13 @@
 // React Navigation Types
 
+import useGetRoomDetails from "api/useGetRoomDetails";
+
 export type StackParamList = {
   Explore: undefined;
   Hotel: { hotelId: string };
   HotelSearchMap: { hotelList: Object[] | undefined };
   CalendarModal: undefined;
-  Room: { roomId: string };
+  Room: { roomId: string; bedType: string };
 };
 
 export type TabParamList = {

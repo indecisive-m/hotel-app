@@ -77,7 +77,11 @@ export default function App() {
             component={Hotel}
             options={{ headerTransparent: true }}
           />
-          <Stack.Screen name="Room" component={Room} />
+          <Stack.Screen
+            name="Room"
+            component={Room}
+            options={{ title: "Room Details" }}
+          />
           <Stack.Screen name="HotelSearchMap" component={HotelSearchMap} />
           <Stack.Screen
             name="CalendarModal"

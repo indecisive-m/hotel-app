@@ -32,9 +32,10 @@ const Hotel = ({ route, navigation }: Props) => {
     queryFn: () => useGetHotelDetails(hotelId, 2, false),
   });
 
-  const handleRoomSearch = (id: string) => {
-    navigation.navigate("Room", { roomId: id });
+  const handleRoomSearch = (id: string, bedType: string) => {
+    navigation.navigate("Room", { roomId: id, bedType: bedType });
   };
+
   if (isLoading) {
     navigation.setOptions({ headerShown: false });
     return (
@@ -60,7 +61,11 @@ const Hotel = ({ route, navigation }: Props) => {
 
   const renderedItem: ListRenderItem<Offers> = ({ item }) => {
     return (
-      <Pressable onPress={() => handleRoomSearch(item.id)}>
+      <Pressable
+        onPress={() =>
+          handleRoomSearch(item.id, item.room.typeEstimated.bedType)
+        }
+      >
         <View
           style={{
             borderWidth: 1,
