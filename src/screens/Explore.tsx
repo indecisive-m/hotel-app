@@ -20,26 +20,32 @@ import { useState, useEffect } from "react";
 import { QueryClient, useQuery, useQueryClient } from "react-query";
 import { SafeAreaView } from "react-native-safe-area-context";
 import NearbyStays from "components/NearbyStays";
+import useGetGeoCode from "api/useGetGeoCode";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 
 function Explore({ navigation }: Props) {
   const { fetchBearerKey } = useGetBearerKey();
+  const [inputText, setInputText] = useState<string>("");
 
   useEffect(() => {
     fetchBearerKey();
+    refetch();
   }, []);
 
   const queryClient = useQueryClient();
 
+  const handleGeoCode = () => {
+    useGetGeoCode(inputText);
+  };
+
   const { data, refetch, error, isLoading } = useQuery({
-    queryKey: ["hotels", 51.51264, 0.10089, 5],
-    queryFn: () => useGetHotelList(51.51264, 0.10089, 5),
+    queryKey: ["hotels", 51.507218, -0.127586, 5],
+    queryFn: () => useGetHotelList(51.507218, -0.127586, 5),
     enabled: false,
   });
 
   const onPress = () => {
-    // refetch();
     navigation.navigate("HotelSearchMap", { hotelList: data?.data });
   };
 
@@ -51,15 +57,21 @@ function Explore({ navigation }: Props) {
     navigation.navigate("CalendarModal");
   };
 
+  console.log(inputText);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <TextInput placeholder="Where are you going?" style={styles.input} />
+        <TextInput
+          placeholder="Where are you going?"
+          style={styles.input}
+          value={inputText}
+          onChangeText={(text) => setInputText(text)}
+        />
         <Pressable style={styles.input} onPress={showModal}>
           <Text style={{ paddingVertical: 5, opacity: 0.5 }}>Select dates</Text>
         </Pressable>
         <TextInput placeholder="How many adults" style={styles.input} />
-        <Pressable style={styles.button}>
+        <Pressable style={styles.button} onPress={() => handleGeoCode()}>
           <Text style={styles.text}>Search</Text>
         </Pressable>
         <NearbyStays />

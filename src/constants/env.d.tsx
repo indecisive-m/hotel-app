@@ -6,4 +6,5 @@ declare module "@env" {
   export const AMADEUS_HOTEL_LIST_URL: String;
   export const AMADEUS_HOTEL_URL: String;
   export const AMADEUS_ROOM_URL: String;
+  export const GOOGLE_API: String;
 }

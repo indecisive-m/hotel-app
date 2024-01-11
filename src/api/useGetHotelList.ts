@@ -6,9 +6,8 @@ import useGetBearerKey from "./useGetBearerKey";
 const useGetHotelList = async (
   latitude: number | string,
   longitude: number | string,
-  radius: number
+  radius: number,
 ) => {
-  // const [hotelList, setHotelList] = useState<HotelList>([]);
   const { fetchBearerKey } = useGetBearerKey();
   try {
     const bearerKey = await SecureStore.getItemAsync("Bearer");
@@ -19,11 +18,13 @@ const useGetHotelList = async (
         headers: {
           Authorization: `Bearer ${bearerKey}`,
         },
-      }
+      },
     );
 
+    console.log(latitude, longitude, radius);
     const statusCode = fetchHotelList.status;
     console.log(statusCode);
+    console.log("api call for hotelList");
 
     if (statusCode === 401 || statusCode === 400) {
       throw new Error(`${statusCode}`);

@@ -5,7 +5,6 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 type Props = NativeStackScreenProps<StackParamList, "Error">;
 
 const Error = ({ navigation }: Props) => {
-  navigation.setOptions({ headerShown: false });
   return (
     <View style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}>
       <Text>No Details Available</Text>

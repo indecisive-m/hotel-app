@@ -163,12 +163,13 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   priceBox: {
-    backgroundColor: "rgb(255, 204, 128)",
+    // backgroundColor: "rgb(255, 204, 128)",
+    backgroundColor: "orange",
+    opacity: 0.75,
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 10,
     gap: 10,
-    borderColor: "black",
   },
 
   button: {

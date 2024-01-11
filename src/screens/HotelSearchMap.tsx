@@ -26,13 +26,15 @@ import useGetBearerKey from "api/useGetBearerKey";
 
 type Props = NativeStackScreenProps<StackParamList, "HotelSearchMap">;
 
-const HotelSearchMap = ({ navigation }: Props) => {
+const HotelSearchMap = ({ navigation, route }: Props) => {
   const { width } = useWindowDimensions();
   const { fetchBearerKey } = useGetBearerKey();
-  const [latitude, setLatitude] = useState(30.643868905461858);
-  const [longitude, setLongitude] = useState(-49.27215378731489);
-  const [latitudeDelta, setLatitudeDelta] = useState(87.27387561478429);
-  const [longitudeDelta, setLongitudeDelta] = useState(126.56250536441803);
+
+  const { hotelList } = route.params;
+  const [latitude, setLatitude] = useState(hotelList[0].geoCode.latitude);
+  const [longitude, setLongitude] = useState(hotelList[0].geoCode.longitude);
+  const [latitudeDelta, setLatitudeDelta] = useState(0.0922);
+  const [longitudeDelta, setLongitudeDelta] = useState(0.3);
 
   const [region, setRegion] = useState({
     latitude: 30.643868905461858,
@@ -45,8 +47,8 @@ const HotelSearchMap = ({ navigation }: Props) => {
   const mapViewRef = useRef<MapView>(null);
 
   const { data, refetch, error, isLoading } = useQuery({
-    queryKey: ["hotels", 40.781928, -73.965342, 5],
-    queryFn: () => useGetHotelList(40.781928, -73.965342, 5),
+    queryKey: ["hotels", latitude, longitude, 5],
+    queryFn: () => useGetHotelList(latitude, longitude, 5),
     retry: 2,
     onError: (error) => {
       console.log(error + "in query");
@@ -67,10 +69,10 @@ const HotelSearchMap = ({ navigation }: Props) => {
           center: { latitude: region.latitude, longitude: region.longitude },
           zoom: 10.5,
         },
-        { duration: 1500 }
+        { duration: 1500 },
       );
     }
-  }, [data]);
+  }, []);
 
   if (isLoading) {
     <ActivityIndicator
