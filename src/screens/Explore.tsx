@@ -21,24 +21,24 @@ import { QueryClient, useQuery, useQueryClient } from "react-query";
 import { SafeAreaView } from "react-native-safe-area-context";
 import NearbyStays from "components/NearbyStays";
 import useGetGeoCode from "api/useGetGeoCode";
+import { geocodeAsync } from "expo-location";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 
 function Explore({ navigation }: Props) {
   const { fetchBearerKey } = useGetBearerKey();
   const [inputText, setInputText] = useState<string>("");
-
   const queryClient = useQueryClient();
-
-  const geoCode = useQuery({
-    queryKey: ["geoCode", inputText],
-    queryFn: () => useGetGeoCode(inputText),
-    enabled: false,
-  });
 
   const { data, refetch, isLoading } = useQuery({
     queryKey: ["hotels", 51.507218, -0.127586, 5],
     queryFn: () => useGetHotelList(51.507218, -0.127586, 5),
+    enabled: false,
+  });
+
+  const geoCode = useQuery({
+    queryKey: ["search", inputText],
+    queryFn: () => useGetGeoCode(inputText),
     enabled: false,
   });
 
@@ -48,8 +48,15 @@ function Explore({ navigation }: Props) {
   }, []);
 
   const handleGeoCode = () => {
-    geoCode.refetch();
+    const hotelList = new Promise((resolve) => resolve(geoCode.refetch()));
+
+    hotelList.then((value) =>
+      navigation.navigate("HotelSearchMap", {
+        hotelList: value.data.hotelListData,
+      })
+    );
   };
+
   const onPress = () => {
     navigation.navigate("HotelSearchMap", { hotelList: data?.data });
   };
@@ -61,7 +68,7 @@ function Explore({ navigation }: Props) {
   const showModal = () => {
     navigation.navigate("CalendarModal");
   };
-  console.log(inputText);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
