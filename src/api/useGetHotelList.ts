@@ -36,7 +36,6 @@ const useGetHotelList = async (
     return { data };
   } catch (error) {
     console.log("error in catch");
-    throw new Error(`${error}`);
   }
 };
 

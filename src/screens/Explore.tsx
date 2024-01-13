@@ -28,23 +28,28 @@ function Explore({ navigation }: Props) {
   const { fetchBearerKey } = useGetBearerKey();
   const [inputText, setInputText] = useState<string>("");
 
-  useEffect(() => {
-    fetchBearerKey();
-    refetch();
-  }, []);
-
   const queryClient = useQueryClient();
 
-  const handleGeoCode = () => {
-    useGetGeoCode(inputText);
-  };
+  const geoCode = useQuery({
+    queryKey: ["geoCode", inputText],
+    queryFn: () => useGetGeoCode(inputText),
+    enabled: false,
+  });
 
-  const { data, refetch, error, isLoading } = useQuery({
+  const { data, refetch, isLoading } = useQuery({
     queryKey: ["hotels", 51.507218, -0.127586, 5],
     queryFn: () => useGetHotelList(51.507218, -0.127586, 5),
     enabled: false,
   });
 
+  useEffect(() => {
+    fetchBearerKey();
+    refetch();
+  }, []);
+
+  const handleGeoCode = () => {
+    geoCode.refetch();
+  };
   const onPress = () => {
     navigation.navigate("HotelSearchMap", { hotelList: data?.data });
   };
@@ -56,7 +61,6 @@ function Explore({ navigation }: Props) {
   const showModal = () => {
     navigation.navigate("CalendarModal");
   };
-
   console.log(inputText);
   return (
     <SafeAreaView style={styles.container}>
