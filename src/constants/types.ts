@@ -33,6 +33,11 @@ export type Hotel = {
   hotelId: string;
   geoCode: GeoCode;
   distance: Distance;
+  address: { countrycode: string };
+  chainCode: string;
+  dupeId: number;
+  iataCode: string;
+  lastUpdate: string;
 };
 
 export type HotelList = Hotel[];

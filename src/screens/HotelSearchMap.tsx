@@ -69,7 +69,7 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
           center: { latitude: region.latitude, longitude: region.longitude },
           zoom: 10.5,
         },
-        { duration: 1500 },
+        { duration: 1500 }
       );
     }
   }, []);

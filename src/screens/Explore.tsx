@@ -50,15 +50,12 @@ function Explore({ navigation }: Props) {
   const handleGeoCode = () => {
     const hotelList = new Promise((resolve) => resolve(geoCode.refetch()));
 
-    hotelList.then((value) =>
+    hotelList.then((value) => {
+      const hotels = value?.data;
       navigation.navigate("HotelSearchMap", {
-        hotelList: value.data.hotelListData,
-      })
-    );
-  };
-
-  const onPress = () => {
-    navigation.navigate("HotelSearchMap", { hotelList: data?.data });
+        hotelList: hotels.data,
+      });
+    });
   };
 
   if (isLoading) {
@@ -88,7 +85,6 @@ function Explore({ navigation }: Props) {
         <NearbyStays />
 
         <View style={{ margin: 20 }}>
-          <Button title="Get Hotel List" onPress={onPress} />
           <Button
             title="Get Hotel"
             onPress={() =>

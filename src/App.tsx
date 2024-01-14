@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import CalendarModal from "screens/CalendarModal";
 import Room from "screens/Room";
 import Error from "screens/Error";
+import Toast from "react-native-toast-message";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -99,6 +100,7 @@ export default function App() {
             }}
           />
         </Stack.Navigator>
+        <Toast />
       </NavigationContainer>
     </QueryClientProvider>
   );

@@ -1,5 +1,6 @@
 import { GOOGLE_API } from "@env";
 import useGetHotelList from "./useGetHotelList";
+import { HotelList } from "constants/types";
 
 const useGetGeoCode = async (location: string) => {
   try {
@@ -13,9 +14,9 @@ const useGetGeoCode = async (location: string) => {
 
     const hotelList = await useGetHotelList(lat, lng, 2);
 
-    const hotelListData = await hotelList?.data;
+    const data = await hotelList?.data;
 
-    return { hotelListData };
+    return { data };
   } catch (error) {
     throw new Error(`${error}`);
   }

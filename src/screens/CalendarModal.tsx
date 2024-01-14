@@ -3,6 +3,7 @@ import { Calendar, CalendarUtils, DateData } from "react-native-calendars";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, Hotel, HotelList, GeoCode } from "../constants/types";
 import { useMemo, useState } from "react";
+import Toast from "react-native-toast-message";
 
 type Props = NativeStackScreenProps<StackParamList, "CalendarModal">;
 
@@ -13,29 +14,37 @@ const CalendarModal = ({ navigation }: Props) => {
 
   const [minDate, setMinDate] = useState(dateToday);
 
-  console.log("marked dates: " + markedDates);
-
   const getDaysInBetween = (firstDay: string, secondDay: string) => {
     const daysArray = [firstDay];
 
-    while (!daysArray.includes(secondDay)) {
-      daysArray.forEach((day) => {
-        const date = new Date(day);
-        const newDate = date.setDate(date.getDate() + 1);
-        const newDay = CalendarUtils.getCalendarDateString(newDate);
-        console.log("new day = " + newDay);
-        daysArray.push(newDay);
-        console.log("days array = " + daysArray);
-        const newArray = [...new Set(daysArray)];
-        const calendarArray = Array.from(newArray);
-        setMarkedDates(calendarArray);
-      });
+    for (let i = firstDay; i !== secondDay; ) {
+      const date = new Date(i);
+      const newDate = date.setDate(date.getDate() + 1);
+      const newDay = CalendarUtils.getCalendarDateString(newDate);
+      daysArray.push(newDay);
+      setMarkedDates(daysArray);
+      i = newDay;
     }
   };
 
   if (markedDates.length === 2) {
-    console.log("running days ");
-    getDaysInBetween(markedDates[0], markedDates[1]);
+    const checkInDate = new Date(markedDates[0]);
+    const checkOutDate = new Date(markedDates[1]);
+
+    const timeDifference = checkInDate.getTime() - checkOutDate.getTime();
+
+    const nights = Math.abs(Math.round(timeDifference / (1000 * 3600 * 24)));
+    if (nights > 31) {
+      Toast.show({
+        type: "error",
+        text1: "Max stay is 31 nights",
+        position: "bottom",
+      });
+      setMarkedDates([markedDates[0]]);
+    } else {
+      console.log("running days ");
+      getDaysInBetween(markedDates[0], markedDates[1]);
+    }
   }
 
   const dayPress = (day: DateData) => {
@@ -49,7 +58,15 @@ const CalendarModal = ({ navigation }: Props) => {
   };
 
   const marked = useMemo(() => {
-    const marks = {};
+    type Marks = {
+      [key: string]: {
+        color: string;
+        startingDay?: boolean;
+        endingDay?: boolean;
+        textColor?: string;
+      };
+    };
+    const marks: Marks = {};
     markedDates.map((day, index) => {
       if (index === 0) {
         marks[`${markedDates[0]}`] = {
