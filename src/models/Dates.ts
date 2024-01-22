@@ -8,10 +8,8 @@ export const Dates = types
   .actions((self) => ({
     setCheckInDate(newDate: string) {
       self.checkInDate = newDate;
-      console.log(self.checkInDate + "checkin");
     },
     setCheckOutDate(newDate: string) {
       self.checkOutDate = newDate;
-      console.log(self.checkOutDate + "checkout");
     },
   }));

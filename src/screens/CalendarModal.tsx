@@ -5,7 +5,7 @@ import { StackParamList, Hotel, HotelList, GeoCode } from "../constants/types";
 import { useMemo, useState } from "react";
 import Toast from "react-native-toast-message";
 import { observer } from "mobx-react-lite";
-import { store, useMst } from "store";
+import { useMst } from "store";
 
 type Props = NativeStackScreenProps<StackParamList, "CalendarModal">;
 
@@ -24,14 +24,14 @@ const CalendarModal = observer(({ navigation }: Props) => {
       day.dateString === dateToday
     ) {
       setMarkedDates([day.dateString]);
-      store.dates.setCheckInDate(day.dateString);
-      store.dates.setCheckOutDate("");
+      dates.setCheckInDate(day.dateString);
+      dates.setCheckOutDate("");
 
       console.log("refreshing list");
     } else {
       setMarkedDates((prev) => [...prev, day.dateString]);
-      store.dates.setCheckInDate(day.dateString);
-      store.dates.setCheckOutDate("");
+      dates.setCheckInDate(day.dateString);
+      dates.setCheckOutDate("");
     }
   };
 
@@ -49,8 +49,8 @@ const CalendarModal = observer(({ navigation }: Props) => {
   };
 
   if (markedDates.length === 2) {
-    store.dates.setCheckInDate(markedDates[0]);
-    store.dates.setCheckOutDate(markedDates[1]);
+    dates.setCheckInDate(markedDates[0]);
+    dates.setCheckOutDate(markedDates[1]);
     const checkInDate = new Date(markedDates[0]);
     const checkOutDate = new Date(markedDates[1]);
 
