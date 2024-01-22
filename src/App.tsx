@@ -17,6 +17,7 @@ import CalendarModal from "screens/CalendarModal";
 import Room from "screens/Room";
 import Error from "screens/Error";
 import Toast from "react-native-toast-message";
+import { Provider, store } from "store";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -66,42 +67,44 @@ function HomeTabs() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Explore"
-            component={HomeTabs}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Hotel"
-            component={Hotel}
-            options={{ headerTransparent: true }}
-          />
-          <Stack.Screen
-            name="Room"
-            component={Room}
-            options={{ title: "Room Details" }}
-          />
-          <Stack.Screen name="HotelSearchMap" component={HotelSearchMap} />
-          <Stack.Screen
-            name="Error"
-            component={Error}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CalendarModal"
-            component={CalendarModal}
-            options={{
-              presentation: "transparentModal",
-              animation: "slide_from_bottom",
-              headerShown: false,
-            }}
-          />
-        </Stack.Navigator>
-        <Toast />
-      </NavigationContainer>
-    </QueryClientProvider>
+    <Provider value={store}>
+      <QueryClientProvider client={queryClient}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Explore"
+              component={HomeTabs}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Hotel"
+              component={Hotel}
+              options={{ headerTransparent: true }}
+            />
+            <Stack.Screen
+              name="Room"
+              component={Room}
+              options={{ title: "Room Details" }}
+            />
+            <Stack.Screen name="HotelSearchMap" component={HotelSearchMap} />
+            <Stack.Screen
+              name="Error"
+              component={Error}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="CalendarModal"
+              component={CalendarModal}
+              options={{
+                presentation: "transparentModal",
+                animation: "slide_from_bottom",
+                headerShown: false,
+              }}
+            />
+          </Stack.Navigator>
+          <Toast />
+        </NavigationContainer>
+      </QueryClientProvider>
+    </Provider>
   );
 }

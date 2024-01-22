@@ -1,8 +1,17 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import React from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { TabParamList } from "../constants/types";
+import { types } from "mobx-state-tree";
+import { observer } from "mobx-react-lite";
 
 type Props = NativeStackScreenProps<TabParamList, "Settings">;
 

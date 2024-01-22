@@ -4,15 +4,36 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, Hotel, HotelList, GeoCode } from "../constants/types";
 import { useMemo, useState } from "react";
 import Toast from "react-native-toast-message";
+import { observer } from "mobx-react-lite";
+import { store, useMst } from "store";
 
 type Props = NativeStackScreenProps<StackParamList, "CalendarModal">;
 
-const CalendarModal = ({ navigation }: Props) => {
+const CalendarModal = observer(({ navigation }: Props) => {
   const [markedDates, setMarkedDates] = useState<string[]>([]);
 
   const dateToday = CalendarUtils.getCalendarDateString(new Date());
+  const { dates } = useMst();
 
   const [minDate, setMinDate] = useState(dateToday);
+
+  const dayPress = (day: DateData) => {
+    if (
+      markedDates.length > 2 ||
+      markedDates[0] > day.dateString ||
+      day.dateString === dateToday
+    ) {
+      setMarkedDates([day.dateString]);
+      store.dates.setCheckInDate(day.dateString);
+      store.dates.setCheckOutDate("");
+
+      console.log("refreshing list");
+    } else {
+      setMarkedDates((prev) => [...prev, day.dateString]);
+      store.dates.setCheckInDate(day.dateString);
+      store.dates.setCheckOutDate("");
+    }
+  };
 
   const getDaysInBetween = (firstDay: string, secondDay: string) => {
     const daysArray = [firstDay];
@@ -28,6 +49,8 @@ const CalendarModal = ({ navigation }: Props) => {
   };
 
   if (markedDates.length === 2) {
+    store.dates.setCheckInDate(markedDates[0]);
+    store.dates.setCheckOutDate(markedDates[1]);
     const checkInDate = new Date(markedDates[0]);
     const checkOutDate = new Date(markedDates[1]);
 
@@ -46,16 +69,6 @@ const CalendarModal = ({ navigation }: Props) => {
       getDaysInBetween(markedDates[0], markedDates[1]);
     }
   }
-
-  const dayPress = (day: DateData) => {
-    if (markedDates.length > 2 || markedDates[0] > day.dateString) {
-      setMarkedDates([day.dateString]);
-
-      console.log("refreshing list");
-    } else {
-      setMarkedDates((prev) => [...prev, day.dateString]);
-    }
-  };
 
   const marked = useMemo(() => {
     type Marks = {
@@ -124,7 +137,7 @@ const CalendarModal = ({ navigation }: Props) => {
       />
     </View>
   );
-};
+});
 
 export default CalendarModal;
 
