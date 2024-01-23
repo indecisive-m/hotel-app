@@ -1,15 +1,19 @@
 import { Instance, types } from "mobx-state-tree";
 import { Dates } from "models/Dates";
+import { IUnit, Unit } from "models/Unit";
 import { createContext, useContext } from "react";
 import { CalendarUtils } from "react-native-calendars";
-
 const RootStore = types.model({
   dates: Dates,
+  unit: Unit,
 });
 
 export const store = RootStore.create({
   dates: {
     checkInDate: CalendarUtils.getCalendarDateString(new Date()),
+  },
+  unit: {
+    unit: "MILE",
   },
 });
 
