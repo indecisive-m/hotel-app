@@ -1,6 +1,6 @@
 import { types } from "mobx-state-tree";
 
-export const Dates = types
+export const DatesModel = types
   .model({
     checkInDate: types.string,
     checkOutDate: types.maybe(types.string),

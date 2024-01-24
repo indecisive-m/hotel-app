@@ -1,11 +1,16 @@
 import { Instance, types } from "mobx-state-tree";
-import { Dates } from "models/Dates";
-import { IUnit, Unit } from "models/Unit";
+import { HotelModel } from "models/HotelModel";
+import { UnitModel } from "models/UnitModel";
 import { createContext, useContext } from "react";
 import { CalendarUtils } from "react-native-calendars";
+import { DatesModel } from "models/DatesModel";
+import { FilterModel } from "models/FilterModel";
+
 const RootStore = types.model({
-  dates: Dates,
-  unit: Unit,
+  dates: DatesModel,
+  unit: UnitModel,
+  hotel: HotelModel,
+  filters: FilterModel,
 });
 
 export const store = RootStore.create({
@@ -15,6 +20,11 @@ export const store = RootStore.create({
   unit: {
     unit: "MILE",
   },
+  hotel: {
+    numberOfRooms: 1,
+    numberOfAdults: 1,
+  },
+  filters: {},
 });
 
 export type RootInstance = Instance<typeof RootStore>;

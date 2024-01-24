@@ -29,8 +29,8 @@ const Hotel = ({ route, navigation }: Props) => {
   const queryClient = useQueryClient();
 
   const { data, isLoading, status, isSuccess, refetch } = useQuery({
-    queryKey: ["hotel", hotelId, 2],
-    queryFn: () => useGetHotelDetails(hotelId, 2, false),
+    queryKey: ["hotel", hotelId],
+    queryFn: () => useGetHotelDetails(hotelId, false),
   });
   const roomSize = /\d\d[s][q][m]/gim;
 
@@ -90,7 +90,7 @@ const Hotel = ({ route, navigation }: Props) => {
               <Text>{bed}</Text>
             </View>
             {item?.room?.description?.text.includes(
-              "Wireless" || "internet",
+              "Wireless" || "internet"
             ) ? (
               <View style={styles.row}>
                 <Ionicons name="wifi" size={26} color={"black"} />

@@ -2,23 +2,27 @@ import { useState } from "react";
 import { AMADEUS_HOTEL_LIST_URL } from "@env";
 import * as SecureStore from "expo-secure-store";
 import useGetBearerKey from "./useGetBearerKey";
+import { useMst } from "store";
 
 const useGetHotelList = async (
   latitude: number | string,
   longitude: number | string,
-  radius: number,
+  radius: number
 ) => {
   const { fetchBearerKey } = useGetBearerKey();
+
+  const { unit } = useMst();
+
   try {
     const bearerKey = await SecureStore.getItemAsync("Bearer");
 
     const fetchHotelList = await fetch(
-      `${AMADEUS_HOTEL_LIST_URL}/reference-data/locations/hotels/by-geocode?latitude=${latitude}&longitude=${longitude}&radius=${radius}&radiusUnit=MILE&hotelSource=ALL`,
+      `${AMADEUS_HOTEL_LIST_URL}/reference-data/locations/hotels/by-geocode?latitude=${latitude}&longitude=${longitude}&radius=${radius}&radiusUnit=${unit.unit}&hotelSource=ALL`,
       {
         headers: {
           Authorization: `Bearer ${bearerKey}`,
         },
-      },
+      }
     );
 
     console.log(latitude, longitude, radius);

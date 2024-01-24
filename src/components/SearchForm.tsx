@@ -25,6 +25,7 @@ const SearchForm = observer(() => {
 
   const [inputText, setInputText] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const { hotel, dates } = useMst();
 
   useEffect(() => {
     setLoading(false);
@@ -61,13 +62,14 @@ const SearchForm = observer(() => {
       />
       <Pressable style={styles.input} onPress={showModal}>
         <Text>
-          {store.dates.checkInDate} - {store.dates.checkOutDate}
+          {dates.checkInDate} - {dates.checkOutDate}
         </Text>
       </Pressable>
       <TextInput
         placeholder="How many adults"
         style={styles.input}
         keyboardType="number-pad"
+        onChangeText={(text) => hotel.setNumberOfAdults(Number(text))}
       />
       <Pressable style={styles.button} onPress={() => handleGeoCode()}>
         {loading ? (

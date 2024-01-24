@@ -1,13 +1,13 @@
-import { Instance, types } from "mobx-state-tree";
+import { types } from "mobx-state-tree";
 
-export const Unit = types
+export const UnitModel = types
   .model({
     unit: types.union(types.literal("MILE"), types.literal("KM")),
   })
   .actions((self) => ({
-    setUnit(unit: IUnit) {
+    setUnit(unit: TUnit) {
       self.unit = unit;
     },
   }));
 
-export type IUnit = "MILE" | "KM";
+type TUnit = "MILE" | "KM";
