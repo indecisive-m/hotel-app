@@ -24,6 +24,7 @@ import useGetGeoCode from "api/useGetGeoCode";
 import { geocodeAsync } from "expo-location";
 import SearchForm from "components/SearchForm";
 import { observer } from "mobx-react-lite";
+import PopularStays from "components/PopularStays";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 
@@ -51,6 +52,7 @@ const Explore = observer(({ navigation }: Props) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <SearchForm />
         <NearbyStays />
+        <PopularStays />
 
         <View style={{ margin: 20 }}>
           <Button

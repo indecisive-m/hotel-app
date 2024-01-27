@@ -85,9 +85,16 @@ export type Offers = {
 
 export type OffersList = Offers[];
 
-// Room Tax code / amount
+// Random Types
 
 export type RoomTax = {
   code: string;
   amount: string;
+};
+
+export type PopularStay = {
+  city: string;
+  imageUri: string;
+  lng: number;
+  lat: number;
 };
