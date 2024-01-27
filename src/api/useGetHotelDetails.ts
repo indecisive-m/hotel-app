@@ -1,14 +1,17 @@
 import { AMADEUS_HOTEL_URL } from "@env";
 import * as SecureStore from "expo-secure-store";
-import { useMst } from "store";
+import { store, useMst } from "store";
 
 const useGetHotelDetails = async (hotelId: String, bestRate: boolean) => {
   const bearerKey = await SecureStore.getItemAsync("Bearer");
 
-  const Store = useMst();
+  const checkOutDate = store.dates.checkOutDate
+    ? `&checkOutDate=${store.dates.checkOutDate}`
+    : "";
+
   try {
     const fetchHotelDetails = await fetch(
-      `${AMADEUS_HOTEL_URL}hotelIds=${hotelId}&adults=${Store.hotel.numberOfAdults}&roomQuantity=${Store.hotel.numberOfRooms}&paymentPolicy=NONE&bestRateOnly=${bestRate}`,
+      `${AMADEUS_HOTEL_URL}hotelIds=${hotelId}&adults=${store.hotel.numberOfAdults}&checkInDate=${store.dates.checkInDate}${checkOutDate}&roomQuantity=${store.hotel.numberOfRooms}&paymentPolicy=NONE&bestRateOnly=${bestRate}`,
       {
         headers: {
           Authorization: `Bearer ${bearerKey}`,

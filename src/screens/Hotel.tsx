@@ -63,7 +63,7 @@ const Hotel = ({ route, navigation }: Props) => {
     const category = item?.room?.typeEstimated?.category;
     const roomType = category?.replace("_", " ").toLowerCase();
     let type;
-    if (roomType.includes(" ")) {
+    if (roomType?.includes(" ")) {
       const secondWordCapitalIndex = roomType.search(" ") + 1;
       type =
         roomType?.charAt(0).toUpperCase() +
@@ -109,11 +109,11 @@ const Hotel = ({ route, navigation }: Props) => {
             ) : null}
           </View>
           <View style={styles.type}>
-            <Text>{type}</Text>
+            {!category ? null : <Text>{type}</Text>}
           </View>
           <View style={styles.priceBox}>
             <Text style={styles.priceText}>
-              {item.price.total} {item.price.currency} per night
+              {item.price.total} {item.price.currency} total price
             </Text>
             <Text style={styles.priceText}>Press to find out more</Text>
           </View>

@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AMADEUS_HOTEL_LIST_URL } from "@env";
 import * as SecureStore from "expo-secure-store";
 import useGetBearerKey from "./useGetBearerKey";
-import { useMst } from "store";
+import { store, useMst } from "store";
 
 const useGetHotelList = async (
   latitude: number | string,
@@ -11,13 +11,12 @@ const useGetHotelList = async (
 ) => {
   const { fetchBearerKey } = useGetBearerKey();
 
-  const { unit } = useMst();
-
   try {
     const bearerKey = await SecureStore.getItemAsync("Bearer");
 
     const fetchHotelList = await fetch(
-      `${AMADEUS_HOTEL_LIST_URL}/reference-data/locations/hotels/by-geocode?latitude=${latitude}&longitude=${longitude}&radius=${radius}&radiusUnit=${unit.unit}&hotelSource=ALL`,
+      `${AMADEUS_HOTEL_LIST_URL}/reference-data/locations/hotels/by-geocode?latitude=${latitude}&longitude=${longitude}&radius=${radius}&radiusUnit=${store.unit.unit}&hotelSource=ALL`,
+
       {
         headers: {
           Authorization: `Bearer ${bearerKey}`,

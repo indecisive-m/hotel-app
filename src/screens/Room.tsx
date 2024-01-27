@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { StackParamList } from "constants/types";
+import { RoomTax, StackParamList } from "constants/types";
 import { useQuery } from "react-query";
 import useGetRoomDetails from "api/useGetRoomDetails";
 import ImageGallery from "components/ImageGallery";
@@ -16,11 +16,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useMst } from "store";
+import { decorate } from "mobx-state-tree";
 
 type Props = NativeStackScreenProps<StackParamList, "Room">;
 
 const Room = ({ route, navigation }: Props) => {
   const { roomId, bedType } = route.params;
+  const { hotel } = useMst();
 
   const { data, isLoading, status, isSuccess, refetch } = useQuery({
     queryKey: ["room", roomId],
@@ -31,9 +34,10 @@ const Room = ({ route, navigation }: Props) => {
   const totalPrice = data?.data?.price?.total;
   const basePrice = data?.data?.price?.base;
   const roomDescription = data?.data?.description?.text;
-  const roomTax = data?.data?.price?.taxes[0]?.amount;
-  const roomTaxCode = data?.data?.price?.taxes[0]?.code;
-  const guests = data?.data?.guests?.adults;
+  let roomTax;
+  let roomTaxCode;
+  let roomInfo: object[] = [];
+  const guests = hotel.numberOfAdults;
   const currency = data?.data?.price?.currency;
   const checkInDate = new Date(data?.data?.checkInDate);
   const checkOutDate = new Date(data?.data?.checkOutDate);
@@ -52,6 +56,12 @@ const Room = ({ route, navigation }: Props) => {
   }
   if (!data?.data) {
     navigation.navigate("Error");
+  }
+
+  if (data?.data?.price?.taxes) {
+    data?.data?.price.taxes.forEach((tax: RoomTax) => {
+      roomInfo.push({ [tax.code]: tax.amount });
+    });
   }
 
   return (
@@ -90,14 +100,40 @@ const Room = ({ route, navigation }: Props) => {
           </Text>
           <Text style={styles.text}>{roomDescription}</Text>
         </View>
+
         <View style={styles.priceBox}>
           <Text style={styles.title}>Price breakdown:</Text>
           <Text style={styles.text}>
-            {nights} {nights < 1 ? "Nights :" : "Night :"} {basePrice}
+            {nights} Night(s): {basePrice}
           </Text>
-          <Text style={styles.text}>
-            {roomTaxCode}: {roomTax}
-          </Text>
+
+          {roomInfo
+            ? roomInfo.map((item, idx) => {
+                const [key, value] = Object.entries(item)[0];
+
+                const lowerCaseKey = key.replace("_", " ").toLowerCase();
+                let objectKey;
+
+                if (lowerCaseKey.includes(" ")) {
+                  const secondWordCapitalIndex = lowerCaseKey.search(" ") + 1;
+                  objectKey =
+                    lowerCaseKey.charAt(0).toUpperCase() +
+                    lowerCaseKey.slice(1, secondWordCapitalIndex) +
+                    lowerCaseKey.charAt(secondWordCapitalIndex).toUpperCase() +
+                    lowerCaseKey.slice(secondWordCapitalIndex + 1);
+                } else {
+                  objectKey =
+                    lowerCaseKey.charAt(0).toUpperCase() +
+                    lowerCaseKey.slice(1);
+                }
+
+                return (
+                  <Text key={idx}>
+                    {objectKey}: {value}
+                  </Text>
+                );
+              })
+            : null}
           <Text style={styles.text}>Total Price: {totalPrice}</Text>
           <Text style={styles.disclaimerText}>All prices in {currency}</Text>
         </View>

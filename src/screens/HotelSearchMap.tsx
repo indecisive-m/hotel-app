@@ -31,8 +31,8 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const { fetchBearerKey } = useGetBearerKey();
 
   const { hotelList } = route.params;
-  const [latitude, setLatitude] = useState(hotelList[0].geoCode.latitude);
-  const [longitude, setLongitude] = useState(hotelList[0].geoCode.longitude);
+  const [latitude, setLatitude] = useState(hotelList[0]?.geoCode?.latitude);
+  const [longitude, setLongitude] = useState(hotelList[0]?.geoCode?.longitude);
   const [latitudeDelta, setLatitudeDelta] = useState(0.0922);
   const [longitudeDelta, setLongitudeDelta] = useState(0.3);
 
@@ -49,7 +49,6 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const { data, refetch, error, isLoading } = useQuery({
     queryKey: ["hotels", latitude, longitude, 5],
     queryFn: () => useGetHotelList(latitude, longitude, 5),
-    retry: 2,
     onError: (error) => {
       console.log(error + "in query");
     },

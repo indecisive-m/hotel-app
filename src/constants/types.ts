@@ -84,3 +84,10 @@ export type Offers = {
 };
 
 export type OffersList = Offers[];
+
+// Room Tax code / amount
+
+export type RoomTax = {
+  code: string;
+  amount: string;
+};

@@ -23,7 +23,7 @@ const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 1000 * 600 } },
+  defaultOptions: { queries: { staleTime: 1000 * 600, retry: 2 } },
 });
 
 function HomeTabs() {

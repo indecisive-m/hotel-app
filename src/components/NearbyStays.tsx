@@ -124,7 +124,7 @@ const NearbyStays = () => {
           height: 220,
           width: width - 75,
           position: "absolute",
-          objectFit: "contain",
+          objectFit: "cover",
           borderRadius: 15,
         }}
       />
