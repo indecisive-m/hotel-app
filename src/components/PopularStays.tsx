@@ -35,36 +35,42 @@ const PopularStays = () => {
       imageUri: require("../../assets/london.jpg"),
       lat: 51.507218,
       lng: -0.127586,
+      country: "United Kingdom",
     },
     {
       city: "New York",
       imageUri: require("../../assets/newyork.jpg"),
       lat: 40.712775,
       lng: -74.005973,
+      country: "United States of America",
     },
     {
       city: "Oslo",
       imageUri: require("../../assets/oslo.jpg"),
       lat: 59.913869,
       lng: 10.752245,
+      country: "Norway",
     },
     {
       city: "Paris",
       imageUri: require("../../assets/paris.jpg"),
       lat: 48.856614,
       lng: 2.352222,
+      country: "France",
     },
     {
       city: "Rome",
       imageUri: require("../../assets/rome.jpg"),
       lat: 41.902784,
       lng: 12.496366,
+      country: "Italy",
     },
     {
       city: "Sydney",
       imageUri: require("../../assets/sydney.jpg"),
       lat: -33.86882,
       lng: 151.20929,
+      country: "Australia",
     },
   ];
 
@@ -113,7 +119,13 @@ const PopularStays = () => {
                 left: 20,
               }}
             >
-              <Text style={{ color: "white" }}>{item.city.toUpperCase()}</Text>
+              <Text style={{ color: "white", fontSize: 18, marginBottom: 5 }}>
+                {item.city}
+              </Text>
+
+              <Text style={{ color: "white", fontSize: 12 }}>
+                {item.country.toUpperCase()}
+              </Text>
             </View>
           </LinearGradient>
         </View>

@@ -135,7 +135,7 @@ const NearbyStays = () => {
         style={{ height: 220, borderRadius: 15 }}
       >
         <View style={{ position: "absolute", bottom: 20, left: 20 }}>
-          <Text style={{ color: "white" }}>{item.name}</Text>
+          <Text style={{ color: "white", marginBottom: 5 }}>{item.name}</Text>
           <Text style={{ color: "white" }}>{`${
             item.distance.value
           } ${item.distance.unit.toLowerCase()}s away`}</Text>

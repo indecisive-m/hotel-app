@@ -7,11 +7,13 @@ import {
   ListRenderItem,
   Button,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Key, useEffect, useRef, useState } from "react";
 import { StackParamList, Hotel, Offers } from "constants/types";
 import useGetHotelList from "api/useGetHotelList";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 import { QueryClient, useQuery, useQueryClient } from "react-query";
 
@@ -27,7 +29,8 @@ import useGetBearerKey from "api/useGetBearerKey";
 type Props = NativeStackScreenProps<StackParamList, "HotelSearchMap">;
 
 const HotelSearchMap = ({ navigation, route }: Props) => {
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
+  const headerHeight = useHeaderHeight();
   const { fetchBearerKey } = useGetBearerKey();
 
   const { hotelList } = route.params;
@@ -35,6 +38,8 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const [longitude, setLongitude] = useState(hotelList[0]?.geoCode?.longitude);
   const [latitudeDelta, setLatitudeDelta] = useState(0.0922);
   const [longitudeDelta, setLongitudeDelta] = useState(0.3);
+
+  const [showMap, setShowMap] = useState(true);
 
   const [region, setRegion] = useState({
     latitude: 30.643868905461858,
@@ -85,6 +90,34 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
     refetch();
   }
 
+  const ContentViewSelector = () => {
+    return (
+      <View style={styles.selectorContainer}>
+        <Pressable
+          onPress={() => setShowMap(true)}
+          style={[
+            styles.selector,
+            showMap
+              ? { backgroundColor: "orange" }
+              : { backgroundColor: "#e3e3e3" },
+          ]}
+        >
+          <Text>Map View</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => setShowMap(false)}
+          style={[
+            styles.selector,
+            !showMap
+              ? { backgroundColor: "orange" }
+              : { backgroundColor: "white" },
+          ]}
+        >
+          <Text>List View</Text>
+        </Pressable>
+      </View>
+    );
+  };
   const renderedItem: ListRenderItem<Hotel> = ({ item, index }) => (
     <View
       style={{
@@ -111,41 +144,51 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
 
   return (
     <View>
-      <Animated
-        provider={PROVIDER_GOOGLE}
-        ref={mapViewRef}
-        camera={{
-          center: { latitude: region.latitude, longitude: region.longitude },
-          zoom: 1,
-          heading: 0,
-          pitch: 0,
-        }}
-        showsBuildings={true}
-        style={{ height: width, width: width }}
-      >
-        {data?.data?.map((hotel: Hotel, index: number) => {
-          return (
-            <Marker
-              key={index}
-              title={hotel.name}
-              coordinate={{
-                latitude: +hotel.geoCode.latitude,
-                longitude: +hotel.geoCode.longitude,
-              }}
-              onCalloutPress={() =>
-                navigation.navigate("Hotel", { hotelId: hotel.hotelId })
-              }
-            />
-          );
-        })}
-      </Animated>
-      <View>
-        <FlatList
-          data={data?.data}
-          renderItem={renderedItem}
-          contentContainerStyle={styles.list}
-        />
-      </View>
+      {showMap ? (
+        <>
+          <Animated
+            provider={PROVIDER_GOOGLE}
+            ref={mapViewRef}
+            initialRegion={region}
+            camera={{
+              center: {
+                latitude: region.latitude,
+                longitude: region.longitude,
+              },
+              zoom: 1,
+              heading: 0,
+              pitch: 0,
+            }}
+            showsBuildings={true}
+            style={{ height: height - headerHeight + 30, width }}
+          >
+            {data?.data?.map((hotel: Hotel, index: number) => {
+              return (
+                <Marker
+                  key={index}
+                  title={hotel.name}
+                  coordinate={{
+                    latitude: +hotel.geoCode.latitude,
+                    longitude: +hotel.geoCode.longitude,
+                  }}
+                  onCalloutPress={() =>
+                    navigation.navigate("Hotel", { hotelId: hotel.hotelId })
+                  }
+                />
+              );
+            })}
+          </Animated>
+        </>
+      ) : (
+        <View>
+          <FlatList
+            data={data?.data}
+            renderItem={renderedItem}
+            contentContainerStyle={styles.list}
+          />
+        </View>
+      )}
+      <ContentViewSelector />
     </View>
   );
 };
@@ -153,6 +196,17 @@ export default HotelSearchMap;
 
 const styles = StyleSheet.create({
   list: {
+    padding: 10,
+  },
+  selectorContainer: {
+    padding: 20,
+    flexDirection: "row",
+    position: "absolute",
+    bottom: 20,
+  },
+  selector: {
+    borderWidth: 1,
+    borderColor: "black",
     padding: 10,
   },
 });

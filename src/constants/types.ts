@@ -97,4 +97,5 @@ export type PopularStay = {
   imageUri: string;
   lng: number;
   lat: number;
+  country: string;
 };
