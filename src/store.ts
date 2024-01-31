@@ -5,12 +5,14 @@ import { createContext, useContext } from "react";
 import { CalendarUtils } from "react-native-calendars";
 import { DatesModel } from "models/DatesModel";
 import { FilterModel } from "models/FilterModel";
+import { SearchDestinationModel } from "models/SearchDestinationModel";
 
 const RootStore = types.model({
   dates: DatesModel,
   unit: UnitModel,
   hotel: HotelModel,
   filters: FilterModel,
+  searchDestination: SearchDestinationModel,
 });
 
 export const store = RootStore.create({
@@ -25,6 +27,7 @@ export const store = RootStore.create({
     numberOfAdults: 1,
   },
   filters: {},
+  searchDestination: {},
 });
 
 export type RootInstance = Instance<typeof RootStore>;

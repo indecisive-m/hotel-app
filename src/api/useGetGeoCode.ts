@@ -1,8 +1,9 @@
 import { GOOGLE_API } from "@env";
 import useGetHotelList from "./useGetHotelList";
 import { HotelList } from "constants/types";
+import { store } from "store";
 
-const useGetGeoCode = async (location: string) => {
+const useGetGeoCode = async (location: string | undefined) => {
   try {
     console.log(location + " in geoCode");
     const fetchGeoCode = await fetch(
@@ -15,6 +16,10 @@ const useGetGeoCode = async (location: string) => {
     const hotelList = await useGetHotelList(lat, lng, 2);
 
     const data = await hotelList?.data;
+
+    store.searchDestination.setSearchDestination(
+      results.results[0].address_components[0].long_name
+    );
 
     return { data };
   } catch (error) {

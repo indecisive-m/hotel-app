@@ -23,12 +23,13 @@ const SearchForm = observer(() => {
   const navigation = useNavigation<SearchFormNavigationProp>();
   const isFocused = useIsFocused();
 
-  const [inputText, setInputText] = useState<string>("");
+  const [inputText, setInputText] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
-  const { hotel, dates } = useMst();
+  const { hotel, dates, searchDestination } = useMst();
 
   useEffect(() => {
     setLoading(false);
+    setInputText(searchDestination.searchDestination);
   }, [isFocused]);
 
   const geoCode = useQuery({
@@ -70,6 +71,12 @@ const SearchForm = observer(() => {
         style={styles.input}
         keyboardType="number-pad"
         onChangeText={(text) => hotel.setNumberOfAdults(Number(text))}
+      />
+      <TextInput
+        placeholder="How many Rooms "
+        style={styles.input}
+        keyboardType="number-pad"
+        onChangeText={(text) => hotel.setNumberOfRooms(Number(text))}
       />
       <Pressable style={styles.button} onPress={() => handleGeoCode()}>
         {loading ? (

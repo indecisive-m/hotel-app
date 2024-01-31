@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Key, useEffect, useRef, useState } from "react";
-import { StackParamList, Hotel, Offers } from "constants/types";
+import { StackParamList, Hotel, Offers, HotelList } from "constants/types";
 import useGetHotelList from "api/useGetHotelList";
 import { useHeaderHeight } from "@react-navigation/elements";
 
@@ -25,6 +25,11 @@ import MapView, {
   Animated,
 } from "react-native-maps";
 import useGetBearerKey from "api/useGetBearerKey";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScreenStack } from "react-native-screens";
+import { observer } from "mobx-react-lite";
+import ContentViewSelector from "components/ContentViewSelector";
+import SearchDetails from "components/SearchDetails";
 
 type Props = NativeStackScreenProps<StackParamList, "HotelSearchMap">;
 
@@ -34,8 +39,12 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const { fetchBearerKey } = useGetBearerKey();
 
   const { hotelList } = route.params;
-  const [latitude, setLatitude] = useState(hotelList[0]?.geoCode?.latitude);
-  const [longitude, setLongitude] = useState(hotelList[0]?.geoCode?.longitude);
+  const [latitude, setLatitude] = useState<HotelList>(
+    hotelList[0]?.geoCode?.latitude
+  );
+  const [longitude, setLongitude] = useState<HotelList>(
+    hotelList[0]?.geoCode?.longitude
+  );
   const [latitudeDelta, setLatitudeDelta] = useState(0.0922);
   const [longitudeDelta, setLongitudeDelta] = useState(0.3);
 
@@ -90,34 +99,6 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
     refetch();
   }
 
-  const ContentViewSelector = () => {
-    return (
-      <View style={styles.selectorContainer}>
-        <Pressable
-          onPress={() => setShowMap(true)}
-          style={[
-            styles.selector,
-            showMap
-              ? { backgroundColor: "orange" }
-              : { backgroundColor: "#e3e3e3" },
-          ]}
-        >
-          <Text>Map View</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => setShowMap(false)}
-          style={[
-            styles.selector,
-            !showMap
-              ? { backgroundColor: "orange" }
-              : { backgroundColor: "white" },
-          ]}
-        >
-          <Text>List View</Text>
-        </Pressable>
-      </View>
-    );
-  };
   const renderedItem: ListRenderItem<Hotel> = ({ item, index }) => (
     <View
       style={{
@@ -143,7 +124,8 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   );
 
   return (
-    <View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <SearchDetails />
       {showMap ? (
         <>
           <Animated
@@ -160,7 +142,7 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
               pitch: 0,
             }}
             showsBuildings={true}
-            style={{ height: height - headerHeight + 30, width }}
+            style={{ flex: 1 }}
           >
             {data?.data?.map((hotel: Hotel, index: number) => {
               return (
@@ -188,25 +170,15 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
           />
         </View>
       )}
-      <ContentViewSelector />
-    </View>
+      <ContentViewSelector showMap={showMap} setShowMap={setShowMap} />
+    </SafeAreaView>
   );
 };
+
 export default HotelSearchMap;
 
 const styles = StyleSheet.create({
   list: {
-    padding: 10,
-  },
-  selectorContainer: {
-    padding: 20,
-    flexDirection: "row",
-    position: "absolute",
-    bottom: 20,
-  },
-  selector: {
-    borderWidth: 1,
-    borderColor: "black",
     padding: 10,
   },
 });

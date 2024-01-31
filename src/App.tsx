@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Text } from "react-native";
+import { Text, StyleSheet } from "react-native";
 
 import Settings from "./screens/Settings";
 import Explore from "./screens/Explore";
@@ -18,6 +18,7 @@ import Room from "screens/Room";
 import Error from "screens/Error";
 import Toast from "react-native-toast-message";
 import { Provider, store } from "store";
+import { BlurView } from "expo-blur";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -86,7 +87,14 @@ export default function App() {
               component={Room}
               options={{ title: "Room Details" }}
             />
-            <Stack.Screen name="HotelSearchMap" component={HotelSearchMap} />
+            <Stack.Screen
+              name="HotelSearchMap"
+              component={HotelSearchMap}
+              options={{
+                headerShown: false,
+              }}
+            />
+
             <Stack.Screen
               name="Error"
               component={Error}
