@@ -8,14 +8,13 @@ import {
   Image,
   useWindowDimensions,
   Pressable,
+  ImageSourcePropType,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { PopularStay, StackParamList } from "constants/types";
-import { Feather } from "@expo/vector-icons";
 import { useQuery } from "react-query";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import useGetGeoCode from "api/useGetGeoCode";
 import { useState } from "react";
 import useGetHotelList from "api/useGetHotelList";
 
@@ -97,7 +96,7 @@ const PopularStays = () => {
           }}
         >
           <Image
-            source={item.imageUri}
+            source={item.imageUri as ImageSourcePropType}
             style={{
               height: 220,
               width: width - 75,

@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Button,
   FlatList,
   ListRenderItem,
   Pressable,
@@ -20,6 +21,7 @@ import ImageGallery from "components/ImageGallery";
 import { Ionicons } from "@expo/vector-icons";
 
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useGetHotelInfo } from "api/useGetHotelInfo";
 
 type Props = NativeStackScreenProps<StackParamList, "Hotel">;
 
@@ -32,7 +34,12 @@ const Hotel = ({ route, navigation }: Props) => {
     queryKey: ["hotel", hotelId],
     queryFn: () => useGetHotelDetails(hotelId, false),
   });
+
   const roomSize = /\d\d[s][q][m]/gim;
+
+  console.log(data?.hotel.name);
+
+  const hotelInfo = useGetHotelInfo(data?.hotel.name);
 
   const handleRoomSearch = (id: string, bedType: string) => {
     navigation.navigate("Room", { roomId: id, bedType: bedType });
@@ -57,7 +64,13 @@ const Hotel = ({ route, navigation }: Props) => {
   }
 
   const renderedItem: ListRenderItem<Offers> = ({ item }) => {
-    const bedLowerCase = item?.room?.typeEstimated?.bedType?.toLowerCase();
+    let bedLowerCase;
+    if (item.room.typeEstimated.bedType === undefined) {
+      bedLowerCase = "single";
+    } else {
+      bedLowerCase = item?.room?.typeEstimated?.bedType?.toLowerCase();
+    }
+
     const bed = bedLowerCase?.charAt(0).toUpperCase() + bedLowerCase?.slice(1);
 
     const category = item?.room?.typeEstimated?.category;
@@ -125,12 +138,12 @@ const Hotel = ({ route, navigation }: Props) => {
   return (
     <>
       <ImageGallery />
-
       <FlatList
         data={data?.data}
         renderItem={renderedItem}
         style={{ flex: 1 }}
       />
+      <Text>{hotelInfo.data}</Text>
     </>
   );
 };

@@ -8,9 +8,11 @@ import {
   Button,
   ActivityIndicator,
   Pressable,
+  Image,
+  Dimensions,
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Key, useEffect, useRef, useState } from "react";
+import { Key, useEffect, useMemo, useRef, useState } from "react";
 import { StackParamList, Hotel, Offers, HotelList } from "constants/types";
 import useGetHotelList from "api/useGetHotelList";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -26,10 +28,9 @@ import MapView, {
 } from "react-native-maps";
 import useGetBearerKey from "api/useGetBearerKey";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScreenStack } from "react-native-screens";
-import { observer } from "mobx-react-lite";
 import ContentViewSelector from "components/ContentViewSelector";
 import SearchDetails from "components/SearchDetails";
+import PlaceHolderImage from "components/PlaceHolderImage";
 
 type Props = NativeStackScreenProps<StackParamList, "HotelSearchMap">;
 
@@ -38,15 +39,15 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const headerHeight = useHeaderHeight();
   const { fetchBearerKey } = useGetBearerKey();
 
+  const ASPECT_RATIO = width / height;
+
   const { hotelList } = route.params;
-  const [latitude, setLatitude] = useState<HotelList>(
-    hotelList[0]?.geoCode?.latitude
-  );
-  const [longitude, setLongitude] = useState<HotelList>(
-    hotelList[0]?.geoCode?.longitude
-  );
+  const [latitude, setLatitude] = useState(hotelList[0]?.geoCode?.latitude);
+  const [longitude, setLongitude] = useState(hotelList[0]?.geoCode?.longitude);
   const [latitudeDelta, setLatitudeDelta] = useState(0.0922);
-  const [longitudeDelta, setLongitudeDelta] = useState(0.3);
+  const [longitudeDelta, setLongitudeDelta] = useState(
+    latitudeDelta * ASPECT_RATIO
+  );
 
   const [showMap, setShowMap] = useState(true);
 
@@ -74,7 +75,7 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
         latitude: +data?.data[0]?.geoCode.latitude,
         longitude: +data?.data[0]?.geoCode.longitude,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.3,
+        longitudeDelta: latitudeDelta * ASPECT_RATIO,
       });
 
       mapViewRef.current?.animateCamera(
@@ -99,29 +100,52 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
     refetch();
   }
 
-  const renderedItem: ListRenderItem<Hotel> = ({ item, index }) => (
-    <View
-      style={{
-        borderWidth: 1,
-        borderColor: "red",
-        padding: 10,
-        backgroundColor: "#ededed",
-        marginBottom: 10,
-        height: 175,
-      }}
-    >
-      <Text>{item.name}</Text>
-      <Text>{item.hotelId}</Text>
-      <Text>{item.geoCode.longitude}</Text>
-      <Text>{item.geoCode.latitude}</Text>
-      <Text>{item.distance.value}</Text>
-      <Text>{index}</Text>
-      <Button
-        title="More info"
-        onPress={() => navigation.navigate("Hotel", { hotelId: item.hotelId })}
-      />
-    </View>
-  );
+  const renderedItem: ListRenderItem<Hotel> = ({ item, index }) => {
+    return (
+      <View
+        style={{
+          borderRadius: 15,
+          padding: 10,
+          backgroundColor: "#e9d5b1",
+          width: width / 2 - 15,
+          height: 300,
+          position: "relative",
+          justifyContent: "flex-end",
+        }}
+      >
+        <View style={{ position: "absolute", top: 0, left: 0 }}>
+          <PlaceHolderImage
+            height={width / 2 - 15}
+            width={width / 2 - 15}
+            randomImageNumber={Math.floor(Math.random() * 4)}
+          />
+        </View>
+        <View
+          style={{
+            backgroundColor: "#e9d5b1",
+            position: "absolute",
+            top: width / 2 - 15,
+            left: 0,
+            right: 0,
+            padding: 10,
+          }}
+        >
+          <Text numberOfLines={2}>{item.name}</Text>
+          <Text>
+            {item.distance.value} {item.distance.unit.toLocaleLowerCase()}s away
+          </Text>
+        </View>
+        <Pressable
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate("Hotel", { hotelId: item.hotelId })
+          }
+        >
+          <Text style={styles.buttonText}>More Information</Text>
+        </Pressable>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -131,7 +155,6 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
           <Animated
             provider={PROVIDER_GOOGLE}
             ref={mapViewRef}
-            initialRegion={region}
             camera={{
               center: {
                 latitude: region.latitude,
@@ -165,8 +188,11 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
         <View>
           <FlatList
             data={data?.data}
+            keyExtractor={(item) => item.hotelId}
             renderItem={renderedItem}
             contentContainerStyle={styles.list}
+            numColumns={2}
+            columnWrapperStyle={{ gap: 10 }}
           />
         </View>
       )}
@@ -180,5 +206,20 @@ export default HotelSearchMap;
 const styles = StyleSheet.create({
   list: {
     padding: 10,
+    gap: 10,
+  },
+  button: {
+    padding: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    borderRadius: 15,
+    backgroundColor: "orange",
+  },
+
+  buttonText: {
+    alignSelf: "center",
+    fontSize: 14,
+    fontWeight: "500",
   },
 });

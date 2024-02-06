@@ -17,7 +17,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useMst } from "store";
-import { decorate } from "mobx-state-tree";
+import useGetHotelInfo from "api/useGetHotelInfo";
 
 type Props = NativeStackScreenProps<StackParamList, "Room">;
 
@@ -106,6 +106,7 @@ const Room = ({ route, navigation }: Props) => {
           <Text style={styles.text}>
             {nights} Night(s): {basePrice}
           </Text>
+          <Text style={styles.text}>Rooms: {hotel.numberOfRooms}</Text>
 
           {roomInfo
             ? roomInfo.map((item, idx) => {
@@ -144,7 +145,7 @@ const Room = ({ route, navigation }: Props) => {
           style={styles.button}
         >
           <Pressable>
-            <Text style={styles.buttonText}>Reserve this room</Text>
+            <Text style={styles.buttonText}>Reserve</Text>
           </Pressable>
         </LinearGradient>
       </View>
