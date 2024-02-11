@@ -15,13 +15,12 @@ import { StackParamList, OffersList, Offers } from "../constants/types";
 import { QueryClient, useQuery, useQueryClient } from "react-query";
 import useGetHotelDetails from "api/useGetHotelDetails";
 
-import { LinearGradient } from "expo-linear-gradient";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import ImageGallery from "components/ImageGallery";
 import { Ionicons } from "@expo/vector-icons";
 
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useGetHotelInfo } from "api/useGetHotelInfo";
+import useGetHotelInfo from "api/useGetHotelInfo";
 
 type Props = NativeStackScreenProps<StackParamList, "Hotel">;
 
@@ -35,11 +34,15 @@ const Hotel = ({ route, navigation }: Props) => {
     queryFn: () => useGetHotelDetails(hotelId, false),
   });
 
+  const hotelName = data?.hotel?.name;
+
+  const hotelInfo = useQuery({
+    queryKey: ["hotelInfo", hotelName],
+    queryFn: () => useGetHotelInfo(),
+    enabled: !!hotelName,
+  });
+
   const roomSize = /\d\d[s][q][m]/gim;
-
-  console.log(data?.hotel.name);
-
-  const hotelInfo = useGetHotelInfo(data?.hotel.name);
 
   const handleRoomSearch = (id: string, bedType: string) => {
     navigation.navigate("Room", { roomId: id, bedType: bedType });
@@ -117,7 +120,9 @@ const Hotel = ({ route, navigation }: Props) => {
                   size={18}
                   color="black"
                 />
-                <Text>{item?.room?.description?.text?.match(roomSize)[0]}</Text>
+                <Text>
+                  {item?.room?.description?.text?.match(roomSize)?.[0]}
+                </Text>
               </View>
             ) : null}
           </View>
@@ -138,12 +143,12 @@ const Hotel = ({ route, navigation }: Props) => {
   return (
     <>
       <ImageGallery />
+
       <FlatList
         data={data?.data}
         renderItem={renderedItem}
         style={{ flex: 1 }}
       />
-      <Text>{hotelInfo.data}</Text>
     </>
   );
 };

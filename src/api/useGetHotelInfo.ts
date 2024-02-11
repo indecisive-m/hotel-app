@@ -4,37 +4,72 @@ import useGetBearerKey from "./useGetBearerKey";
 import { store, useMst } from "store";
 import { useQuery } from "react-query";
 
-const fetchInfo = async (hotel: string) => {
+const useGetHotelInfo = async () => {
   try {
+    const hotelName = store.hotel.hotelName;
+
     const bearerKey = await SecureStore.getItemAsync("Bearer");
 
+    const hotelInfo = new URLSearchParams({
+      textQuery: "London Harriott",
+    });
+
+    const body = { textQuery: hotelName };
+
+    const encodedForm: {
+      key: string;
+      value: string;
+    }[] = [];
+
+    Object.entries(body).forEach(([key, value]) => {
+      const encodedKey: string = encodeURIComponent(key);
+      const encodedValue: string = encodeURIComponent(value);
+      encodedForm.push(`${encodedKey}=${encodedValue}`);
+    });
+
+    const bodyForm = encodedForm.join("&");
+
+    console.log(bodyForm);
+
     const fetchHotelInfo = await fetch(
-      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json
-  ?fields=formatted_address%2Cname%2photos%2vicinity
-  &input=${hotel}
-  &inputtype=textquery
-  &key=${GOOGLE_API}`
+      "https://places.googleapis.com/v1/places:searchText",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Goog-Api-Key": `${GOOGLE_API}`,
+          "X-Goog-FieldMask":
+            "places.accessibilityOptions,places.formattedAddress,places.photos,places.types",
+        },
+        body: bodyForm,
+      }
     );
-
-    console.log(hotel);
+    console.log(store.hotel.hotelName);
     const statusCode = fetchHotelInfo.status;
-
-    if (statusCode === 401 || statusCode === 400) {
-      throw new Error(`${statusCode}`);
-    }
-
     const data = await fetchHotelInfo.json();
+    console.log(data.status);
 
     console.log(data);
+    if (statusCode === 401 || statusCode === 400) {
+      throw new Error(`${statusCode}` + "hello");
+    }
+
+    console.log(data.places[0].accessibilityOptions);
+    console.log(data.places[0].formattedAddress);
+    console.log(data.places[0].photos);
+    console.log(data.places[0].types);
+
     return { data };
   } catch (error) {
     console.log("error in catch hotel info");
   }
 };
 
-export const useGetHotelInfo = (hotel: string) => {
-  return useQuery({
-    queryKey: ["HotelInfo", hotel],
-    queryFn: () => fetchInfo(hotel),
-  });
-};
+export default useGetHotelInfo;
+
+// export const useGetHotelInfo = () => {
+//   return useQuery({
+//     queryKey: ["HotelInfo"],
+//     queryFn: () => fetchInfo(),
+//   });
+// };

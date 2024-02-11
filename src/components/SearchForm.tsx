@@ -14,6 +14,7 @@ import { StackParamList } from "constants/types";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react-lite";
 import { store, useMst } from "store";
+import { text } from "@fortawesome/fontawesome-svg-core";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 type SearchFormNavigationProp = Props["navigation"];
@@ -42,6 +43,11 @@ const SearchForm = observer(() => {
     navigation.navigate("CalendarModal");
   };
 
+  const handleInputText = (text: string) => {
+    setInputText(text);
+    searchDestination.setSearchDestination(text);
+  };
+
   const handleGeoCode = () => {
     setLoading(true);
     const hotelList = new Promise((resolve) => resolve(geoCode.refetch()));
@@ -59,25 +65,27 @@ const SearchForm = observer(() => {
         placeholder="Where are you going?"
         style={styles.input}
         value={inputText}
-        onChangeText={(text) => setInputText(text)}
+        onChangeText={(text) => handleInputText(text)}
       />
       <Pressable style={styles.input} onPress={showModal}>
         <Text>
           {dates.checkInDate} - {dates.checkOutDate}
         </Text>
       </Pressable>
-      <TextInput
-        placeholder="How many adults"
-        style={styles.input}
-        keyboardType="number-pad"
-        onChangeText={(text) => hotel.setNumberOfAdults(Number(text))}
-      />
-      <TextInput
-        placeholder="How many Rooms "
-        style={styles.input}
-        keyboardType="number-pad"
-        onChangeText={(text) => hotel.setNumberOfRooms(Number(text))}
-      />
+      <View style={styles.rowInput}>
+        <TextInput
+          placeholder="How many adults"
+          style={styles.inputSplit}
+          keyboardType="number-pad"
+          onChangeText={(text) => hotel.setNumberOfAdults(Number(text))}
+        />
+        <TextInput
+          placeholder="How many Rooms "
+          style={styles.inputSplit}
+          keyboardType="number-pad"
+          onChangeText={(text) => hotel.setNumberOfRooms(Number(text))}
+        />
+      </View>
       <Pressable style={styles.button} onPress={() => handleGeoCode()}>
         {loading ? (
           <ActivityIndicator />
@@ -100,7 +108,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 50,
-    backgroundColor: "orange",
+    backgroundColor: "red",
     padding: 12,
     justifyContent: "center",
     width: "100%",
@@ -109,5 +117,15 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 22,
     fontWeight: "500",
+  },
+  rowInput: {
+    flexDirection: "row",
+  },
+  inputSplit: {
+    width: "50%",
+    borderWidth: 1,
+    borderRadius: 15,
+    padding: 10,
+    marginBottom: 20,
   },
 });

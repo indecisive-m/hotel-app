@@ -26,6 +26,7 @@ const useGetHotelDetails = async (hotelId: String, bestRate: boolean) => {
 
     const data = results?.data[0]?.offers;
     const hotel = results?.data[0]?.hotel;
+    store.hotel.setHotelName(hotel?.name);
 
     return { data, hotel };
   } catch (error) {

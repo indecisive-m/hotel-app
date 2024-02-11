@@ -6,8 +6,6 @@ const PlaceHolderImage = (props: {
   width: number;
   randomImageNumber: number;
 }) => {
-  //   const randomImageNumber = Math.floor(Math.random() * 4);
-
   const imageArray = [
     require("../../assets/hotel_1.jpg"),
     require("../../assets/hotel_2.jpg"),

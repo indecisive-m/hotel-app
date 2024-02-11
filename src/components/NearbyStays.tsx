@@ -14,7 +14,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { GeoCode, Hotel } from "constants/types";
 import useGetHotelList from "api/useGetHotelList";
 import { QueryClient, useQueries, useQuery, useQueryClient } from "react-query";
-import useGetHotelDetails from "api/useGetHotelDetails";
 import { Entypo } from "@expo/vector-icons";
 
 const NearbyStays = () => {
