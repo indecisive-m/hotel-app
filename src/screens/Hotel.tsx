@@ -7,12 +7,13 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  Image,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, OffersList, Offers } from "../constants/types";
-import { QueryClient, useQuery, useQueryClient } from "react-query";
+import { QueryClient, useQueries, useQuery, useQueryClient } from "react-query";
 import useGetHotelDetails from "api/useGetHotelDetails";
 
 import { SimpleLineIcons } from "@expo/vector-icons";
@@ -21,6 +22,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import useGetHotelInfo from "api/useGetHotelInfo";
+import useGetHotelPhotos from "api/useGetHotelPhotos";
 
 type Props = NativeStackScreenProps<StackParamList, "Hotel">;
 
@@ -41,6 +43,35 @@ const Hotel = ({ route, navigation }: Props) => {
     queryFn: () => useGetHotelInfo(),
     enabled: !!hotelName,
   });
+
+  const places = hotelInfo.data?.data?.places[0];
+
+  // const hotelPhotos = useQuery({
+  //   queryKey: ["hotelPhotos", places],
+  //   queryFn: () => useGetHotelPhotos(places.photos[0].name),
+  //   enabled: !!places,
+  // });
+
+  const hotelPhotos = useQueries({
+    queries: places?.photos?.map((photo) => {
+      return {
+        queryKey: ["hotelPhotos", photo.name],
+        queryFn: () => useGetHotelPhotos(photo.name),
+        enabled: !!places,
+      };
+    }),
+  });
+  //   places?.photos?.map((photo) => {
+  //     return {
+  //       queryKey: ["hotelPhotos", photo.name],
+  //       queryFn: () => useGetHotelPhotos(photo.name),
+  //       enabled: !!places,
+  //     };
+  //   })
+  // );
+
+  console.log(hotelPhotos[0].data.data.name);
+  console.log(hotelPhotos[1].data.data.name);
 
   const roomSize = /\d\d[s][q][m]/gim;
 
@@ -143,12 +174,34 @@ const Hotel = ({ route, navigation }: Props) => {
   return (
     <>
       <ImageGallery />
+      <ScrollView>
+        <Text>{places?.formattedAddress}</Text>
+        <Text>{places?.rating}</Text>
+        <Text>{places?.userRatingCount}</Text>
+        <Text>{places?.allowsDogs ? "Pets Allowed" : "No Pets"}</Text>
+        <Text>{places?.editorialSummary.text}</Text>
+        <Text>{places?.internationalPhoneNumber}</Text>
+        <Text>
+          {places?.accessibilityOptions.wheelchairAccessibleEntrance
+            ? "Wheelchair accessible"
+            : null}
+        </Text>
+        <Text>
+          {places?.accessibilityOptions.wheelchairAccessibleParking
+            ? "Disabled Parking"
+            : null}
+        </Text>
+        <Image
+          source={{ uri: hotelPhotos?.data?.data?.photoUri }}
+          style={{ height: 400, width: 400 }}
+        />
 
-      <FlatList
-        data={data?.data}
-        renderItem={renderedItem}
-        style={{ flex: 1 }}
-      />
+        <FlatList
+          data={data?.data}
+          renderItem={renderedItem}
+          style={{ flex: 1 }}
+        />
+      </ScrollView>
     </>
   );
 };

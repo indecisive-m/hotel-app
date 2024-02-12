@@ -1,18 +1,12 @@
-import { AMADEUS_HOTEL_LIST_URL, GOOGLE_API } from "@env";
+import { GOOGLE_API } from "@env";
 import * as SecureStore from "expo-secure-store";
-import useGetBearerKey from "./useGetBearerKey";
 import { store, useMst } from "store";
-import { useQuery } from "react-query";
 
 const useGetHotelInfo = async () => {
   try {
     const hotelName = store.hotel.hotelName;
 
     const bearerKey = await SecureStore.getItemAsync("Bearer");
-
-    const hotelInfo = new URLSearchParams({
-      textQuery: "London Harriott",
-    });
 
     const body = { textQuery: hotelName };
 
@@ -39,7 +33,7 @@ const useGetHotelInfo = async () => {
           "Content-Type": "application/x-www-form-urlencoded",
           "X-Goog-Api-Key": `${GOOGLE_API}`,
           "X-Goog-FieldMask":
-            "places.accessibilityOptions,places.formattedAddress,places.photos,places.types",
+            "places.accessibilityOptions,places.formattedAddress,places.photos,places.allowsDogs,places.rating,places.userRatingCount,places.internationalPhoneNumber,places.editorialSummary",
         },
         body: bodyForm,
       }
@@ -54,10 +48,14 @@ const useGetHotelInfo = async () => {
       throw new Error(`${statusCode}` + "hello");
     }
 
-    console.log(data.places[0].accessibilityOptions);
-    console.log(data.places[0].formattedAddress);
-    console.log(data.places[0].photos);
-    console.log(data.places[0].types);
+    // console.log(data.places[0].accessibilityOptions);
+    // console.log(data.places[0].formattedAddress);
+    // console.log(data.places[0].photos);
+    // console.log(data.places[0].allowsDogs);
+    // console.log(data.places[0].rating);
+    // console.log(data.places[0].userRatingCount);
+    // console.log(data.places[0].internationPhoneNumber);
+    // console.log(data.places[0].editorialSummary);
 
     return { data };
   } catch (error) {
@@ -66,10 +64,3 @@ const useGetHotelInfo = async () => {
 };
 
 export default useGetHotelInfo;
-
-// export const useGetHotelInfo = () => {
-//   return useQuery({
-//     queryKey: ["HotelInfo"],
-//     queryFn: () => fetchInfo(),
-//   });
-// };
