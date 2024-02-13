@@ -46,32 +46,21 @@ const Hotel = ({ route, navigation }: Props) => {
 
   const places = hotelInfo.data?.data?.places[0];
 
-  // const hotelPhotos = useQuery({
-  //   queryKey: ["hotelPhotos", places],
-  //   queryFn: () => useGetHotelPhotos(places.photos[0].name),
-  //   enabled: !!places,
-  // });
+  const photos = hotelInfo.data?.photoUris;
 
-  const hotelPhotos = useQueries({
-    queries: places?.photos?.map((photo) => {
-      return {
-        queryKey: ["hotelPhotos", photo.name],
-        queryFn: () => useGetHotelPhotos(photo.name),
-        enabled: !!places,
-      };
-    }),
-  });
-  //   places?.photos?.map((photo) => {
-  //     return {
-  //       queryKey: ["hotelPhotos", photo.name],
-  //       queryFn: () => useGetHotelPhotos(photo.name),
-  //       enabled: !!places,
-  //     };
-  //   })
-  // );
+  let renderedPhotos;
 
-  console.log(hotelPhotos[0].data.data.name);
-  console.log(hotelPhotos[1].data.data.name);
+  if (hotelInfo) {
+    renderedPhotos = photos?.map((photo) => {
+      return (
+        <Image
+          source={{ uri: photo }}
+          key={photo}
+          style={{ height: 200, width: 200 }}
+        />
+      );
+    });
+  }
 
   const roomSize = /\d\d[s][q][m]/gim;
 
@@ -191,11 +180,7 @@ const Hotel = ({ route, navigation }: Props) => {
             ? "Disabled Parking"
             : null}
         </Text>
-        <Image
-          source={{ uri: hotelPhotos?.data?.data?.photoUri }}
-          style={{ height: 400, width: 400 }}
-        />
-
+        {renderedPhotos}
         <FlatList
           data={data?.data}
           renderItem={renderedItem}

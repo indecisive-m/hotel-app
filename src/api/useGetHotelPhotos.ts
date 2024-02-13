@@ -9,8 +9,6 @@ const useGetHotelPhotos = async (photoName: string) => {
 
   const data = await fetchPhotos.json();
 
-  //   console.log(data);
-
   return { data };
 };
 
