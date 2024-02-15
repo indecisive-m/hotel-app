@@ -18,13 +18,12 @@ import Room from "screens/Room";
 import Error from "screens/Error";
 import Toast from "react-native-toast-message";
 import { Provider, store } from "store";
-import { BlurView } from "expo-blur";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 1000 * 600, retry: 2 } },
+  defaultOptions: { queries: { staleTime: 1800 * 1000, retry: 2 } },
 });
 
 function HomeTabs() {

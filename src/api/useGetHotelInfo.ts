@@ -5,16 +5,13 @@ import useGetHotelPhotos from "./useGetHotelPhotos";
 
 const useGetHotelInfo = async () => {
   try {
-    const hotelName = store.hotel.hotelName;
+    const hotelName = store.hotel.hotelName!;
 
     const bearerKey = await SecureStore.getItemAsync("Bearer");
 
     const body = { textQuery: hotelName };
 
-    const encodedForm: {
-      key: string;
-      value: string;
-    }[] = [];
+    const encodedForm: {}[] = [];
 
     Object.entries(body).forEach(([key, value]) => {
       const encodedKey: string = encodeURIComponent(key);
@@ -32,7 +29,7 @@ const useGetHotelInfo = async () => {
           "Content-Type": "application/x-www-form-urlencoded",
           "X-Goog-Api-Key": `${GOOGLE_API}`,
           "X-Goog-FieldMask":
-            "places.accessibilityOptions,places.formattedAddress,places.photos,places.allowsDogs,places.rating,places.userRatingCount,places.internationalPhoneNumber,places.editorialSummary",
+            "places.accessibilityOptions,places.formattedAddress,places.photos,places.allowsDogs,places.rating,places.userRatingCount,places.internationalPhoneNumber,places.editorialSummary,places.reviews",
         },
         body: bodyForm,
       }

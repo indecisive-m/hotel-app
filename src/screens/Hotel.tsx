@@ -9,6 +9,9 @@ import {
   Text,
   Image,
   View,
+  ImageSourcePropType,
+  ImageURISource,
+  useWindowDimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -23,12 +26,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useGetHotelInfo from "api/useGetHotelInfo";
 import useGetHotelPhotos from "api/useGetHotelPhotos";
+import RoomDetailsCard from "components/RoomDetailsCard";
 
 type Props = NativeStackScreenProps<StackParamList, "Hotel">;
 
 const Hotel = ({ route, navigation }: Props) => {
+  const [reviewsShown, setReviewsShown] = useState(false);
   const { hotelId } = route.params;
-
+  const { width } = useWindowDimensions();
   const queryClient = useQueryClient();
 
   const { data, isLoading, status, isSuccess, refetch } = useQuery({
@@ -45,30 +50,13 @@ const Hotel = ({ route, navigation }: Props) => {
   });
 
   const places = hotelInfo.data?.data?.places[0];
-
   const photos = hotelInfo.data?.photoUris;
-
-  let renderedPhotos;
-
-  if (hotelInfo) {
-    renderedPhotos = photos?.map((photo) => {
-      return (
-        <Image
-          source={{ uri: photo }}
-          key={photo}
-          style={{ height: 200, width: 200 }}
-        />
-      );
-    });
-  }
-
-  const roomSize = /\d\d[s][q][m]/gim;
 
   const handleRoomSearch = (id: string, bedType: string) => {
     navigation.navigate("Room", { roomId: id, bedType: bedType });
   };
 
-  if (isLoading) {
+  if (isLoading || hotelInfo.isLoading || !hotelInfo.data?.photoUris) {
     navigation.setOptions({ headerShown: false });
     return (
       <ActivityIndicator
@@ -78,168 +66,115 @@ const Hotel = ({ route, navigation }: Props) => {
     );
   }
 
-  if (!data?.data) {
-    navigation.navigate("Error");
-  }
+  const reviews = places?.reviews?.map((item) => {
+    return (
+      <>
+        <Text>{item.authorAttribution?.displayName}</Text>
+        <Text>{new Date(item.publishTime).toLocaleString()}</Text>
+        <Text>{item.relativePublishTimeDescription}</Text>
+        <Text>{item.rating}</Text>
+        <Text>{item.text.text}</Text>
+      </>
+    );
+  });
+
+  // if (!data?.data) {
+  //   navigation.navigate("Error");
+  // }
 
   if (isSuccess) {
-    navigation.setOptions({ headerShown: true, title: `${data?.hotel?.name}` });
+    navigation.setOptions({
+      headerShown: true,
+      title: `${data?.hotel?.name}`,
+    });
   }
 
-  const renderedItem: ListRenderItem<Offers> = ({ item }) => {
-    let bedLowerCase;
-    if (item.room.typeEstimated.bedType === undefined) {
-      bedLowerCase = "single";
-    } else {
-      bedLowerCase = item?.room?.typeEstimated?.bedType?.toLowerCase();
-    }
-
-    const bed = bedLowerCase?.charAt(0).toUpperCase() + bedLowerCase?.slice(1);
-
-    const category = item?.room?.typeEstimated?.category;
-    const roomType = category?.replace("_", " ").toLowerCase();
-    let type;
-    if (roomType?.includes(" ")) {
-      const secondWordCapitalIndex = roomType.search(" ") + 1;
-      type =
-        roomType?.charAt(0).toUpperCase() +
-        roomType?.slice(1, secondWordCapitalIndex) +
-        roomType.charAt(secondWordCapitalIndex).toUpperCase() +
-        roomType?.slice(secondWordCapitalIndex + 1);
-    } else {
-      type = roomType?.charAt(0).toUpperCase() + roomType?.slice(1);
-    }
-
+  const renderedImages: ListRenderItem<string> = ({ item }) => {
     return (
-      <Pressable
-        onPress={() =>
-          handleRoomSearch(item.id, item.room.typeEstimated.bedType)
-        }
-      >
-        <View style={styles.container}>
-          <View style={styles.id}>
-            <Text>Offer ID: {item.id}</Text>
-          </View>
-          <View style={styles.infoBox}>
-            <View style={styles.row}>
-              <Ionicons name="bed" size={22} color="black" />
-              <Text>{bed}</Text>
-            </View>
-            {item?.room?.description?.text.includes(
-              "Wireless" || "internet"
-            ) ? (
-              <View style={styles.row}>
-                <Ionicons name="wifi" size={26} color={"black"} />
-                <Text>Free WiFi</Text>
-              </View>
-            ) : null}
-            {item?.room?.description?.text.match(roomSize) ? (
-              <View style={styles.row}>
-                <SimpleLineIcons
-                  name="size-fullscreen"
-                  size={18}
-                  color="black"
-                />
-                <Text>
-                  {item?.room?.description?.text?.match(roomSize)?.[0]}
-                </Text>
-              </View>
-            ) : null}
-          </View>
-          <View style={styles.type}>
-            {!category ? null : <Text>{type}</Text>}
-          </View>
-          <View style={styles.priceBox}>
-            <Text style={styles.priceText}>
-              {item.price.total} {item.price.currency} total price
-            </Text>
-            <Text style={styles.priceText}>Press to find out more</Text>
-          </View>
-        </View>
-      </Pressable>
+      <Image
+        source={{ uri: item }}
+        key={item}
+        style={{ height: width, width: width, objectFit: "cover" }}
+      />
     );
   };
 
   return (
-    <>
-      <ImageGallery />
+    <SafeAreaView>
+      <FlatList
+        data={hotelInfo.data?.photoUris}
+        horizontal={true}
+        pagingEnabled={true}
+        showsHorizontalScrollIndicator={false}
+        renderItem={renderedImages}
+      />
       <ScrollView>
-        <Text>{places?.formattedAddress}</Text>
-        <Text>{places?.rating}</Text>
-        <Text>{places?.userRatingCount}</Text>
-        <Text>{places?.allowsDogs ? "Pets Allowed" : "No Pets"}</Text>
-        <Text>{places?.editorialSummary.text}</Text>
-        <Text>{places?.internationalPhoneNumber}</Text>
-        <Text>
-          {places?.accessibilityOptions.wheelchairAccessibleEntrance
-            ? "Wheelchair accessible"
-            : null}
-        </Text>
-        <Text>
-          {places?.accessibilityOptions.wheelchairAccessibleParking
-            ? "Disabled Parking"
-            : null}
-        </Text>
-        {renderedPhotos}
+        <View style={styles.container}>
+          <View style={styles.addressContainer}>
+            <Text>{hotelName}</Text>
+            <Text>{places?.formattedAddress}</Text>
+          </View>
+          <Pressable>
+            <Text>{places?.internationalPhoneNumber}</Text>
+          </Pressable>
+          <View style={styles.ratingContainer}>
+            <Text>{places?.rating}</Text>
+            <Ionicons name="star" size={24} color="orange" />
+            <Text>{places?.userRatingCount} total ratings</Text>
+          </View>
+          <Text style={styles.summary}>{places?.editorialSummary.text}</Text>
+          <View style={styles.detailsContainer}>
+            <Text>{places?.allowsDogs ? "Pets Allowed" : "No Pets"}</Text>
+            <Text>
+              {places?.accessibilityOptions.wheelchairAccessibleEntrance
+                ? "Wheelchair accessible"
+                : null}
+            </Text>
+            <Text>
+              {places?.accessibilityOptions.wheelchairAccessibleParking
+                ? "Disabled Parking"
+                : null}
+            </Text>
+          </View>
+          <Pressable onPress={() => setReviewsShown(!reviewsShown)}>
+            <View style={{ flexDirection: "row" }}>
+              <Text>Show reviews</Text>
+              <Ionicons name="chevron-down" size={24} color="black" />
+            </View>
+            {reviewsShown ? reviews : null}
+          </Pressable>
+        </View>
         <FlatList
           data={data?.data}
-          renderItem={renderedItem}
+          renderItem={({ item }) => <RoomDetailsCard item={item} />}
           style={{ flex: 1 }}
         />
       </ScrollView>
-    </>
+    </SafeAreaView>
   );
 };
 
 export default Hotel;
 
 const styles = StyleSheet.create({
-  row: {
+  container: {
+    backgroundColor: "#f5f5f5",
+    padding: 20,
+  },
+  addressContainer: {
+    backgroundColor: "white",
+  },
+  ratingContainer: {
     flexDirection: "row",
     gap: 10,
     alignItems: "center",
   },
-  priceBox: {
-    backgroundColor: "black",
-    paddingVertical: 20,
-    gap: 20,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginTop: 20,
-    paddingTop: 20,
+  detailsContainer: {
+    padding: 10,
   },
-  priceText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  container: {
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: "black",
+  summary: {
+    padding: 10,
     backgroundColor: "orange",
-
-    marginHorizontal: 10,
-    gap: 5,
-    marginTop: 10,
-  },
-  infoBox: {
-    paddingHorizontal: 20,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "baseline",
-  },
-  id: {
-    padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  type: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    fontSize: 14,
   },
 });
