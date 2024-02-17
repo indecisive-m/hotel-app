@@ -17,6 +17,8 @@ import CalendarModal from "screens/CalendarModal";
 import Room from "screens/Room";
 import Error from "screens/Error";
 import Toast from "react-native-toast-message";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import { Provider, store } from "store";
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -66,6 +68,23 @@ function HomeTabs() {
 }
 
 export default function App() {
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+    prepare();
+  }, []);
+
+  const [fontsLoaded] = useFonts({
+    FantasqueBold: require("../assets/fonts/FantasqueSansMNerdFont-Bold.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return undefined;
+  } else {
+    SplashScreen.hideAsync();
+  }
+
   return (
     <Provider value={store}>
       <QueryClientProvider client={queryClient}>
@@ -76,11 +95,7 @@ export default function App() {
               component={HomeTabs}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="Hotel"
-              component={Hotel}
-              options={{ headerTransparent: true }}
-            />
+            <Stack.Screen name="Hotel" component={Hotel} />
             <Stack.Screen
               name="Room"
               component={Room}

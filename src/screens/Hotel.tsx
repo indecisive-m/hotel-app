@@ -13,7 +13,7 @@ import {
   ImageURISource,
   useWindowDimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, OffersList, Offers } from "../constants/types";
 import { QueryClient, useQueries, useQuery, useQueryClient } from "react-query";
@@ -21,7 +21,14 @@ import useGetHotelDetails from "api/useGetHotelDetails";
 
 import { SimpleLineIcons } from "@expo/vector-icons";
 import ImageGallery from "components/ImageGallery";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import MapView, {
+  Marker,
+  PROVIDER_GOOGLE,
+  Region,
+  AnimatedRegion,
+  Animated,
+} from "react-native-maps";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import useGetHotelInfo from "api/useGetHotelInfo";
@@ -36,6 +43,7 @@ const Hotel = ({ route, navigation }: Props) => {
   const { width } = useWindowDimensions();
   const queryClient = useQueryClient();
 
+  const mapViewRef = useRef<MapView>(null);
   const { data, isLoading, status, isSuccess, refetch } = useQuery({
     queryKey: ["hotel", hotelId],
     queryFn: () => useGetHotelDetails(hotelId, false),
@@ -51,10 +59,6 @@ const Hotel = ({ route, navigation }: Props) => {
 
   const places = hotelInfo.data?.data?.places[0];
   const photos = hotelInfo.data?.photoUris;
-
-  const handleRoomSearch = (id: string, bedType: string) => {
-    navigation.navigate("Room", { roomId: id, bedType: bedType });
-  };
 
   if (isLoading || hotelInfo.isLoading || !hotelInfo.data?.photoUris) {
     navigation.setOptions({ headerShown: false });
@@ -94,13 +98,18 @@ const Hotel = ({ route, navigation }: Props) => {
       <Image
         source={{ uri: item }}
         key={item}
-        style={{ height: width, width: width, objectFit: "cover" }}
+        style={{
+          height: width,
+          width: width,
+          resizeMode: "cover",
+          overflow: "hidden",
+        }}
       />
     );
   };
 
   return (
-    <SafeAreaView>
+    <>
       <FlatList
         data={hotelInfo.data?.photoUris}
         horizontal={true}
@@ -111,18 +120,53 @@ const Hotel = ({ route, navigation }: Props) => {
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.addressContainer}>
-            <Text>{hotelName}</Text>
-            <Text>{places?.formattedAddress}</Text>
+            <Text style={styles.hotelNameText}>{hotelName}</Text>
           </View>
-          <Pressable>
-            <Text>{places?.internationalPhoneNumber}</Text>
-          </Pressable>
           <View style={styles.ratingContainer}>
-            <Text>{places?.rating}</Text>
-            <Ionicons name="star" size={24} color="orange" />
-            <Text>{places?.userRatingCount} total ratings</Text>
+            <Ionicons name="star" size={20} color="orange" />
+            <Text style={styles.ratingText}>
+              {places?.rating}
+              <Text style={{ fontSize: 14 }}> / 5</Text>
+            </Text>
+            <Text>({places?.userRatingCount} total ratings)</Text>
           </View>
           <Text style={styles.summary}>{places?.editorialSummary.text}</Text>
+          <View>
+            <Animated
+              provider={PROVIDER_GOOGLE}
+              ref={mapViewRef}
+              camera={{
+                center: {
+                  latitude: data?.hotel?.latitude,
+                  longitude: data?.hotel?.longitude,
+                },
+                zoom: 14,
+                heading: 0,
+                pitch: 0,
+              }}
+              showsBuildings={true}
+              minZoomLevel={6}
+              scrollEnabled={false}
+              style={{ flex: 1, height: 100, width: width }}
+            >
+              <Marker
+                title={hotelName}
+                coordinate={{
+                  latitude: data?.hotel?.latitude,
+                  longitude: data?.hotel?.longitude,
+                }}
+              />
+            </Animated>
+
+            <Text style={styles.addressText}>{places?.formattedAddress}</Text>
+            <Pressable style={styles.phoneContainer}>
+              <FontAwesome name={"phone"} size={20} color="black" />
+              <Text style={styles.phoneText}>
+                {places?.internationalPhoneNumber}
+              </Text>
+            </Pressable>
+          </View>
+
           <View style={styles.detailsContainer}>
             <Text>{places?.allowsDogs ? "Pets Allowed" : "No Pets"}</Text>
             <Text>
@@ -150,7 +194,7 @@ const Hotel = ({ route, navigation }: Props) => {
           style={{ flex: 1 }}
         />
       </ScrollView>
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -159,15 +203,19 @@ export default Hotel;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f5f5f5",
-    padding: 20,
+    padding: 10,
+    rowGap: 16,
   },
   addressContainer: {
     backgroundColor: "white",
+    padding: 10,
+    borderRadius: 10,
   },
   ratingContainer: {
     flexDirection: "row",
     gap: 10,
-    alignItems: "center",
+    alignItems: "baseline",
+    paddingHorizontal: 10,
   },
   detailsContainer: {
     padding: 10,
@@ -175,6 +223,26 @@ const styles = StyleSheet.create({
   summary: {
     padding: 10,
     backgroundColor: "orange",
+    fontSize: 16,
+  },
+  hotelNameText: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  addressText: {
     fontSize: 14,
+  },
+  phoneText: {
+    fontStyle: "italic",
+    fontSize: 16,
+  },
+  phoneContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginTop: 10,
+  },
+  ratingText: {
+    fontSize: 18,
   },
 });
