@@ -131,7 +131,7 @@ const Hotel = ({ route, navigation }: Props) => {
           <View style={styles.addressContainer}>
             <Text style={styles.hotelNameText}>{hotelName}</Text>
             <View style={styles.ratingContainer}>
-              <Ionicons name="star" size={20} color="orange" />
+              <FontAwesome name="star" size={22} color="orange" />
               <Text style={styles.ratingText}>
                 {places?.rating}
                 <Text
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
   hotelNameText: {
     fontSize: fontSize.extraLarge,
     fontFamily: "CormorantGaramond_700Bold",
-    alignSelf: "center",
+    paddingHorizontal: spacing.medium,
   },
   addressText: {
     fontSize: fontSize.small,
