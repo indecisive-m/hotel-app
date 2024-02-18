@@ -134,8 +134,19 @@ const NearbyStays = () => {
         style={{ height: 220, borderRadius: 15 }}
       >
         <View style={{ position: "absolute", bottom: 20, left: 20 }}>
-          <Text style={{ color: "white", marginBottom: 5 }}>{item.name}</Text>
-          <Text style={{ color: "white" }}>{`${
+          <Text
+            style={[
+              {
+                color: "white",
+                marginBottom: 5,
+                fontSize: 14,
+                fontFamily: "Rubik_500Medium",
+              },
+            ]}
+          >
+            {item.name}
+          </Text>
+          <Text style={[styles.text, { color: "white" }]}>{`${
             item.distance.value
           } ${item.distance.unit.toLowerCase()}s away`}</Text>
         </View>
@@ -175,11 +186,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   header: {
-    fontSize: 20,
+    fontSize: 30,
     paddingBottom: 5,
+    fontFamily: "CormorantGaramond_700Bold_Italic",
   },
   text: {
-    fontSize: 12,
+    fontSize: 14,
+    fontFamily: "Rubik_400Regular",
   },
   list: {
     paddingTop: 10,

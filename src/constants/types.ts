@@ -9,6 +9,7 @@ export type StackParamList = {
   CalendarModal: undefined;
   Room: { roomId: string; bedType: string };
   Error: undefined;
+  ReviewsModal: { reviews: Review[] };
 };
 
 export type TabParamList = {
@@ -98,4 +99,18 @@ export type PopularStay = {
   lng: number;
   lat: number;
   country: string;
+};
+
+// Google Places API Types
+
+export type Review = {
+  authorAttribution: {
+    displayName: string;
+  };
+  publishTime: string;
+  relativePublishTimeDescription: string;
+  rating: string;
+  text: {
+    text: string;
+  };
 };

@@ -9,6 +9,7 @@ import {
   useWindowDimensions,
   Pressable,
   ImageSourcePropType,
+  Dimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { PopularStay, StackParamList } from "constants/types";
@@ -20,9 +21,9 @@ import useGetHotelList from "api/useGetHotelList";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 type PopularStaysNavigationProp = Props["navigation"];
+const { width } = Dimensions.get("window");
 
 const PopularStays = () => {
-  const { width } = useWindowDimensions();
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
 
@@ -97,13 +98,7 @@ const PopularStays = () => {
         >
           <Image
             source={item.imageUri as ImageSourcePropType}
-            style={{
-              height: 220,
-              width: width - 75,
-              position: "absolute",
-              objectFit: "cover",
-              borderRadius: 15,
-            }}
+            style={styles.image}
           />
           <LinearGradient
             colors={["transparent", "black"]}
@@ -118,11 +113,24 @@ const PopularStays = () => {
                 left: 20,
               }}
             >
-              <Text style={{ color: "white", fontSize: 18, marginBottom: 5 }}>
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 18,
+                  marginBottom: 5,
+                  fontFamily: "Rubik_500Medium",
+                }}
+              >
                 {item.city}
               </Text>
 
-              <Text style={{ color: "white", fontSize: 12 }}>
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 12,
+                  fontFamily: "Rubik_400Regular",
+                }}
+              >
                 {item.country.toUpperCase()}
               </Text>
             </View>
@@ -161,8 +169,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   header: {
-    fontSize: 20,
+    fontSize: 30,
     paddingBottom: 5,
+    fontFamily: "CormorantGaramond_700Bold_Italic",
   },
   text: {
     fontSize: 12,
@@ -174,7 +183,13 @@ const styles = StyleSheet.create({
     color: "orange",
     fontSize: 36,
   },
-  image: {},
+  image: {
+    height: 220,
+    width: width - 75,
+    position: "absolute",
+    objectFit: "cover",
+    borderRadius: 15,
+  },
 });
 
 export default PopularStays;

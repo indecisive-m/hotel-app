@@ -17,9 +17,38 @@ import CalendarModal from "screens/CalendarModal";
 import Room from "screens/Room";
 import Error from "screens/Error";
 import Toast from "react-native-toast-message";
-import { useFonts } from "expo-font";
+import {
+  useFonts,
+  Rubik_300Light,
+  Rubik_300Light_Italic,
+  Rubik_400Regular,
+  Rubik_400Regular_Italic,
+  Rubik_500Medium,
+  Rubik_500Medium_Italic,
+  Rubik_600SemiBold,
+  Rubik_600SemiBold_Italic,
+  Rubik_700Bold,
+  Rubik_700Bold_Italic,
+  Rubik_800ExtraBold,
+  Rubik_800ExtraBold_Italic,
+  Rubik_900Black,
+  Rubik_900Black_Italic,
+} from "@expo-google-fonts/rubik";
+import {
+  CormorantGaramond_300Light,
+  CormorantGaramond_300Light_Italic,
+  CormorantGaramond_400Regular,
+  CormorantGaramond_400Regular_Italic,
+  CormorantGaramond_500Medium,
+  CormorantGaramond_500Medium_Italic,
+  CormorantGaramond_600SemiBold,
+  CormorantGaramond_600SemiBold_Italic,
+  CormorantGaramond_700Bold,
+  CormorantGaramond_700Bold_Italic,
+} from "@expo-google-fonts/cormorant-garamond";
 import * as SplashScreen from "expo-splash-screen";
 import { Provider, store } from "store";
+import ReviewsModal from "screens/ReviewsModal";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -76,7 +105,31 @@ export default function App() {
   }, []);
 
   const [fontsLoaded] = useFonts({
-    FantasqueBold: require("../assets/fonts/FantasqueSansMNerdFont-Bold.ttf"),
+    Rubik_300Light,
+    Rubik_300Light_Italic,
+    Rubik_400Regular,
+    Rubik_400Regular_Italic,
+    Rubik_500Medium,
+    Rubik_500Medium_Italic,
+    Rubik_600SemiBold,
+    Rubik_600SemiBold_Italic,
+    Rubik_700Bold,
+    Rubik_700Bold_Italic,
+    Rubik_800ExtraBold,
+    Rubik_800ExtraBold_Italic,
+    Rubik_900Black,
+    Rubik_900Black_Italic,
+
+    CormorantGaramond_300Light,
+    CormorantGaramond_300Light_Italic,
+    CormorantGaramond_400Regular,
+    CormorantGaramond_400Regular_Italic,
+    CormorantGaramond_500Medium,
+    CormorantGaramond_500Medium_Italic,
+    CormorantGaramond_600SemiBold,
+    CormorantGaramond_600SemiBold_Italic,
+    CormorantGaramond_700Bold,
+    CormorantGaramond_700Bold_Italic,
   });
 
   if (!fontsLoaded) {
@@ -121,6 +174,14 @@ export default function App() {
                 presentation: "transparentModal",
                 animation: "slide_from_bottom",
                 headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="ReviewsModal"
+              component={ReviewsModal}
+              options={{
+                presentation: "modal",
+                animation: "slide_from_bottom",
               }}
             />
           </Stack.Navigator>

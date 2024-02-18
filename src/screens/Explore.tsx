@@ -11,12 +11,14 @@ import NearbyStays from "components/NearbyStays";
 import SearchForm from "components/SearchForm";
 import { observer } from "mobx-react-lite";
 import PopularStays from "components/PopularStays";
+import { useIsFocused } from "@react-navigation/native";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 
 const Explore = observer(({ navigation }: Props) => {
   const { fetchBearerKey } = useGetBearerKey();
   const queryClient = useQueryClient();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     fetchBearerKey();
