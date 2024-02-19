@@ -5,7 +5,7 @@ import useGetRoomDetails from "api/useGetRoomDetails";
 export type StackParamList = {
   Explore: undefined;
   Hotel: { hotelId: string };
-  HotelSearchMap: { hotelList: Object[] | undefined };
+  HotelSearchMap: { hotelList: HotelList };
   CalendarModal: undefined;
   Room: { roomId: string; bedType: string };
   Error: undefined;

@@ -18,14 +18,14 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
 import useGetHotelList from "api/useGetHotelList";
+import { useMst } from "store";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 type PopularStaysNavigationProp = Props["navigation"];
 const { width } = Dimensions.get("window");
 
 const PopularStays = () => {
-  const [lat, setLat] = useState(0);
-  const [lng, setLng] = useState(0);
+  const { searchDestination } = useMst();
 
   const navigation = useNavigation<PopularStaysNavigationProp>();
 
@@ -74,17 +74,17 @@ const PopularStays = () => {
     },
   ];
 
-  const { data, isLoading, isSuccess, refetch } = useQuery({
-    queryKey: ["popular", lat, lng],
-    queryFn: () => useGetHotelList(lat, lng, 3),
-  });
-
   const renderedItem: ListRenderItem<PopularStay> = ({ item }) => {
     return (
       <Pressable
-        onPress={() => {
-          setLat(item.lat);
-          setLng(item.lng);
+        onPress={async () => {
+          const getHotelList = await useGetHotelList(item.lat, item.lng, 3);
+          if (getHotelList?.data) {
+            navigation.navigate("HotelSearchMap", {
+              hotelList: getHotelList.data,
+            });
+            searchDestination.setSearchDestination(item.city);
+          }
         }}
       >
         <View

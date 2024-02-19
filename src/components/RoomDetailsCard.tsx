@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Offers, StackParamList } from "constants/types";
 
-import { Ionicons, SimpleLineIcons } from "@expo/vector-icons";
+import { Ionicons, SimpleLineIcons, AntDesign } from "@expo/vector-icons";
 import {
   ListRenderItem,
   Pressable,
@@ -10,7 +10,7 @@ import {
   View,
   Text,
 } from "react-native";
-import { roomSize } from "constants/styles";
+import { borderRadius, roomSize, spacing } from "constants/styles";
 
 type Props = NativeStackScreenProps<StackParamList, "Hotel">;
 
@@ -56,34 +56,39 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
     >
       <View style={styles.container}>
         <View style={styles.id}>
-          <Text>Offer ID: {item.id}</Text>
+          <Text style={styles.text}>Offer ID: {item.id}</Text>
         </View>
         <View style={styles.infoBox}>
           <View style={styles.row}>
             <Ionicons name="bed" size={22} color="black" />
-            <Text>{bed}</Text>
+            <Text style={styles.text}>{bed}</Text>
           </View>
           {item?.room?.description?.text.includes("Wireless" || "internet") ? (
             <View style={styles.row}>
               <Ionicons name="wifi" size={26} color={"black"} />
-              <Text>Free WiFi</Text>
+              <Text style={styles.text}>Free WiFi</Text>
             </View>
           ) : null}
           {item?.room?.description?.text.match(roomSize) ? (
             <View style={styles.row}>
               <SimpleLineIcons name="size-fullscreen" size={18} color="black" />
-              <Text>{item?.room?.description?.text?.match(roomSize)?.[0]}</Text>
+              <Text style={styles.text}>
+                {item?.room?.description?.text?.match(roomSize)?.[0]}
+              </Text>
             </View>
           ) : null}
         </View>
         <View style={styles.type}>
-          {!category ? null : <Text>{type}</Text>}
+          {!category ? null : <Text style={styles.text}>{type}</Text>}
         </View>
         <View style={styles.priceBox}>
           <Text style={styles.priceText}>
             {item.price.total} {item.price.currency} total price
           </Text>
-          <Text style={styles.priceText}>Press to find out more</Text>
+          <View style={styles.priceBtn}>
+            <Text style={styles.priceText}>Find out more</Text>
+            <AntDesign name="arrowright" size={22} color="black" />
+          </View>
         </View>
       </View>
     </Pressable>
@@ -99,27 +104,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   priceBox: {
-    backgroundColor: "black",
+    backgroundColor: "orange",
+    opacity: 0.75,
     paddingVertical: 20,
     gap: 20,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: borderRadius.medium,
+    borderBottomRightRadius: borderRadius.medium,
+
     justifyContent: "flex-end",
     alignItems: "center",
     marginTop: 20,
     paddingTop: 20,
   },
   priceText: {
-    color: "white",
-    fontWeight: "bold",
+    color: "black",
     fontSize: 16,
+    fontFamily: "Rubik_600SemiBold",
   },
   container: {
-    borderWidth: 1,
     borderRadius: 10,
-    borderColor: "black",
-    backgroundColor: "orange",
-
+    backgroundColor: "white",
     marginHorizontal: 10,
     gap: 5,
     marginTop: 10,
@@ -140,5 +144,14 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     justifyContent: "center",
     alignItems: "center",
+  },
+  text: {
+    fontFamily: "Rubik_400Regular",
+    fontSize: spacing.medium,
+  },
+  priceBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.medium,
   },
 });

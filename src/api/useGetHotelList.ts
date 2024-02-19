@@ -24,10 +24,8 @@ const useGetHotelList = async (
       }
     );
 
-    console.log(latitude, longitude, radius);
     const statusCode = fetchHotelList.status;
     console.log(statusCode);
-    console.log("api call for hotelList");
 
     if (statusCode === 401 || statusCode === 400) {
       throw new Error(`${statusCode}`);

@@ -20,9 +20,9 @@ const Explore = observer(({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    fetchBearerKey();
-  }, []);
+  // useEffect(() => {
+  //   fetchBearerKey();
+  // }, []);
 
   return (
     <SafeAreaView style={styles.container}>

@@ -79,18 +79,6 @@ const Hotel = ({ route, navigation }: Props) => {
     );
   }
 
-  const reviews = places?.reviews?.map((item) => {
-    return (
-      <>
-        <Text>{item.authorAttribution?.displayName}</Text>
-        <Text>{new Date(item.publishTime).toLocaleString()}</Text>
-        <Text>{item.relativePublishTimeDescription}</Text>
-        <Text>{item.rating}</Text>
-        <Text>{item.text.text}</Text>
-      </>
-    );
-  });
-
   // if (!data?.data) {
   //   navigation.navigate("Error");
   // }
@@ -258,7 +246,6 @@ const Hotel = ({ route, navigation }: Props) => {
               color="black"
             />
           </Pressable>
-          {reviewsShown ? reviews : null}
         </View>
         <FlatList
           data={data?.data}

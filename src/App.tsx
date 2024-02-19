@@ -97,11 +97,13 @@ function HomeTabs() {
 }
 
 export default function App() {
+  const { fetchBearerKey } = useGetBearerKey();
   useEffect(() => {
     async function prepare() {
       await SplashScreen.preventAutoHideAsync();
     }
     prepare();
+    fetchBearerKey();
   }, []);
 
   const [fontsLoaded] = useFonts({

@@ -42,8 +42,9 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const ASPECT_RATIO = width / height;
 
   const { hotelList } = route.params;
-  const [latitude, setLatitude] = useState(hotelList[0]?.geoCode?.latitude);
-  const [longitude, setLongitude] = useState(hotelList[0]?.geoCode?.longitude);
+  const [zoom, setZoom] = useState(5);
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
   const [latitudeDelta, setLatitudeDelta] = useState(0.0922);
   const [longitudeDelta, setLongitudeDelta] = useState(
     latitudeDelta * ASPECT_RATIO
@@ -52,41 +53,50 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const [showMap, setShowMap] = useState(true);
 
   const [region, setRegion] = useState({
-    latitude: 30.643868905461858,
-    longitude: -49.27215378731489,
-    latitudeDelta: 87.27387561478429,
-    longitudeDelta: 126.56250536441803,
+    latitude: hotelList[1]?.geoCode?.latitude,
+    longitude: hotelList[1]?.geoCode?.longitude,
+    latitudeDelta: latitudeDelta,
+    longitudeDelta: longitudeDelta,
   });
 
   const queryClient = useQueryClient();
   const mapViewRef = useRef<MapView>(null);
 
   const { data, refetch, error, isLoading } = useQuery({
-    queryKey: ["hotels", latitude, longitude, 5],
-    queryFn: () => useGetHotelList(latitude, longitude, 5),
+    queryKey: [
+      "hotels",
+      hotelList[0]?.geoCode?.latitude,
+      hotelList[0]?.geoCode?.longitude,
+      5,
+    ],
+    queryFn: () =>
+      useGetHotelList(
+        hotelList[0]?.geoCode.latitude,
+        hotelList[0]?.geoCode.longitude,
+        5
+      ),
     onError: (error) => {
       console.log(error + "in query");
     },
   });
 
   useEffect(() => {
-    if (data) {
-      setRegion({
-        latitude: +data?.data[0]?.geoCode.latitude,
-        longitude: +data?.data[0]?.geoCode.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: latitudeDelta * ASPECT_RATIO,
-      });
-
-      mapViewRef.current?.animateCamera(
-        {
-          center: { latitude: region.latitude, longitude: region.longitude },
-          zoom: 10.5,
+    mapViewRef.current?.animateCamera(
+      {
+        center: {
+          latitude: data?.data[0]?.geoCode.latitude,
+          longitude: data?.data[0]?.geoCode.longitude,
         },
-        { duration: 1500 }
-      );
-    }
-  }, []);
+        zoom: 10.5,
+      },
+      { duration: 1500 }
+    );
+    setTimeout(() => {
+      setLatitude(data?.data[0]?.geoCode.latitude);
+      setLongitude(data?.data[0]?.geoCode.longitude);
+      setZoom(10.5);
+    }, 2000);
+  }, [data, showMap]);
 
   if (isLoading) {
     <ActivityIndicator
@@ -100,6 +110,7 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
     refetch();
   }
 
+  console.log(data?.data.slice(0, -300).length);
   const renderedItem: ListRenderItem<Hotel> = ({ item, index }) => {
     return (
       <View
@@ -155,17 +166,18 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
           <Animated
             provider={PROVIDER_GOOGLE}
             ref={mapViewRef}
+            showsBuildings={true}
             camera={{
               center: {
-                latitude: region.latitude,
-                longitude: region.longitude,
+                latitude: latitude,
+                longitude: longitude,
               },
-              zoom: 1,
+              zoom: zoom,
               heading: 0,
               pitch: 0,
             }}
-            showsBuildings={true}
-            style={{ flex: 1 }}
+            style={{ height: height, width: width }}
+            onRegionChange={(region) => console.log(region)}
           >
             {data?.data?.map((hotel: Hotel, index: number) => {
               return (

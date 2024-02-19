@@ -7,19 +7,27 @@ import {
   ListRenderItem,
   Image,
   useWindowDimensions,
+  Pressable,
 } from "react-native";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { LinearGradient } from "expo-linear-gradient";
-import { GeoCode, Hotel } from "constants/types";
+import { GeoCode, Hotel, StackParamList } from "constants/types";
 import useGetHotelList from "api/useGetHotelList";
 import { QueryClient, useQueries, useQuery, useQueryClient } from "react-query";
 import { Entypo } from "@expo/vector-icons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+
+type Props = NativeStackScreenProps<StackParamList, "Explore">;
+type NearbyStaysNavigationProp = Props["navigation"];
 
 const NearbyStays = () => {
   const queryClient = useQueryClient();
   const { width } = useWindowDimensions();
   const [permission, setPermission] = useState(false);
+
+  const navigation = useNavigation<NearbyStaysNavigationProp>();
 
   const [localLocation, setLocalLocation] = useState<GeoCode>({
     latitude: "",
@@ -108,50 +116,54 @@ const NearbyStays = () => {
     );
   }
   const renderedItem: ListRenderItem<Hotel> = ({ item }) => (
-    <View
-      style={{
-        marginRight: 10,
-        position: "relative",
-        overflow: "hidden",
-        height: 220,
-        width: width - 75,
-      }}
+    <Pressable
+      onPress={() => navigation.navigate("Hotel", { hotelId: item.hotelId })}
     >
-      <Image
-        source={require("../../assets/hotel_2.jpg")}
+      <View
         style={{
+          marginRight: 10,
+          position: "relative",
+          overflow: "hidden",
           height: 220,
           width: width - 75,
-          position: "absolute",
-          objectFit: "cover",
-          borderRadius: 15,
         }}
-      />
-      <LinearGradient
-        colors={["transparent", "black"]}
-        start={{ x: 0.5, y: 0.35 }}
-        end={{ x: 0.5, y: 0.9 }}
-        style={{ height: 220, borderRadius: 15 }}
       >
-        <View style={{ position: "absolute", bottom: 20, left: 20 }}>
-          <Text
-            style={[
-              {
-                color: "white",
-                marginBottom: 5,
-                fontSize: 14,
-                fontFamily: "Rubik_500Medium",
-              },
-            ]}
-          >
-            {item.name}
-          </Text>
-          <Text style={[styles.text, { color: "white" }]}>{`${
-            item.distance.value
-          } ${item.distance.unit.toLowerCase()}s away`}</Text>
-        </View>
-      </LinearGradient>
-    </View>
+        <Image
+          source={require("../../assets/hotel_2.jpg")}
+          style={{
+            height: 220,
+            width: width - 75,
+            position: "absolute",
+            objectFit: "cover",
+            borderRadius: 15,
+          }}
+        />
+        <LinearGradient
+          colors={["transparent", "black"]}
+          start={{ x: 0.5, y: 0.35 }}
+          end={{ x: 0.5, y: 0.9 }}
+          style={{ height: 220, borderRadius: 15 }}
+        >
+          <View style={{ position: "absolute", bottom: 20, left: 20 }}>
+            <Text
+              style={[
+                {
+                  color: "white",
+                  marginBottom: 5,
+                  fontSize: 14,
+                  fontFamily: "Rubik_500Medium",
+                },
+              ]}
+            >
+              {item.name}
+            </Text>
+            <Text style={[styles.text, { color: "white" }]}>{`${
+              item.distance.value
+            } ${item.distance.unit.toLowerCase()}s away`}</Text>
+          </View>
+        </LinearGradient>
+      </View>
+    </Pressable>
   );
   return (
     <View style={styles.container}>
