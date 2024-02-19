@@ -25,6 +25,7 @@ import MapView, {
   Region,
   AnimatedRegion,
   Animated,
+  Camera,
 } from "react-native-maps";
 import useGetBearerKey from "api/useGetBearerKey";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -50,11 +51,14 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
     latitudeDelta * ASPECT_RATIO
   );
 
+  const [markerZoomLevel, setMarkerZoomLevel] = useState(5);
+  let slicedData: HotelList = hotelList;
+
   const [showMap, setShowMap] = useState(true);
 
   const [region, setRegion] = useState({
-    latitude: hotelList[1]?.geoCode?.latitude,
-    longitude: hotelList[1]?.geoCode?.longitude,
+    latitude: hotelList[0]?.geoCode?.latitude,
+    longitude: hotelList[0]?.geoCode?.longitude,
     latitudeDelta: latitudeDelta,
     longitudeDelta: longitudeDelta,
   });
@@ -62,55 +66,47 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const queryClient = useQueryClient();
   const mapViewRef = useRef<MapView>(null);
 
-  const { data, refetch, error, isLoading } = useQuery({
-    queryKey: [
-      "hotels",
-      hotelList[0]?.geoCode?.latitude,
-      hotelList[0]?.geoCode?.longitude,
-      5,
-    ],
-    queryFn: () =>
-      useGetHotelList(
-        hotelList[0]?.geoCode.latitude,
-        hotelList[0]?.geoCode.longitude,
-        5
-      ),
-    onError: (error) => {
-      console.log(error + "in query");
-    },
-  });
+  const getZoomLevel = async () => {
+    const zoom = await mapViewRef.current?.getCamera();
+    setMarkerZoomLevel(zoom?.zoom!);
+    console.log(zoom?.zoom);
+  };
 
   useEffect(() => {
-    mapViewRef.current?.animateCamera(
-      {
-        center: {
-          latitude: data?.data[0]?.geoCode.latitude,
-          longitude: data?.data[0]?.geoCode.longitude,
-        },
-        zoom: 10.5,
-      },
-      { duration: 1500 }
-    );
-    setTimeout(() => {
-      setLatitude(data?.data[0]?.geoCode.latitude);
-      setLongitude(data?.data[0]?.geoCode.longitude);
-      setZoom(10.5);
-    }, 2000);
-  }, [data, showMap]);
+    setLatitude(+hotelList[0]?.geoCode?.latitude);
+    setLongitude(+hotelList[0]?.geoCode.longitude);
+    setZoom(11);
+  }, [slicedData, showMap]);
 
-  if (isLoading) {
-    <ActivityIndicator
-      style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}
-      size={"large"}
-    />;
-  }
+  const clusteredMarkers = useMemo(() => {
+    const tenth = hotelList.length / 10;
+    const eigth = hotelList.length / 8;
+    const fifth = hotelList.length / 5;
 
-  if (error) {
-    fetchBearerKey();
-    refetch();
-  }
+    const third = hotelList.length / 2;
 
-  console.log(data?.data.slice(0, -300).length);
+    if (markerZoomLevel <= 11.5) {
+      return (slicedData = hotelList.slice(0, 1));
+    }
+    if (markerZoomLevel < 11.6) {
+      return (slicedData = hotelList.slice(0, tenth));
+    }
+
+    if (markerZoomLevel >= 11.6 && markerZoomLevel < 12) {
+      return (slicedData = hotelList.slice(0, eigth));
+    }
+
+    if (markerZoomLevel >= 12 && markerZoomLevel < 12.5) {
+      return (slicedData = hotelList.slice(0, fifth));
+    }
+
+    if (markerZoomLevel >= 12.5 && markerZoomLevel < 13) {
+      return (slicedData = hotelList.slice(0, third));
+    }
+
+    return (slicedData = hotelList);
+  }, [markerZoomLevel, hotelList, getZoomLevel]);
+
   const renderedItem: ListRenderItem<Hotel> = ({ item, index }) => {
     return (
       <View
@@ -177,29 +173,32 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
               pitch: 0,
             }}
             style={{ height: height, width: width }}
-            onRegionChange={(region) => console.log(region)}
+            onMapLoaded={() => getZoomLevel()}
+            onTouchMove={() => getZoomLevel()}
           >
-            {data?.data?.map((hotel: Hotel, index: number) => {
-              return (
-                <Marker
-                  key={index}
-                  title={hotel.name}
-                  coordinate={{
-                    latitude: +hotel.geoCode.latitude,
-                    longitude: +hotel.geoCode.longitude,
-                  }}
-                  onCalloutPress={() =>
-                    navigation.navigate("Hotel", { hotelId: hotel.hotelId })
-                  }
-                />
-              );
-            })}
+            {slicedData !== undefined
+              ? slicedData.map((hotel: Hotel, index: number) => {
+                  return (
+                    <Marker
+                      key={index}
+                      title={hotel.name}
+                      coordinate={{
+                        latitude: +hotel.geoCode.latitude,
+                        longitude: +hotel.geoCode.longitude,
+                      }}
+                      onCalloutPress={() =>
+                        navigation.navigate("Hotel", { hotelId: hotel.hotelId })
+                      }
+                    />
+                  );
+                })
+              : null}
           </Animated>
         </>
       ) : (
         <View>
           <FlatList
-            data={data?.data}
+            data={hotelList}
             keyExtractor={(item) => item.hotelId}
             renderItem={renderedItem}
             contentContainerStyle={styles.list}

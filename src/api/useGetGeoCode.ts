@@ -13,7 +13,7 @@ const useGetGeoCode = async (location: string | undefined) => {
     const lat = results.results[0].geometry.location.lat;
     const lng = results.results[0].geometry.location.lng;
 
-    const hotelList = await useGetHotelList(lat, lng, 2);
+    const hotelList = await useGetHotelList(lat, lng, 3);
 
     const data = await hotelList?.data;
 
