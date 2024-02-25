@@ -32,6 +32,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ContentViewSelector from "components/ContentViewSelector";
 import SearchDetails from "components/SearchDetails";
 import PlaceHolderImage from "components/PlaceHolderImage";
+import { borderRadius, fontSize, spacing } from "constants/styles";
 
 type Props = NativeStackScreenProps<StackParamList, "HotelSearchMap">;
 
@@ -48,7 +49,7 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const [longitude, setLongitude] = useState(0);
   const [latitudeDelta, setLatitudeDelta] = useState(0.0922);
   const [longitudeDelta, setLongitudeDelta] = useState(
-    latitudeDelta * ASPECT_RATIO
+    latitudeDelta * ASPECT_RATIO,
   );
 
   const [markerZoomLevel, setMarkerZoomLevel] = useState(5);
@@ -178,20 +179,20 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
           >
             {slicedData !== undefined
               ? slicedData.map((hotel: Hotel, index: number) => {
-                  return (
-                    <Marker
-                      key={index}
-                      title={hotel.name}
-                      coordinate={{
-                        latitude: +hotel.geoCode.latitude,
-                        longitude: +hotel.geoCode.longitude,
-                      }}
-                      onCalloutPress={() =>
-                        navigation.navigate("Hotel", { hotelId: hotel.hotelId })
-                      }
-                    />
-                  );
-                })
+                return (
+                  <Marker
+                    key={index}
+                    title={hotel.name}
+                    coordinate={{
+                      latitude: +hotel.geoCode.latitude,
+                      longitude: +hotel.geoCode.longitude,
+                    }}
+                    onCalloutPress={() =>
+                      navigation.navigate("Hotel", { hotelId: hotel.hotelId })
+                    }
+                  />
+                );
+              })
               : null}
           </Animated>
         </>
@@ -216,21 +217,21 @@ export default HotelSearchMap;
 
 const styles = StyleSheet.create({
   list: {
-    padding: 10,
-    gap: 10,
+    padding: spacing.extraSmall,
+    gap: spacing.extraSmall,
   },
   button: {
-    padding: 12,
+    padding: spacing.small,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    borderRadius: 15,
+    borderRadius: borderRadius.large,
     backgroundColor: "orange",
   },
 
   buttonText: {
     alignSelf: "center",
-    fontSize: 14,
-    fontWeight: "500",
+    fontSize: fontSize.small,
+    fontFamily: "Rubik_500Medium",
   },
 });

@@ -3,10 +3,8 @@ import {
   Text,
   View,
   FlatList,
-  ActivityIndicator,
   ListRenderItem,
   Image,
-  useWindowDimensions,
   Pressable,
   ImageSourcePropType,
   Dimensions,
@@ -16,9 +14,9 @@ import { PopularStay, StackParamList } from "constants/types";
 import { useQuery } from "react-query";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useState } from "react";
 import useGetHotelList from "api/useGetHotelList";
 import { useMst } from "store";
+import { borderRadius, fontSize, spacing } from "constants/styles";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 type PopularStaysNavigationProp = Props["navigation"];
@@ -161,7 +159,7 @@ const PopularStays = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 20,
+    paddingVertical: spacing.medium,
   },
   flexContainer: {
     flexDirection: "row",
@@ -169,26 +167,26 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   header: {
-    fontSize: 30,
-    paddingBottom: 5,
+    fontSize: fontSize.extraLarge,
+    paddingBottom: spacing.tiny,
     fontFamily: "CormorantGaramond_700Bold_Italic",
   },
   text: {
-    fontSize: 12,
+    fontSize: fontSize.extraSmall,
   },
   list: {
-    paddingTop: 10,
+    paddingTop: spacing.small,
   },
   icon: {
     color: "orange",
-    fontSize: 36,
+    fontSize: fontSize.huge,
   },
   image: {
     height: 220,
     width: width - 75,
     position: "absolute",
     objectFit: "cover",
-    borderRadius: 15,
+    borderRadius: borderRadius.large,
   },
 });
 

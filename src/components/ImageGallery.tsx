@@ -1,11 +1,9 @@
 import {
   ScrollView,
   StyleSheet,
-  Text,
   View,
   Image,
   useWindowDimensions,
-  FlatList,
 } from "react-native";
 import React from "react";
 

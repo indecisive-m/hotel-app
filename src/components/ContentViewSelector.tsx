@@ -1,6 +1,7 @@
 import { View, StyleSheet, Pressable, Text } from "react-native";
 
 import { Entypo } from "@expo/vector-icons";
+import { borderRadius, spacing } from "constants/styles";
 
 const ContentViewSelector = (props: {
   showMap: boolean;
@@ -46,13 +47,13 @@ const styles = StyleSheet.create({
     bottom: 20,
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 10,
+    borderRadius: borderRadius.large,
     overflow: "hidden",
   },
   selector: {
-    padding: 10,
+    padding: spacing.extraSmall,
     flexDirection: "row",
-    gap: 5,
+    gap: spacing.tiny,
     alignItems: "center",
   },
 });

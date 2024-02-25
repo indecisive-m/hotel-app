@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import Toast from "react-native-toast-message";
 import { observer } from "mobx-react-lite";
 import { useMst } from "store";
+import { borderRadius } from "constants/styles";
 
 type Props = NativeStackScreenProps<StackParamList, "CalendarModal">;
 
@@ -38,7 +39,7 @@ const CalendarModal = observer(({ navigation }: Props) => {
   const getDaysInBetween = (firstDay: string, secondDay: string) => {
     const daysArray = [firstDay];
 
-    for (let i = firstDay; i !== secondDay; ) {
+    for (let i = firstDay; i !== secondDay;) {
       const date = new Date(i);
       const newDate = date.setDate(date.getDate() + 1);
       const newDay = CalendarUtils.getCalendarDateString(newDate);
@@ -112,8 +113,8 @@ const CalendarModal = observer(({ navigation }: Props) => {
         style={{
           height: 20,
           backgroundColor: "orange",
-          borderTopRightRadius: 15,
-          borderTopLeftRadius: 15,
+          borderTopRightRadius: borderRadius.medium,
+          borderTopLeftRadius: borderRadius.medium,
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -123,7 +124,7 @@ const CalendarModal = observer(({ navigation }: Props) => {
             backgroundColor: "white",
             height: 6,
             width: 100,
-            borderRadius: 100,
+            borderRadius: borderRadius.circle,
           }}
         />
       </View>
@@ -140,5 +141,3 @@ const CalendarModal = observer(({ navigation }: Props) => {
 });
 
 export default CalendarModal;
-
-const styles = StyleSheet.create({});

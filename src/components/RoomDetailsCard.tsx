@@ -3,14 +3,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Offers, StackParamList } from "constants/types";
 
 import { Ionicons, SimpleLineIcons, AntDesign } from "@expo/vector-icons";
-import {
-  ListRenderItem,
-  Pressable,
-  StyleSheet,
-  View,
-  Text,
-} from "react-native";
-import { borderRadius, roomSize, spacing } from "constants/styles";
+import { Pressable, StyleSheet, View, Text } from "react-native";
+import { borderRadius, fontSize, roomSize, spacing } from "constants/styles";
 
 type Props = NativeStackScreenProps<StackParamList, "Hotel">;
 
@@ -83,7 +77,8 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
         </View>
         <View style={styles.priceBox}>
           <Text style={styles.priceText}>
-            {item.price.total} {item.price.currency} total price
+            {item.price.total} {item.price.currency}
+            <Text style={styles.totalPrice}> TOTAL PRICE</Text>
           </Text>
           <View style={styles.priceBtn}>
             <Text style={styles.priceText}>Find out more</Text>
@@ -100,48 +95,48 @@ export default RoomDetailsCard;
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
-    gap: 10,
+    gap: spacing.small,
     alignItems: "center",
   },
   priceBox: {
     backgroundColor: "orange",
     opacity: 0.75,
-    paddingVertical: 20,
-    gap: 20,
+    paddingVertical: spacing.medium,
+    gap: spacing.small,
     borderBottomLeftRadius: borderRadius.medium,
     borderBottomRightRadius: borderRadius.medium,
 
     justifyContent: "flex-end",
     alignItems: "center",
-    marginTop: 20,
-    paddingTop: 20,
+    marginTop: spacing.medium,
+    paddingTop: spacing.medium,
   },
   priceText: {
     color: "black",
-    fontSize: 16,
+    fontSize: fontSize.small,
     fontFamily: "Rubik_600SemiBold",
   },
   container: {
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     backgroundColor: "white",
-    marginHorizontal: 10,
-    gap: 5,
-    marginTop: 10,
+    marginHorizontal: spacing.small,
+    gap: spacing.tiny,
+    marginTop: spacing.small,
   },
   infoBox: {
-    paddingHorizontal: 20,
+    paddingHorizontal: spacing.medium,
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "baseline",
   },
   id: {
-    padding: 20,
+    padding: spacing.medium,
     justifyContent: "center",
     alignItems: "center",
   },
   type: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingHorizontal: spacing.medium,
+    paddingTop: spacing.medium,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -153,5 +148,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.medium,
+  },
+  totalPrice: {
+    fontFamily: "Rubik_500Medium_Italic",
+    fontSize: fontSize.extraSmall,
   },
 });

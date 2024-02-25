@@ -16,6 +16,7 @@ import { GeoCode, Hotel, StackParamList } from "constants/types";
 import useGetHotelList from "api/useGetHotelList";
 import { QueryClient, useQueries, useQuery, useQueryClient } from "react-query";
 import { Entypo } from "@expo/vector-icons";
+import { fontSize, spacing } from "constants/styles";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 
@@ -157,9 +158,8 @@ const NearbyStays = () => {
             >
               {item.name}
             </Text>
-            <Text style={[styles.text, { color: "white" }]}>{`${
-              item.distance.value
-            } ${item.distance.unit.toLowerCase()}s away`}</Text>
+            <Text style={[styles.text, { color: "white" }]}>{`${item.distance.value
+              } ${item.distance.unit.toLowerCase()}s away`}</Text>
           </View>
         </LinearGradient>
       </View>
@@ -190,7 +190,7 @@ export default NearbyStays;
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 20,
+    paddingVertical: spacing.medium,
   },
   flexContainer: {
     flexDirection: "row",
@@ -198,20 +198,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   header: {
-    fontSize: 30,
-    paddingBottom: 5,
+    fontSize: fontSize.extraLarge,
+    paddingBottom: spacing.tiny,
     fontFamily: "CormorantGaramond_700Bold_Italic",
   },
   text: {
-    fontSize: 14,
+    fontSize: fontSize.extraSmall,
     fontFamily: "Rubik_400Regular",
   },
   list: {
-    paddingTop: 10,
+    paddingTop: spacing.small,
   },
   icon: {
     color: "orange",
-    fontSize: 36,
+    fontSize: fontSize.huge,
   },
   image: {},
 });

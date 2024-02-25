@@ -1,3 +1,4 @@
+import { borderRadius } from "constants/styles";
 import { useMemo } from "react";
 import { StyleSheet, Image } from "react-native";
 
@@ -22,7 +23,7 @@ const PlaceHolderImage = (props: {
         style={{
           height: props.height,
           width: props.width,
-          borderRadius: 15,
+          borderRadius: borderRadius.large,
         }}
       />
     </>

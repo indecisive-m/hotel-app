@@ -12,6 +12,7 @@ import SearchForm from "components/SearchForm";
 import { observer } from "mobx-react-lite";
 import PopularStays from "components/PopularStays";
 import { useIsFocused } from "@react-navigation/native";
+import { spacing } from "constants/styles";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 
@@ -49,7 +50,7 @@ const Explore = observer(({ navigation }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: spacing.medium,
   },
 });
 

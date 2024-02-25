@@ -16,14 +16,6 @@ export default {
     secondary: "rgb(100, 51, 2)",
     accent: "rgb(0, 94, 255)",
   },
-
-  fontSize: {
-    sm: 8,
-    md: 12,
-    lg: 16,
-    xl: 20,
-    xxl: 24,
-  },
 };
 
 export const roomSize = /\d\d[s][q][m]/gim;
@@ -57,5 +49,5 @@ export const borderRadius = {
   medium: 10,
   large: 15,
   extraLarge: 20,
-  circle: "50%",
+  circle: 9999,
 };

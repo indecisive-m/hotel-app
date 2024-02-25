@@ -14,7 +14,7 @@ import { StackParamList } from "constants/types";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react-lite";
 import { store, useMst } from "store";
-import { text } from "@fortawesome/fontawesome-svg-core";
+import { borderRadius, spacing, fontSize } from "constants/styles";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 type SearchFormNavigationProp = Props["navigation"];
@@ -102,20 +102,20 @@ export default SearchForm;
 const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
-    borderRadius: 15,
-    padding: 10,
-    marginBottom: 20,
+    borderRadius: borderRadius.large,
+    padding: spacing.extraSmall,
+    marginBottom: spacing.medium,
   },
   button: {
-    borderRadius: 50,
-    backgroundColor: "red",
-    padding: 12,
+    borderRadius: borderRadius.circle,
+    backgroundColor: "orange",
+    padding: spacing.small,
     justifyContent: "center",
     width: "100%",
   },
   text: {
     alignSelf: "center",
-    fontSize: 22,
+    fontSize: fontSize.large,
     fontWeight: "500",
   },
   rowInput: {
@@ -124,8 +124,8 @@ const styles = StyleSheet.create({
   inputSplit: {
     width: "50%",
     borderWidth: 1,
-    borderRadius: 15,
-    padding: 10,
-    marginBottom: 20,
+    borderRadius: borderRadius.large,
+    padding: spacing.extraSmall,
+    marginBottom: spacing.medium,
   },
 });

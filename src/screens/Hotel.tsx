@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  Button,
   FlatList,
   ListRenderItem,
   Pressable,
@@ -9,8 +8,6 @@ import {
   Text,
   Image,
   View,
-  ImageSourcePropType,
-  ImageURISource,
   useWindowDimensions,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
@@ -19,8 +16,6 @@ import { StackParamList, OffersList, Offers } from "../constants/types";
 import { QueryClient, useQueries, useQuery, useQueryClient } from "react-query";
 import useGetHotelDetails from "api/useGetHotelDetails";
 
-import { SimpleLineIcons } from "@expo/vector-icons";
-import ImageGallery from "components/ImageGallery";
 import {
   Ionicons,
   FontAwesome,
@@ -29,13 +24,7 @@ import {
   MaterialCommunityIcons,
   Entypo,
 } from "@expo/vector-icons";
-import MapView, {
-  Marker,
-  PROVIDER_GOOGLE,
-  Region,
-  AnimatedRegion,
-  Animated,
-} from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE, Animated } from "react-native-maps";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import useGetHotelInfo from "api/useGetHotelInfo";
@@ -137,31 +126,33 @@ const Hotel = ({ route, navigation }: Props) => {
             </View>
             <Text style={styles.summary}>{places?.editorialSummary.text}</Text>
             <View>
-              <Animated
-                provider={PROVIDER_GOOGLE}
-                ref={mapViewRef}
-                camera={{
-                  center: {
-                    latitude: data?.hotel?.latitude,
-                    longitude: data?.hotel?.longitude,
-                  },
-                  zoom: 14,
-                  heading: 0,
-                  pitch: 0,
-                }}
-                showsBuildings={true}
-                minZoomLevel={6}
-                scrollEnabled={false}
-                style={styles.map}
-              >
-                <Marker
-                  title={hotelName}
-                  coordinate={{
-                    latitude: data?.hotel?.latitude,
-                    longitude: data?.hotel?.longitude,
+              <Pressable>
+                <Animated
+                  provider={PROVIDER_GOOGLE}
+                  ref={mapViewRef}
+                  camera={{
+                    center: {
+                      latitude: data?.hotel?.latitude,
+                      longitude: data?.hotel?.longitude,
+                    },
+                    zoom: 14,
+                    heading: 0,
+                    pitch: 0,
                   }}
-                />
-              </Animated>
+                  showsBuildings={true}
+                  minZoomLevel={6}
+                  scrollEnabled={false}
+                  style={styles.map}
+                >
+                  <Marker
+                    title={hotelName}
+                    coordinate={{
+                      latitude: data?.hotel?.latitude,
+                      longitude: data?.hotel?.longitude,
+                    }}
+                  />
+                </Animated>
+              </Pressable>
 
               <Text style={styles.addressText}>{places?.formattedAddress}</Text>
               <Pressable style={styles.phoneContainer}>

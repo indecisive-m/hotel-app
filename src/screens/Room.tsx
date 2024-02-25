@@ -18,6 +18,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useMst } from "store";
 import useGetHotelInfo from "api/useGetHotelInfo";
+import { borderRadius, fontSize, spacing } from "constants/styles";
 
 type Props = NativeStackScreenProps<StackParamList, "Room">;
 
@@ -110,30 +111,30 @@ const Room = ({ route, navigation }: Props) => {
 
           {roomInfo
             ? roomInfo.map((item, idx) => {
-                const [key, value] = Object.entries(item)[0];
+              const [key, value] = Object.entries(item)[0];
 
-                const lowerCaseKey = key.replace("_", " ").toLowerCase();
-                let objectKey;
+              const lowerCaseKey = key.replace("_", " ").toLowerCase();
+              let objectKey;
 
-                if (lowerCaseKey.includes(" ")) {
-                  const secondWordCapitalIndex = lowerCaseKey.search(" ") + 1;
-                  objectKey =
-                    lowerCaseKey.charAt(0).toUpperCase() +
-                    lowerCaseKey.slice(1, secondWordCapitalIndex) +
-                    lowerCaseKey.charAt(secondWordCapitalIndex).toUpperCase() +
-                    lowerCaseKey.slice(secondWordCapitalIndex + 1);
-                } else {
-                  objectKey =
-                    lowerCaseKey.charAt(0).toUpperCase() +
-                    lowerCaseKey.slice(1);
-                }
+              if (lowerCaseKey.includes(" ")) {
+                const secondWordCapitalIndex = lowerCaseKey.search(" ") + 1;
+                objectKey =
+                  lowerCaseKey.charAt(0).toUpperCase() +
+                  lowerCaseKey.slice(1, secondWordCapitalIndex) +
+                  lowerCaseKey.charAt(secondWordCapitalIndex).toUpperCase() +
+                  lowerCaseKey.slice(secondWordCapitalIndex + 1);
+              } else {
+                objectKey =
+                  lowerCaseKey.charAt(0).toUpperCase() +
+                  lowerCaseKey.slice(1);
+              }
 
-                return (
-                  <Text key={idx}>
-                    {objectKey}: {value}
-                  </Text>
-                );
-              })
+              return (
+                <Text key={idx}>
+                  {objectKey}: {value}
+                </Text>
+              );
+            })
             : null}
           <Text style={styles.text}>Total Price: {totalPrice}</Text>
           <Text style={styles.disclaimerText}>All prices in {currency}</Text>
@@ -157,61 +158,61 @@ export default Room;
 
 const styles = StyleSheet.create({
   description: {
-    borderRadius: 10,
-    padding: 10,
-    gap: 10,
+    borderRadius: borderRadius.medium,
+    padding: spacing.small,
+    gap: spacing.small,
     backgroundColor: "white",
   },
   descriptionText: {
-    fontSize: 14,
+    fontSize: fontSize.small,
   },
   disclaimerText: {
-    fontSize: 12,
+    fontSize: fontSize.small,
   },
   row: {
     flexDirection: "row",
-    gap: 5,
+    gap: spacing.tiny,
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   box: {
-    borderRadius: 10,
-    padding: 10,
-    marginTop: 10,
+    borderRadius: borderRadius.medium,
+    padding: spacing.small,
+    marginTop: spacing.small,
     backgroundColor: "white",
     justifyContent: "center",
     flexDirection: "row",
     alignSelf: "baseline",
-    gap: 10,
+    gap: spacing.small,
   },
   text: {
-    fontSize: 16,
+    fontSize: fontSize.small,
     letterSpacing: 0.25,
   },
   container: {
-    padding: 10,
-    gap: 20,
+    padding: spacing.small,
+    gap: spacing.large,
     backgroundColor: "#f5f5f5",
   },
   title: {
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: fontSize.medium,
     textDecorationLine: "underline",
   },
   priceBox: {
     // backgroundColor: "rgb(255, 204, 128)",
     backgroundColor: "orange",
     opacity: 0.75,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    gap: 10,
+    borderRadius: borderRadius.medium,
+    paddingHorizontal: spacing.small,
+    paddingVertical: spacing.small,
+    gap: spacing.small,
   },
 
   button: {
-    borderRadius: 50,
-    padding: 12,
+    borderRadius: borderRadius.circle,
+    padding: spacing.small,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
 
   buttonText: {
     alignSelf: "center",
-    fontSize: 22,
+    fontSize: fontSize.extraSmall,
     fontWeight: "500",
   },
 });
