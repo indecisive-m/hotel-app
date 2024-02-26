@@ -20,7 +20,7 @@ const ContentViewSelector = (props: {
         ]}
       >
         <Entypo name="map" size={18} color={"black"} />
-        <Text>Map View</Text>
+        <Text style={styles.text}>Map View</Text>
       </Pressable>
       <Pressable
         onPress={() => props.setShowMap(false)}
@@ -32,7 +32,7 @@ const ContentViewSelector = (props: {
         ]}
       >
         <Entypo name="list" size={18} color={"black"} />
-        <Text>List View</Text>
+        <Text style={styles.text}>List View</Text>
       </Pressable>
     </View>
   );
@@ -51,9 +51,13 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   selector: {
-    padding: spacing.extraSmall,
+    padding: spacing.small,
     flexDirection: "row",
     gap: spacing.tiny,
     alignItems: "center",
+  },
+  text: {
+    fontFamily: "Rubik_400Regular",
+    letterSpacing: 0.25,
   },
 });

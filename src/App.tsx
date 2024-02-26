@@ -150,7 +150,11 @@ export default function App() {
               component={HomeTabs}
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="Hotel" component={Hotel} />
+            <Stack.Screen
+              name="Hotel"
+              component={Hotel}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="Room"
               component={Room}

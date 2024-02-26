@@ -49,7 +49,7 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const [longitude, setLongitude] = useState(0);
   const [latitudeDelta, setLatitudeDelta] = useState(0.0922);
   const [longitudeDelta, setLongitudeDelta] = useState(
-    latitudeDelta * ASPECT_RATIO,
+    latitudeDelta * ASPECT_RATIO
   );
 
   const [markerZoomLevel, setMarkerZoomLevel] = useState(5);
@@ -70,7 +70,6 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const getZoomLevel = async () => {
     const zoom = await mapViewRef.current?.getCamera();
     setMarkerZoomLevel(zoom?.zoom!);
-    console.log(zoom?.zoom);
   };
 
   useEffect(() => {
@@ -112,11 +111,11 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
     return (
       <View
         style={{
-          borderRadius: 15,
-          padding: 10,
+          borderRadius: borderRadius.large,
+          padding: spacing.small,
           backgroundColor: "#e9d5b1",
           width: width / 2 - 15,
-          height: 300,
+          height: 310,
           position: "relative",
           justifyContent: "flex-end",
         }}
@@ -135,11 +134,13 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
             top: width / 2 - 15,
             left: 0,
             right: 0,
-            padding: 10,
+            padding: spacing.small,
           }}
         >
-          <Text numberOfLines={2}>{item.name}</Text>
-          <Text>
+          <Text style={styles.text} numberOfLines={2}>
+            {item.name}
+          </Text>
+          <Text style={styles.text}>
             {item.distance.value} {item.distance.unit.toLocaleLowerCase()}s away
           </Text>
         </View>
@@ -179,20 +180,20 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
           >
             {slicedData !== undefined
               ? slicedData.map((hotel: Hotel, index: number) => {
-                return (
-                  <Marker
-                    key={index}
-                    title={hotel.name}
-                    coordinate={{
-                      latitude: +hotel.geoCode.latitude,
-                      longitude: +hotel.geoCode.longitude,
-                    }}
-                    onCalloutPress={() =>
-                      navigation.navigate("Hotel", { hotelId: hotel.hotelId })
-                    }
-                  />
-                );
-              })
+                  return (
+                    <Marker
+                      key={index}
+                      title={hotel.name}
+                      coordinate={{
+                        latitude: +hotel.geoCode.latitude,
+                        longitude: +hotel.geoCode.longitude,
+                      }}
+                      onCalloutPress={() =>
+                        navigation.navigate("Hotel", { hotelId: hotel.hotelId })
+                      }
+                    />
+                  );
+                })
               : null}
           </Animated>
         </>
@@ -218,10 +219,10 @@ export default HotelSearchMap;
 const styles = StyleSheet.create({
   list: {
     padding: spacing.extraSmall,
-    gap: spacing.extraSmall,
+    gap: spacing.small,
   },
   button: {
-    padding: spacing.small,
+    padding: spacing.extraSmall,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
@@ -233,5 +234,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: fontSize.small,
     fontFamily: "Rubik_500Medium",
+  },
+  text: {
+    fontFamily: "Rubik_400Regular",
+    letterSpacing: 0.25,
   },
 });

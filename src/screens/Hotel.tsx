@@ -59,7 +59,7 @@ const Hotel = ({ route, navigation }: Props) => {
   const photos = hotelInfo.data?.photoUris;
 
   if (isLoading || hotelInfo.isLoading || !hotelInfo.data?.photoUris) {
-    navigation.setOptions({ headerShown: false });
+    // navigation.setOptions({ headerShown: false });
     return (
       <ActivityIndicator
         size={"large"}
@@ -73,10 +73,10 @@ const Hotel = ({ route, navigation }: Props) => {
   // }
 
   if (isSuccess) {
-    navigation.setOptions({
-      headerShown: true,
-      title: `${data?.hotel?.name}`,
-    });
+    // navigation.setOptions({
+    //   headerShown: true,
+    //   title: `${data?.hotel?.name}`,
+    // });
   }
 
   const renderedImages: ListRenderItem<string> = ({ item }) => {
@@ -94,156 +94,160 @@ const Hotel = ({ route, navigation }: Props) => {
     );
   };
 
-  return (
-    <>
-      <ScrollView>
-        <FlatList
-          data={hotelInfo.data?.photoUris}
-          horizontal={true}
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          renderItem={renderedImages}
-        />
-        <View style={styles.container}>
-          <View style={styles.addressContainer}>
-            <Text style={styles.hotelNameText}>{hotelName}</Text>
-            <View style={styles.ratingContainer}>
-              <FontAwesome name="star" size={22} color="orange" />
-              <Text style={styles.ratingText}>
-                {places?.rating}
-                <Text
-                  style={{
-                    fontSize: fontSize.small,
-                    fontFamily: "Rubik_400Regular",
-                  }}
-                >
-                  / 5
-                </Text>
-              </Text>
-              <Text style={{ fontFamily: "Rubik_400Regular_Italic" }}>
-                ({places?.userRatingCount} total ratings)
-              </Text>
-            </View>
-            <Text style={styles.summary}>{places?.editorialSummary.text}</Text>
-            <View>
-              <Pressable>
-                <Animated
-                  provider={PROVIDER_GOOGLE}
-                  ref={mapViewRef}
-                  camera={{
-                    center: {
-                      latitude: data?.hotel?.latitude,
-                      longitude: data?.hotel?.longitude,
-                    },
-                    zoom: 14,
-                    heading: 0,
-                    pitch: 0,
-                  }}
-                  showsBuildings={true}
-                  minZoomLevel={6}
-                  scrollEnabled={false}
-                  style={styles.map}
-                >
-                  <Marker
-                    title={hotelName}
-                    coordinate={{
-                      latitude: data?.hotel?.latitude,
-                      longitude: data?.hotel?.longitude,
-                    }}
-                  />
-                </Animated>
-              </Pressable>
-
-              <Text style={styles.addressText}>{places?.formattedAddress}</Text>
-              <Pressable style={styles.phoneContainer}>
-                <FontAwesome name={"phone"} size={20} color="black" />
-                <Text style={styles.phoneText}>
-                  {places?.internationalPhoneNumber}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-
-          <Pressable
-            onPress={() => setShowAmenities(!showAmenities)}
-            style={styles.headerContainer}
-          >
-            <Text style={styles.headerText}>Amenities</Text>
-
-            <Ionicons
-              name={showAmenities ? "chevron-up" : "chevron-down"}
-              size={24}
-              color="black"
-            />
+  const headerComponent = (
+    <View style={styles.container}>
+      <View style={styles.addressContainer}>
+        <Text style={styles.hotelNameText}>{hotelName}</Text>
+        <View style={styles.ratingContainer}>
+          <FontAwesome name="star" size={22} color="orange" />
+          <Text style={styles.ratingText}>
+            {places?.rating}
+            <Text
+              style={{
+                fontSize: fontSize.small,
+                fontFamily: "Rubik_400Regular",
+              }}
+            >
+              / 5
+            </Text>
+          </Text>
+          <Text style={{ fontFamily: "Rubik_400Regular_Italic" }}>
+            ({places?.userRatingCount} total ratings)
+          </Text>
+        </View>
+        <Text style={styles.summary}>{places?.editorialSummary.text}</Text>
+        <View>
+          <Pressable>
+            <Animated
+              provider={PROVIDER_GOOGLE}
+              ref={mapViewRef}
+              camera={{
+                center: {
+                  latitude: data?.hotel?.latitude,
+                  longitude: data?.hotel?.longitude,
+                },
+                zoom: 14,
+                heading: 0,
+                pitch: 0,
+              }}
+              showsBuildings={true}
+              minZoomLevel={6}
+              scrollEnabled={false}
+              style={styles.map}
+            >
+              <Marker
+                title={hotelName}
+                coordinate={{
+                  latitude: data?.hotel?.latitude,
+                  longitude: data?.hotel?.longitude,
+                }}
+              />
+            </Animated>
           </Pressable>
-          {showAmenities ? (
-            <View style={styles.expandedContainer}>
-              <View style={styles.flexRow}>
-                <FontAwesome name="shower" style={styles.icon} />
-                <Text style={styles.detailsItem}>Shower</Text>
-              </View>
-              <View style={styles.flexRow}>
-                <FontAwesome name="bathtub" style={styles.icon} />
-                <Text style={styles.detailsItem}>Bath</Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Ionicons name="wifi" style={styles.icon} />
 
-                <Text style={styles.detailsItem}>WiFi</Text>
-              </View>
-              <View style={styles.flexRow}>
-                <MaterialCommunityIcons name="hair-dryer" style={styles.icon} />
-                <Text style={styles.detailsItem}>Hairdryer</Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Entypo name="tv" style={styles.icon} />
-                <Text style={styles.detailsItem}>TV</Text>
-              </View>
-              {places?.allowsDogs ? (
-                <View style={styles.flexRow}>
-                  <MaterialIcons name="pets" style={styles.icon} />
-                  <Text style={styles.detailsItem}>Pets Allowed</Text>
-                </View>
-              ) : (
-                <View style={styles.flexRow}>
-                  <FontAwesome name="ban" style={styles.icon} />
-                  <Text style={styles.detailsItem}>No pets</Text>
-                </View>
-              )}
-              {places?.accessibilityOptions.wheelchairAccessibleEntrance ? (
-                <View style={styles.flexRow}>
-                  <FontAwesome5 name="wheelchair" style={styles.icon} />
-                  <Text style={styles.detailsItem}>Wheelchair accessible</Text>
-                </View>
-              ) : null}
-              {places?.accessibilityOptions.wheelchairAccessibleParking ? (
-                <View style={styles.flexRow}>
-                  <FontAwesome5 name="wheelchair" style={styles.icon} />
-                  <Text style={styles.detailsItem}>Disabled parking</Text>
-                </View>
-              ) : null}
-            </View>
-          ) : null}
-          <Pressable
-            style={styles.headerContainer}
-            onPress={() =>
-              navigation.navigate("ReviewsModal", { reviews: places?.reviews })
-            }
-          >
-            <Text style={styles.headerText}>Reviews</Text>
-            <Ionicons
-              name={reviewsShown ? "chevron-up" : "chevron-forward"}
-              size={24}
-              color="black"
-            />
+          <Text style={styles.addressText}>{places?.formattedAddress}</Text>
+          <Pressable style={styles.phoneContainer}>
+            <FontAwesome name={"phone"} size={20} color="black" />
+            <Text style={styles.phoneText}>
+              {places?.internationalPhoneNumber}
+            </Text>
           </Pressable>
         </View>
-        <FlatList
-          data={data?.data}
-          renderItem={({ item }) => <RoomDetailsCard item={item} />}
-          style={{ flex: 1 }}
+      </View>
+
+      <Pressable
+        onPress={() => setShowAmenities(!showAmenities)}
+        style={styles.headerContainer}
+      >
+        <Text style={styles.headerText}>Amenities</Text>
+
+        <Ionicons
+          name={showAmenities ? "chevron-up" : "chevron-down"}
+          size={24}
+          color="black"
         />
-      </ScrollView>
+      </Pressable>
+      {showAmenities ? (
+        <View style={styles.expandedContainer}>
+          <View style={styles.flexRow}>
+            <FontAwesome name="shower" style={styles.icon} />
+            <Text style={styles.detailsItem}>Shower</Text>
+          </View>
+          <View style={styles.flexRow}>
+            <FontAwesome name="bathtub" style={styles.icon} />
+            <Text style={styles.detailsItem}>Bath</Text>
+          </View>
+          <View style={styles.flexRow}>
+            <Ionicons name="wifi" style={styles.icon} />
+
+            <Text style={styles.detailsItem}>WiFi</Text>
+          </View>
+          <View style={styles.flexRow}>
+            <MaterialCommunityIcons name="hair-dryer" style={styles.icon} />
+            <Text style={styles.detailsItem}>Hairdryer</Text>
+          </View>
+          <View style={styles.flexRow}>
+            <Entypo name="tv" style={styles.icon} />
+            <Text style={styles.detailsItem}>TV</Text>
+          </View>
+          {places?.allowsDogs ? (
+            <View style={styles.flexRow}>
+              <MaterialIcons name="pets" style={styles.icon} />
+              <Text style={styles.detailsItem}>Pets Allowed</Text>
+            </View>
+          ) : (
+            <View style={styles.flexRow}>
+              <FontAwesome name="ban" style={styles.icon} />
+              <Text style={styles.detailsItem}>No pets</Text>
+            </View>
+          )}
+          {places?.accessibilityOptions.wheelchairAccessibleEntrance ? (
+            <View style={styles.flexRow}>
+              <FontAwesome5 name="wheelchair" style={styles.icon} />
+              <Text style={styles.detailsItem}>Wheelchair accessible</Text>
+            </View>
+          ) : null}
+          {places?.accessibilityOptions.wheelchairAccessibleParking ? (
+            <View style={styles.flexRow}>
+              <FontAwesome5 name="wheelchair" style={styles.icon} />
+              <Text style={styles.detailsItem}>Disabled parking</Text>
+            </View>
+          ) : null}
+        </View>
+      ) : null}
+      <Pressable
+        style={styles.headerContainer}
+        onPress={() =>
+          navigation.navigate("ReviewsModal", { reviews: places?.reviews })
+        }
+      >
+        <Text style={styles.headerText}>Reviews</Text>
+        <Ionicons
+          name={reviewsShown ? "chevron-up" : "chevron-forward"}
+          size={24}
+          color="black"
+        />
+      </Pressable>
+    </View>
+  );
+
+  return (
+    <>
+      <FlatList
+        data={hotelInfo.data?.photoUris}
+        horizontal={true}
+        pagingEnabled={true}
+        showsHorizontalScrollIndicator={false}
+        renderItem={renderedImages}
+        style={{ flex: 1 }}
+      />
+      <FlatList
+        data={data?.data}
+        renderItem={({ item }) => <RoomDetailsCard item={item} />}
+        style={{ flex: 1 }}
+        scrollEnabled={true}
+        ListHeaderComponent={headerComponent}
+      />
     </>
   );
 };

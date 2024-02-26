@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
   },
   priceBox: {
     backgroundColor: "orange",
-    opacity: 0.75,
     paddingVertical: spacing.medium,
     gap: spacing.small,
     borderBottomLeftRadius: borderRadius.medium,
