@@ -42,6 +42,7 @@ const Hotel = ({ route, navigation }: Props) => {
   const queryClient = useQueryClient();
 
   const mapViewRef = useRef<MapView>(null);
+
   const { data, isLoading, status, isSuccess, refetch } = useQuery({
     queryKey: ["hotel", hotelId],
     queryFn: () => useGetHotelDetails(hotelId, false),
@@ -55,6 +56,10 @@ const Hotel = ({ route, navigation }: Props) => {
     enabled: !!hotelName,
   });
 
+  if (status === "error") {
+    navigation.replace("Error");
+  }
+
   const places = hotelInfo.data?.data?.places[0];
   const photos = hotelInfo.data?.photoUris;
 
@@ -67,10 +72,6 @@ const Hotel = ({ route, navigation }: Props) => {
       />
     );
   }
-
-  // if (!data?.data) {
-  //   navigation.navigate("Error");
-  // }
 
   if (isSuccess) {
     // navigation.setOptions({

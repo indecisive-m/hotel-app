@@ -14,10 +14,12 @@ import { StackParamList } from "constants/types";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react-lite";
 import { store, useMst } from "store";
-import { borderRadius, spacing, fontSize } from "constants/styles";
+import { borderRadius, spacing, fontSize, colors } from "constants/styles";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 type SearchFormNavigationProp = Props["navigation"];
+
+const theme = store.theme.theme;
 
 const SearchForm = observer(() => {
   const queryClient = useQueryClient();
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: borderRadius.circle,
-    backgroundColor: "orange",
+    backgroundColor: colors.accent400,
     padding: spacing.small,
     justifyContent: "center",
     width: "100%",

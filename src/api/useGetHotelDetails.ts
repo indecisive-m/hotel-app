@@ -20,7 +20,6 @@ const useGetHotelDetails = async (hotelId: String, bestRate: boolean) => {
     );
 
     const statusCode = fetchHotelDetails.status;
-    console.log(statusCode);
 
     const results = await fetchHotelDetails.json();
 

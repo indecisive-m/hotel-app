@@ -6,6 +6,7 @@ import { CalendarUtils } from "react-native-calendars";
 import { DatesModel } from "models/DatesModel";
 import { FilterModel } from "models/FilterModel";
 import { SearchDestinationModel } from "models/SearchDestinationModel";
+import { ThemeModel } from "models/ThemeModel";
 
 const RootStore = types.model({
   dates: DatesModel,
@@ -13,6 +14,7 @@ const RootStore = types.model({
   hotel: HotelModel,
   filters: FilterModel,
   searchDestination: SearchDestinationModel,
+  theme: ThemeModel,
 });
 
 export const store = RootStore.create({
@@ -28,6 +30,9 @@ export const store = RootStore.create({
   },
   filters: {},
   searchDestination: {},
+  theme: {
+    theme: "dark",
+  },
 });
 
 export type RootInstance = Instance<typeof RootStore>;
