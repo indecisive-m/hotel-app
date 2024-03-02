@@ -10,7 +10,7 @@ import Explore from "./screens/Explore";
 import { StackParamList, TabParamList } from "constants/types";
 import Hotel from "screens/Hotel";
 import HotelSearchMap from "screens/HotelSearchMap";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useGetBearerKey from "api/useGetBearerKey";
 import { Ionicons } from "@expo/vector-icons";
 import CalendarModal from "screens/CalendarModal";
@@ -51,6 +51,7 @@ import { Provider, store } from "store";
 import ReviewsModal from "screens/ReviewsModal";
 import { observer } from "mobx-react-lite";
 import { ThemeContext } from "constants/context";
+import { darkTheme, fontSize, lightTheme, spacing } from "constants/styles";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -60,6 +61,8 @@ const queryClient = new QueryClient({
 });
 
 function HomeTabs() {
+  const { theme } = useContext(ThemeContext);
+  const color = theme === "dark" ? darkTheme : lightTheme;
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -82,7 +85,14 @@ function HomeTabs() {
         name="Settings"
         component={Settings}
         options={{
-          headerShown: false,
+          headerShown: true,
+          headerTitleStyle: {
+            fontFamily: "CormorantGaramond_700Bold",
+            fontSize: fontSize.extraLarge,
+          },
+          headerStyle: {
+            backgroundColor: color.accent400,
+          },
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name="settings-outline"

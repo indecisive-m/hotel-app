@@ -31,7 +31,7 @@ export const store = RootStore.create({
   filters: {},
   searchDestination: {},
   theme: {
-    theme: "dark",
+    theme: "light",
   },
 });
 
