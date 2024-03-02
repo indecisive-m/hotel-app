@@ -8,6 +8,9 @@ import {
   Pressable,
   ImageSourcePropType,
   Dimensions,
+  ViewStyle,
+  TextStyle,
+  ImageStyle,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { PopularStay, StackParamList } from "constants/types";
@@ -16,7 +19,15 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import useGetHotelList from "api/useGetHotelList";
 import { useMst } from "store";
-import { borderRadius, fontSize, spacing } from "constants/styles";
+import {
+  borderRadius,
+  darkTheme,
+  fontSize,
+  lightTheme,
+  spacing,
+} from "constants/styles";
+import { ThemeContext } from "constants/context";
+import { useContext } from "react";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 type PopularStaysNavigationProp = Props["navigation"];
@@ -24,8 +35,9 @@ const { width } = Dimensions.get("window");
 
 const PopularStays = () => {
   const { searchDestination } = useMst();
-
+  const { theme } = useContext(ThemeContext);
   const navigation = useNavigation<PopularStaysNavigationProp>();
+  const color = theme === "dark" ? darkTheme : lightTheme;
 
   const DATA = [
     {
@@ -72,6 +84,43 @@ const PopularStays = () => {
     },
   ];
 
+  const $container: ViewStyle = {
+    paddingVertical: spacing.medium,
+  };
+
+  const $flexContainer: ViewStyle = {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  };
+
+  const $header: TextStyle = {
+    fontSize: fontSize.extraLarge,
+    paddingBottom: spacing.tiny,
+    fontFamily: "CormorantGaramond_700Bold_Italic",
+  };
+
+  const $text: TextStyle = {
+    fontSize: fontSize.extraSmall,
+  };
+
+  const $list: ViewStyle = {
+    paddingTop: spacing.small,
+  };
+
+  const $icon: TextStyle = {
+    color: color.accent400,
+    fontSize: fontSize.huge,
+  };
+
+  const $image: ImageStyle = {
+    height: 220,
+    width: width - 75,
+    position: "absolute",
+    objectFit: "cover",
+    borderRadius: borderRadius.large,
+  };
+
   const renderedItem: ListRenderItem<PopularStay> = ({ item }) => {
     return (
       <Pressable
@@ -94,10 +143,7 @@ const PopularStays = () => {
             width: width - 75,
           }}
         >
-          <Image
-            source={item.imageUri as ImageSourcePropType}
-            style={styles.image}
-          />
+          <Image source={item.imageUri as ImageSourcePropType} style={$image} />
           <LinearGradient
             colors={["transparent", "black"]}
             start={{ x: 0.5, y: 0.35 }}
@@ -139,10 +185,10 @@ const PopularStays = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.flexContainer}>
+    <View style={$container}>
+      <View style={$flexContainer}>
         <View>
-          <Text style={styles.header}>Popular Destinations</Text>
+          <Text style={$header}>Popular Destinations</Text>
         </View>
       </View>
 
@@ -151,43 +197,10 @@ const PopularStays = () => {
         renderItem={renderedItem}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        style={styles.list}
+        style={$list}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingVertical: spacing.medium,
-  },
-  flexContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  header: {
-    fontSize: fontSize.extraLarge,
-    paddingBottom: spacing.tiny,
-    fontFamily: "CormorantGaramond_700Bold_Italic",
-  },
-  text: {
-    fontSize: fontSize.extraSmall,
-  },
-  list: {
-    paddingTop: spacing.small,
-  },
-  icon: {
-    color: "orange",
-    fontSize: fontSize.huge,
-  },
-  image: {
-    height: 220,
-    width: width - 75,
-    position: "absolute",
-    objectFit: "cover",
-    borderRadius: borderRadius.large,
-  },
-});
 
 export default PopularStays;

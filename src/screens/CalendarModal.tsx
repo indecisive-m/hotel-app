@@ -2,16 +2,19 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Calendar, CalendarUtils, DateData } from "react-native-calendars";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, Hotel, HotelList, GeoCode } from "../constants/types";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import Toast from "react-native-toast-message";
 import { observer } from "mobx-react-lite";
 import { useMst } from "store";
-import { borderRadius } from "constants/styles";
+import { borderRadius, darkTheme, lightTheme } from "constants/styles";
+import { ThemeContext } from "constants/context";
 
 type Props = NativeStackScreenProps<StackParamList, "CalendarModal">;
 
 const CalendarModal = observer(({ navigation }: Props) => {
   const [markedDates, setMarkedDates] = useState<string[]>([]);
+  const { theme } = useContext(ThemeContext);
+  const color = theme === "dark" ? darkTheme : lightTheme;
 
   const dateToday = CalendarUtils.getCalendarDateString(new Date());
   const { dates } = useMst();
@@ -39,7 +42,7 @@ const CalendarModal = observer(({ navigation }: Props) => {
   const getDaysInBetween = (firstDay: string, secondDay: string) => {
     const daysArray = [firstDay];
 
-    for (let i = firstDay; i !== secondDay;) {
+    for (let i = firstDay; i !== secondDay; ) {
       const date = new Date(i);
       const newDate = date.setDate(date.getDate() + 1);
       const newDay = CalendarUtils.getCalendarDateString(newDate);
@@ -75,6 +78,7 @@ const CalendarModal = observer(({ navigation }: Props) => {
     type Marks = {
       [key: string]: {
         color: string;
+        opacity?: number;
         startingDay?: boolean;
         endingDay?: boolean;
         textColor?: string;
@@ -84,17 +88,18 @@ const CalendarModal = observer(({ navigation }: Props) => {
     markedDates.map((day, index) => {
       if (index === 0) {
         marks[`${markedDates[0]}`] = {
-          color: "hsl(38.82352941176471, 100%, 50%)",
+          color: color.accent400,
           startingDay: true,
         };
       } else if (index === markedDates.length - 1) {
         marks[`${markedDates[index]}`] = {
-          color: "hsl(38.82352941176471, 100%, 50%)",
+          color: color.accent400,
           endingDay: true,
         };
       } else {
         marks[`${markedDates[index]}`] = {
-          color: "hsl(38.82352941176471, 100%, 60%)",
+          color: color.accent400,
+          opacity: 0.5,
           textColor: "black",
         };
       }
@@ -112,7 +117,7 @@ const CalendarModal = observer(({ navigation }: Props) => {
       <View
         style={{
           height: 20,
-          backgroundColor: "orange",
+          backgroundColor: color.accent400,
           borderTopRightRadius: borderRadius.medium,
           borderTopLeftRadius: borderRadius.medium,
           justifyContent: "center",

@@ -4,9 +4,12 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TextInputProps,
+  TextStyle,
   View,
+  ViewStyle,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import useGetGeoCode from "api/useGetGeoCode";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -14,17 +17,25 @@ import { StackParamList } from "constants/types";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react-lite";
 import { store, useMst } from "store";
-import { borderRadius, spacing, fontSize, colors } from "constants/styles";
+import {
+  borderRadius,
+  spacing,
+  fontSize,
+  darkTheme,
+  lightTheme,
+} from "constants/styles";
+import { ThemeContext } from "constants/context";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 type SearchFormNavigationProp = Props["navigation"];
 
-const theme = store.theme.theme;
-
 const SearchForm = observer(() => {
+  const { theme } = useContext(ThemeContext);
   const queryClient = useQueryClient();
   const navigation = useNavigation<SearchFormNavigationProp>();
   const isFocused = useIsFocused();
+
+  const color = theme === "dark" ? darkTheme : lightTheme;
 
   const [inputText, setInputText] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
@@ -61,73 +72,72 @@ const SearchForm = observer(() => {
       });
     });
   };
+
+  const $inputSplit: TextStyle = {
+    width: "50%",
+    borderWidth: 1,
+    borderRadius: borderRadius.large,
+    padding: spacing.extraSmall,
+    marginBottom: spacing.medium,
+  };
+
+  const $rowInput: ViewStyle = {
+    flexDirection: "row",
+  };
+
+  const $text: TextStyle = {
+    alignSelf: "center",
+    fontSize: fontSize.large,
+    fontWeight: "500",
+  };
+
+  const $input: ViewStyle = {
+    borderWidth: 1,
+    borderRadius: borderRadius.large,
+    padding: spacing.extraSmall,
+    marginBottom: spacing.medium,
+  };
+
+  const $button: ViewStyle = {
+    borderRadius: borderRadius.circle,
+    backgroundColor: color.accent400,
+    padding: spacing.small,
+    justifyContent: "center",
+    width: "100%",
+  };
+
   return (
     <>
       <TextInput
         placeholder="Where are you going?"
-        style={styles.input}
+        style={$input}
         value={inputText}
         onChangeText={(text) => handleInputText(text)}
       />
-      <Pressable style={styles.input} onPress={showModal}>
+      <Pressable style={$input} onPress={showModal}>
         <Text>
           {dates.checkInDate} - {dates.checkOutDate}
         </Text>
       </Pressable>
-      <View style={styles.rowInput}>
+      <View style={$rowInput}>
         <TextInput
           placeholder="How many adults"
-          style={styles.inputSplit}
+          style={$inputSplit}
           keyboardType="number-pad"
           onChangeText={(text) => hotel.setNumberOfAdults(Number(text))}
         />
         <TextInput
           placeholder="How many Rooms "
-          style={styles.inputSplit}
+          style={$inputSplit}
           keyboardType="number-pad"
           onChangeText={(text) => hotel.setNumberOfRooms(Number(text))}
         />
       </View>
-      <Pressable style={styles.button} onPress={() => handleGeoCode()}>
-        {loading ? (
-          <ActivityIndicator />
-        ) : (
-          <Text style={styles.text}>Search</Text>
-        )}
+      <Pressable style={$button} onPress={() => handleGeoCode()}>
+        {loading ? <ActivityIndicator /> : <Text style={$text}>Search</Text>}
       </Pressable>
     </>
   );
 });
 
 export default SearchForm;
-
-const styles = StyleSheet.create({
-  input: {
-    borderWidth: 1,
-    borderRadius: borderRadius.large,
-    padding: spacing.extraSmall,
-    marginBottom: spacing.medium,
-  },
-  button: {
-    borderRadius: borderRadius.circle,
-    backgroundColor: colors.accent400,
-    padding: spacing.small,
-    justifyContent: "center",
-    width: "100%",
-  },
-  text: {
-    alignSelf: "center",
-    fontSize: fontSize.large,
-    fontWeight: "500",
-  },
-  rowInput: {
-    flexDirection: "row",
-  },
-  inputSplit: {
-    width: "50%",
-    borderWidth: 1,
-    borderRadius: borderRadius.large,
-    padding: spacing.extraSmall,
-    marginBottom: spacing.medium,
-  },
-});

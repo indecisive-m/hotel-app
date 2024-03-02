@@ -1,47 +1,25 @@
-import { View, StyleSheet, Pressable, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  Text,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 
 import { Entypo } from "@expo/vector-icons";
-import { borderRadius, spacing } from "constants/styles";
+import { borderRadius, darkTheme, lightTheme, spacing } from "constants/styles";
+import { ThemeContext } from "constants/context";
+import { useContext } from "react";
 
 const ContentViewSelector = (props: {
   showMap: boolean;
   setShowMap: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  return (
-    <View style={[styles.selectorContainer, { alignSelf: "center" }]}>
-      <Pressable
-        onPress={() => props.setShowMap(true)}
-        style={[
-          styles.selector,
-          { borderEndWidth: 1, borderColor: "black" },
-          props.showMap
-            ? { backgroundColor: "orange" }
-            : { backgroundColor: "white" },
-        ]}
-      >
-        <Entypo name="map" size={18} color={"black"} />
-        <Text style={styles.text}>Map View</Text>
-      </Pressable>
-      <Pressable
-        onPress={() => props.setShowMap(false)}
-        style={[
-          styles.selector,
-          !props.showMap
-            ? { backgroundColor: "orange" }
-            : { backgroundColor: "white" },
-        ]}
-      >
-        <Entypo name="list" size={18} color={"black"} />
-        <Text style={styles.text}>List View</Text>
-      </Pressable>
-    </View>
-  );
-};
+  const { theme } = useContext(ThemeContext);
+  const color = theme === "dark" ? darkTheme : lightTheme;
 
-export default ContentViewSelector;
-
-const styles = StyleSheet.create({
-  selectorContainer: {
+  const $selectorContainer: ViewStyle = {
     flexDirection: "row",
     position: "absolute",
     bottom: 20,
@@ -49,15 +27,49 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderRadius: borderRadius.large,
     overflow: "hidden",
-  },
-  selector: {
+  };
+
+  const $selector: ViewStyle = {
     padding: spacing.small,
     flexDirection: "row",
     gap: spacing.tiny,
     alignItems: "center",
-  },
-  text: {
+  };
+
+  const $text: TextStyle = {
     fontFamily: "Rubik_400Regular",
     letterSpacing: 0.25,
-  },
-});
+  };
+
+  return (
+    <View style={[$selectorContainer, { alignSelf: "center" }]}>
+      <Pressable
+        onPress={() => props.setShowMap(true)}
+        style={[
+          $selector,
+          { borderEndWidth: 1, borderColor: "black" },
+          props.showMap
+            ? { backgroundColor: color.accent400 }
+            : { backgroundColor: "white" },
+        ]}
+      >
+        <Entypo name="map" size={18} color={"black"} />
+        <Text style={$text}>Map View</Text>
+      </Pressable>
+      <Pressable
+        onPress={() => props.setShowMap(false)}
+        style={[
+          $selector,
+          !props.showMap
+            ? { backgroundColor: color.accent400 }
+            : { backgroundColor: "white" },
+        ]}
+      >
+        <Entypo name="list" size={18} color={"black"} />
+        <Text style={$text}>List View</Text>
+      </Pressable>
+    </View>
+  );
+};
+
+export default ContentViewSelector;

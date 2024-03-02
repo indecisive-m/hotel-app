@@ -8,17 +8,20 @@ import {
   Image,
   useWindowDimensions,
   Pressable,
+  ViewStyle,
+  TextStyle,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { LinearGradient } from "expo-linear-gradient";
 import { GeoCode, Hotel, StackParamList } from "constants/types";
 import useGetHotelList from "api/useGetHotelList";
 import { QueryClient, useQueries, useQuery, useQueryClient } from "react-query";
 import { Entypo } from "@expo/vector-icons";
-import { fontSize, spacing } from "constants/styles";
+import { darkTheme, fontSize, lightTheme, spacing } from "constants/styles";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
+import { ThemeContext } from "constants/context";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 type NearbyStaysNavigationProp = Props["navigation"];
@@ -27,6 +30,8 @@ const NearbyStays = () => {
   const queryClient = useQueryClient();
   const { width } = useWindowDimensions();
   const [permission, setPermission] = useState(false);
+  const { theme } = useContext(ThemeContext);
+  const color = theme === "dark" ? darkTheme : lightTheme;
 
   const navigation = useNavigation<NearbyStaysNavigationProp>();
 
@@ -59,15 +64,45 @@ const NearbyStays = () => {
     })();
   }, []);
 
+  const $container: ViewStyle = {
+    paddingVertical: spacing.medium,
+  };
+
+  const $flexContainer: ViewStyle = {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  };
+
+  const $header: TextStyle = {
+    fontSize: fontSize.extraLarge,
+    paddingBottom: spacing.tiny,
+    fontFamily: "CormorantGaramond_700Bold_Italic",
+  };
+
+  const $text: TextStyle = {
+    fontSize: fontSize.extraSmall,
+    fontFamily: "Rubik_400Regular",
+  };
+
+  const $list: ViewStyle = {
+    paddingTop: spacing.small,
+  };
+
+  const $icon: TextStyle = {
+    color: color.accent400,
+    fontSize: fontSize.huge,
+  };
+
   if (isLoading) {
     return (
-      <View style={styles.container}>
-        <View style={styles.flexContainer}>
+      <View style={$container}>
+        <View style={$flexContainer}>
           <View>
-            <Text style={styles.header}>Hotels Nearby</Text>
-            <Text style={styles.text}>Based on your location</Text>
+            <Text style={$header}>Hotels Nearby</Text>
+            <Text style={$text}>Based on your location</Text>
           </View>
-          <Entypo name="location-pin" style={styles.icon} />
+          <Entypo name="location-pin" style={$icon} />
         </View>
         <View
           style={{
@@ -90,13 +125,13 @@ const NearbyStays = () => {
 
   if (!permission) {
     return (
-      <View style={styles.container}>
-        <View style={styles.flexContainer}>
+      <View style={$container}>
+        <View style={$flexContainer}>
           <View>
-            <Text style={styles.header}>Hotels Nearby</Text>
-            <Text style={styles.text}>Based on your location</Text>
+            <Text style={$header}>Hotels Nearby</Text>
+            <Text style={$text}>Based on your location</Text>
           </View>
-          <Entypo name="location-pin" style={styles.icon} />
+          <Entypo name="location-pin" style={$icon} />
         </View>
         <View
           style={{
@@ -158,21 +193,22 @@ const NearbyStays = () => {
             >
               {item.name}
             </Text>
-            <Text style={[styles.text, { color: "white" }]}>{`${item.distance.value
-              } ${item.distance.unit.toLowerCase()}s away`}</Text>
+            <Text style={[$text, { color: "white" }]}>{`${
+              item.distance.value
+            } ${item.distance.unit.toLowerCase()}s away`}</Text>
           </View>
         </LinearGradient>
       </View>
     </Pressable>
   );
   return (
-    <View style={styles.container}>
-      <View style={styles.flexContainer}>
+    <View style={$container}>
+      <View style={$flexContainer}>
         <View>
-          <Text style={styles.header}>Hotels Nearby</Text>
-          <Text style={styles.text}>Based on your location</Text>
+          <Text style={$header}>Hotels Nearby</Text>
+          <Text style={$text}>Based on your location</Text>
         </View>
-        <Entypo name="location-pin" style={styles.icon} />
+        <Entypo name="location-pin" style={$icon} />
       </View>
 
       <FlatList
@@ -180,38 +216,10 @@ const NearbyStays = () => {
         renderItem={renderedItem}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        style={styles.list}
+        style={$list}
       />
     </View>
   );
 };
 
 export default NearbyStays;
-
-const styles = StyleSheet.create({
-  container: {
-    paddingVertical: spacing.medium,
-  },
-  flexContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  header: {
-    fontSize: fontSize.extraLarge,
-    paddingBottom: spacing.tiny,
-    fontFamily: "CormorantGaramond_700Bold_Italic",
-  },
-  text: {
-    fontSize: fontSize.extraSmall,
-    fontFamily: "Rubik_400Regular",
-  },
-  list: {
-    paddingTop: spacing.small,
-  },
-  icon: {
-    color: "orange",
-    fontSize: fontSize.huge,
-  },
-  image: {},
-});

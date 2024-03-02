@@ -3,8 +3,24 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Offers, StackParamList } from "constants/types";
 
 import { Ionicons, SimpleLineIcons, AntDesign } from "@expo/vector-icons";
-import { Pressable, StyleSheet, View, Text } from "react-native";
-import { borderRadius, fontSize, roomSize, spacing } from "constants/styles";
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  Text,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
+import {
+  borderRadius,
+  darkTheme,
+  fontSize,
+  lightTheme,
+  roomSize,
+  spacing,
+} from "constants/styles";
+import { ThemeContext } from "constants/context";
+import { useContext } from "react";
 
 type Props = NativeStackScreenProps<StackParamList, "Hotel">;
 
@@ -16,7 +32,8 @@ type item = {
 
 const RoomDetailsCard: React.FC<item> = ({ item }) => {
   const navigation = useNavigation<RoomDetailsCardNavigationProp>();
-
+  const { theme } = useContext(ThemeContext);
+  const color = theme === "dark" ? darkTheme : lightTheme;
   const handleRoomSearch = (id: string, bedType: string) => {
     navigation.navigate("Room", { roomId: id, bedType: bedType });
   };
@@ -44,62 +61,14 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
     type = roomType?.charAt(0).toUpperCase() + roomType?.slice(1);
   }
 
-  return (
-    <Pressable
-      onPress={() => handleRoomSearch(item.id, item.room.typeEstimated.bedType)}
-    >
-      <View style={styles.container}>
-        <View style={styles.id}>
-          <Text style={styles.text}>Offer ID: {item.id}</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <View style={styles.row}>
-            <Ionicons name="bed" size={22} color="black" />
-            <Text style={styles.text}>{bed}</Text>
-          </View>
-          {item?.room?.description?.text.includes("Wireless" || "internet") ? (
-            <View style={styles.row}>
-              <Ionicons name="wifi" size={26} color={"black"} />
-              <Text style={styles.text}>Free WiFi</Text>
-            </View>
-          ) : null}
-          {item?.room?.description?.text.match(roomSize) ? (
-            <View style={styles.row}>
-              <SimpleLineIcons name="size-fullscreen" size={18} color="black" />
-              <Text style={styles.text}>
-                {item?.room?.description?.text?.match(roomSize)?.[0]}
-              </Text>
-            </View>
-          ) : null}
-        </View>
-        <View style={styles.type}>
-          {!category ? null : <Text style={styles.text}>{type}</Text>}
-        </View>
-        <View style={styles.priceBox}>
-          <Text style={styles.priceText}>
-            {item.price.total} {item.price.currency}
-            <Text style={styles.totalPrice}> TOTAL PRICE</Text>
-          </Text>
-          <View style={styles.priceBtn}>
-            <Text style={styles.priceText}>Find out more</Text>
-            <AntDesign name="arrowright" size={22} color="black" />
-          </View>
-        </View>
-      </View>
-    </Pressable>
-  );
-};
-
-export default RoomDetailsCard;
-
-const styles = StyleSheet.create({
-  row: {
+  const $row: ViewStyle = {
     flexDirection: "row",
     gap: spacing.small,
     alignItems: "center",
-  },
-  priceBox: {
-    backgroundColor: "orange",
+  };
+
+  const $priceBox: ViewStyle = {
+    backgroundColor: color.accent400,
     paddingVertical: spacing.medium,
     gap: spacing.small,
     borderBottomLeftRadius: borderRadius.medium,
@@ -109,47 +78,102 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: spacing.medium,
     paddingTop: spacing.medium,
-  },
-  priceText: {
+  };
+
+  const $priceText: TextStyle = {
     color: "black",
     fontSize: fontSize.small,
     fontFamily: "Rubik_600SemiBold",
-  },
-  container: {
+  };
+
+  const $container: ViewStyle = {
     borderRadius: borderRadius.medium,
     backgroundColor: "white",
     marginHorizontal: spacing.small,
     gap: spacing.tiny,
     marginTop: spacing.small,
-  },
-  infoBox: {
+  };
+
+  const $infoBox: ViewStyle = {
     paddingHorizontal: spacing.medium,
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "baseline",
-  },
-  id: {
+  };
+
+  const $id: ViewStyle = {
     padding: spacing.medium,
     justifyContent: "center",
     alignItems: "center",
-  },
-  type: {
+  };
+
+  const $type: ViewStyle = {
     paddingHorizontal: spacing.medium,
     paddingTop: spacing.medium,
     justifyContent: "center",
     alignItems: "center",
-  },
-  text: {
+  };
+
+  const $text: TextStyle = {
     fontFamily: "Rubik_400Regular",
     fontSize: spacing.medium,
-  },
-  priceBtn: {
+  };
+
+  const $priceBtn: ViewStyle = {
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.medium,
-  },
-  totalPrice: {
+  };
+
+  const $totalPrice: TextStyle = {
     fontFamily: "Rubik_500Medium_Italic",
     fontSize: fontSize.extraSmall,
-  },
-});
+  };
+
+  return (
+    <Pressable
+      onPress={() => handleRoomSearch(item.id, item.room.typeEstimated.bedType)}
+    >
+      <View style={$container}>
+        <View style={$id}>
+          <Text style={$text}>Offer ID: {item.id}</Text>
+        </View>
+        <View style={$infoBox}>
+          <View style={$row}>
+            <Ionicons name="bed" size={22} color="black" />
+            <Text style={$text}>{bed}</Text>
+          </View>
+          {item?.room?.description?.text.includes("Wireless" || "internet") ? (
+            <View style={$row}>
+              <Ionicons name="wifi" size={26} color={"black"} />
+              <Text style={$text}>Free WiFi</Text>
+            </View>
+          ) : null}
+          {item?.room?.description?.text.match(roomSize) ? (
+            <View style={$row}>
+              <SimpleLineIcons name="size-fullscreen" size={18} color="black" />
+              <Text style={$text}>
+                {item?.room?.description?.text?.match(roomSize)?.[0]}
+              </Text>
+            </View>
+          ) : null}
+        </View>
+        <View style={$type}>
+          {!category ? null : <Text style={$text}>{type}</Text>}
+        </View>
+        <View style={$priceBox}>
+          <Text style={$priceText}>
+            {item.price.total} {item.price.currency}
+            <Text style={$totalPrice}> TOTAL PRICE</Text>
+          </Text>
+          <View style={$priceBtn}>
+            <Text style={$priceText}>Find out more</Text>
+            <AntDesign name="arrowright" size={22} color="black" />
+          </View>
+        </View>
+      </View>
+    </Pressable>
+  );
+};
+
+export default RoomDetailsCard;

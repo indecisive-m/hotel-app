@@ -4,9 +4,11 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextStyle,
   View,
+  ViewStyle,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RoomTax, StackParamList } from "constants/types";
 import { useQuery } from "react-query";
@@ -18,13 +20,96 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useMst } from "store";
 import useGetHotelInfo from "api/useGetHotelInfo";
-import { borderRadius, fontSize, spacing } from "constants/styles";
+import {
+  borderRadius,
+  darkTheme,
+  fontSize,
+  lightTheme,
+  spacing,
+} from "constants/styles";
+import { ThemeContext } from "constants/context";
 
 type Props = NativeStackScreenProps<StackParamList, "Room">;
 
 const Room = ({ route, navigation }: Props) => {
   const { roomId, bedType } = route.params;
   const { hotel } = useMst();
+  const { theme } = useContext(ThemeContext);
+  const color = theme === "dark" ? darkTheme : lightTheme;
+
+  const $description: ViewStyle = {
+    borderRadius: borderRadius.medium,
+    padding: spacing.small,
+    gap: spacing.small,
+    backgroundColor: "white",
+  };
+
+  const $descriptionText: TextStyle = {
+    fontSize: fontSize.small,
+  };
+
+  const $disclaimerText: TextStyle = {
+    fontSize: fontSize.small,
+  };
+
+  const $row: ViewStyle = {
+    flexDirection: "row",
+    gap: spacing.tiny,
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  };
+
+  const $box: ViewStyle = {
+    borderRadius: borderRadius.medium,
+    padding: spacing.small,
+    marginTop: spacing.small,
+    backgroundColor: "white",
+    justifyContent: "center",
+    flexDirection: "row",
+    alignSelf: "baseline",
+    gap: spacing.small,
+  };
+
+  const $text: TextStyle = {
+    fontSize: fontSize.small,
+    letterSpacing: 0.25,
+  };
+
+  const $container: ViewStyle = {
+    padding: spacing.small,
+    gap: spacing.large,
+    backgroundColor: "#f5f5f5",
+  };
+
+  const $title: TextStyle = {
+    fontWeight: "bold",
+    fontSize: fontSize.medium,
+    textDecorationLine: "underline",
+  };
+
+  const $priceBox: ViewStyle = {
+    backgroundColor: color.accent400,
+    opacity: 0.75,
+    borderRadius: borderRadius.medium,
+    paddingHorizontal: spacing.small,
+    paddingVertical: spacing.small,
+    gap: spacing.small,
+  };
+
+  const $button: ViewStyle = {
+    borderRadius: borderRadius.circle,
+    padding: spacing.small,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  };
+
+  const $buttonText: TextStyle = {
+    alignSelf: "center",
+    fontSize: fontSize.extraSmall,
+    fontWeight: "500",
+  };
 
   const { data, isLoading, status, isSuccess, refetch } = useQuery({
     queryKey: ["room", roomId],
@@ -68,85 +153,85 @@ const Room = ({ route, navigation }: Props) => {
   return (
     <ScrollView>
       <ImageGallery />
-      <View style={styles.container}>
-        <View style={styles.box}>
-          <View style={styles.row}>
+      <View style={$container}>
+        <View style={$box}>
+          <View style={$row}>
             <Ionicons name="bed" size={22} color="black" />
-            <Text style={styles.text}>{bed}</Text>
+            <Text style={$text}>{bed}</Text>
           </View>
-          <View style={styles.row}>
+          <View style={$row}>
             <MaterialIcons name="person" size={24} color="black" />
-            <Text style={styles.text}>{guests}</Text>
+            <Text style={$text}>{guests}</Text>
           </View>
 
           {roomDescription?.includes("Wireless" || "internet") ? (
-            <View style={styles.row}>
+            <View style={$row}>
               <Ionicons name="wifi" size={22} color={"black"} />
-              <Text style={styles.text}>Free WiFi</Text>
+              <Text style={$text}>Free WiFi</Text>
             </View>
           ) : null}
           {roomDescription?.match(roomSizeRegEx) ? (
-            <View style={styles.row}>
+            <View style={$row}>
               <SimpleLineIcons name="size-fullscreen" size={18} color="black" />
-              <Text style={styles.text}>
+              <Text style={$text}>
                 {roomDescription?.match(roomSizeRegEx)[0]}
               </Text>
             </View>
           ) : null}
         </View>
-        <View style={styles.description}>
-          <Text style={styles.disclaimerText}>
+        <View style={$description}>
+          <Text style={$disclaimerText}>
             Note: This room description is generated from the API and only
             includes keywords
           </Text>
-          <Text style={styles.text}>{roomDescription}</Text>
+          <Text style={$text}>{roomDescription}</Text>
         </View>
 
-        <View style={styles.priceBox}>
-          <Text style={styles.title}>Price breakdown:</Text>
-          <Text style={styles.text}>
+        <View style={$priceBox}>
+          <Text style={$title}>Price breakdown:</Text>
+          <Text style={$text}>
             {nights} Night(s): {basePrice}
           </Text>
-          <Text style={styles.text}>Rooms: {hotel.numberOfRooms}</Text>
+          <Text style={$text}>Rooms: {hotel.numberOfRooms}</Text>
 
           {roomInfo
             ? roomInfo.map((item, idx) => {
-              const [key, value] = Object.entries(item)[0];
+                const [key, value] = Object.entries(item)[0];
 
-              const lowerCaseKey = key.replace("_", " ").toLowerCase();
-              let objectKey;
+                const lowerCaseKey = key.replace("_", " ").toLowerCase();
+                let objectKey;
 
-              if (lowerCaseKey.includes(" ")) {
-                const secondWordCapitalIndex = lowerCaseKey.search(" ") + 1;
-                objectKey =
-                  lowerCaseKey.charAt(0).toUpperCase() +
-                  lowerCaseKey.slice(1, secondWordCapitalIndex) +
-                  lowerCaseKey.charAt(secondWordCapitalIndex).toUpperCase() +
-                  lowerCaseKey.slice(secondWordCapitalIndex + 1);
-              } else {
-                objectKey =
-                  lowerCaseKey.charAt(0).toUpperCase() +
-                  lowerCaseKey.slice(1);
-              }
+                if (lowerCaseKey.includes(" ")) {
+                  const secondWordCapitalIndex = lowerCaseKey.search(" ") + 1;
+                  objectKey =
+                    lowerCaseKey.charAt(0).toUpperCase() +
+                    lowerCaseKey.slice(1, secondWordCapitalIndex) +
+                    lowerCaseKey.charAt(secondWordCapitalIndex).toUpperCase() +
+                    lowerCaseKey.slice(secondWordCapitalIndex + 1);
+                } else {
+                  objectKey =
+                    lowerCaseKey.charAt(0).toUpperCase() +
+                    lowerCaseKey.slice(1);
+                }
 
-              return (
-                <Text key={idx}>
-                  {objectKey}: {value}
-                </Text>
-              );
-            })
+                return (
+                  <Text key={idx}>
+                    {objectKey}: {value}
+                  </Text>
+                );
+              })
             : null}
-          <Text style={styles.text}>Total Price: {totalPrice}</Text>
-          <Text style={styles.disclaimerText}>All prices in {currency}</Text>
+          <Text style={$text}>Total Price: {totalPrice}</Text>
+          <Text style={$disclaimerText}>All prices in {currency}</Text>
         </View>
         <LinearGradient
           colors={["#dc4d01", "orange"]}
           start={{ x: 0.9, y: 0.1 }}
           end={{ x: 0.05, y: 0.5 }}
-          style={styles.button}
+          style={$button}
         >
           <Pressable>
-            <Text style={styles.buttonText}>Reserve</Text>
+            <Text style={$buttonText}>Reserve</Text>
           </Pressable>
         </LinearGradient>
       </View>
@@ -155,72 +240,3 @@ const Room = ({ route, navigation }: Props) => {
 };
 
 export default Room;
-
-const styles = StyleSheet.create({
-  description: {
-    borderRadius: borderRadius.medium,
-    padding: spacing.small,
-    gap: spacing.small,
-    backgroundColor: "white",
-  },
-  descriptionText: {
-    fontSize: fontSize.small,
-  },
-  disclaimerText: {
-    fontSize: fontSize.small,
-  },
-  row: {
-    flexDirection: "row",
-    gap: spacing.tiny,
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  box: {
-    borderRadius: borderRadius.medium,
-    padding: spacing.small,
-    marginTop: spacing.small,
-    backgroundColor: "white",
-    justifyContent: "center",
-    flexDirection: "row",
-    alignSelf: "baseline",
-    gap: spacing.small,
-  },
-  text: {
-    fontSize: fontSize.small,
-    letterSpacing: 0.25,
-  },
-  container: {
-    padding: spacing.small,
-    gap: spacing.large,
-    backgroundColor: "#f5f5f5",
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: fontSize.medium,
-    textDecorationLine: "underline",
-  },
-  priceBox: {
-    // backgroundColor: "rgb(255, 204, 128)",
-    backgroundColor: "orange",
-    opacity: 0.75,
-    borderRadius: borderRadius.medium,
-    paddingHorizontal: spacing.small,
-    paddingVertical: spacing.small,
-    gap: spacing.small,
-  },
-
-  button: {
-    borderRadius: borderRadius.circle,
-    padding: spacing.small,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-  },
-
-  buttonText: {
-    alignSelf: "center",
-    fontSize: fontSize.extraSmall,
-    fontWeight: "500",
-  },
-});

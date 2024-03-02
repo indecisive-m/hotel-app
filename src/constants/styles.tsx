@@ -1,6 +1,7 @@
-import { observable } from "mobx";
 import { observer } from "mobx-react-lite";
+import { useContext } from "react";
 import { store } from "store";
+import { ThemeContext } from "./context";
 
 export const roomSize = /\d\d[s][q][m]/gim;
 
@@ -36,21 +37,10 @@ export const borderRadius = {
   circle: 9999,
 };
 
-const theme = store.theme.theme;
-export let colors: any;
+export const lightTheme = {
+  accent400: "orange",
+};
 
-observable(
-  theme === "dark"
-    ? (colors = {
-        accent400: "blue",
-      })
-    : (colors = {
-        accent400: "orange",
-      })
-);
-
-// if (theme === "light") {
-//   colors = {
-//     accent400: "orange",
-//   };
-// }
+export const darkTheme = {
+  accent400: "blue",
+};

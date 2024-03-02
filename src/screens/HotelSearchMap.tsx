@@ -10,9 +10,11 @@ import {
   Pressable,
   Image,
   Dimensions,
+  ViewStyle,
+  TextStyle,
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Key, useEffect, useMemo, useRef, useState } from "react";
+import { Key, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { StackParamList, Hotel, Offers, HotelList } from "constants/types";
 import useGetHotelList from "api/useGetHotelList";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -32,12 +34,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ContentViewSelector from "components/ContentViewSelector";
 import SearchDetails from "components/SearchDetails";
 import PlaceHolderImage from "components/PlaceHolderImage";
-import { borderRadius, fontSize, spacing } from "constants/styles";
+import {
+  borderRadius,
+  darkTheme,
+  fontSize,
+  lightTheme,
+  spacing,
+} from "constants/styles";
+import { ThemeContext } from "constants/context";
 
 type Props = NativeStackScreenProps<StackParamList, "HotelSearchMap">;
 
 const HotelSearchMap = ({ navigation, route }: Props) => {
   const { width, height } = useWindowDimensions();
+  const { theme } = useContext(ThemeContext);
+  const color = theme === "dark" ? darkTheme : lightTheme;
   const headerHeight = useHeaderHeight();
   const { fetchBearerKey } = useGetBearerKey();
 
@@ -66,6 +77,31 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
 
   const queryClient = useQueryClient();
   const mapViewRef = useRef<MapView>(null);
+
+  const $list: ViewStyle = {
+    padding: spacing.extraSmall,
+    gap: spacing.small,
+  };
+
+  const $button: ViewStyle = {
+    padding: spacing.extraSmall,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    borderRadius: borderRadius.large,
+    backgroundColor: color.accent400,
+  };
+
+  const $buttonText: TextStyle = {
+    alignSelf: "center",
+    fontSize: fontSize.small,
+    fontFamily: "Rubik_500Medium",
+  };
+
+  const $text: TextStyle = {
+    fontFamily: "Rubik_400Regular",
+    letterSpacing: 0.25,
+  };
 
   const getZoomLevel = async () => {
     const zoom = await mapViewRef.current?.getCamera();
@@ -137,20 +173,20 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
             padding: spacing.small,
           }}
         >
-          <Text style={styles.text} numberOfLines={2}>
+          <Text style={$text} numberOfLines={2}>
             {item.name}
           </Text>
-          <Text style={styles.text}>
+          <Text style={$text}>
             {item.distance.value} {item.distance.unit.toLocaleLowerCase()}s away
           </Text>
         </View>
         <Pressable
-          style={styles.button}
+          style={$button}
           onPress={() =>
             navigation.navigate("Hotel", { hotelId: item.hotelId })
           }
         >
-          <Text style={styles.buttonText}>More Information</Text>
+          <Text style={$buttonText}>More Information</Text>
         </Pressable>
       </View>
     );
@@ -203,7 +239,7 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
             data={hotelList}
             keyExtractor={(item) => item.hotelId}
             renderItem={renderedItem}
-            contentContainerStyle={styles.list}
+            contentContainerStyle={$list}
             numColumns={2}
             columnWrapperStyle={{ gap: 10 }}
           />
@@ -215,28 +251,3 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
 };
 
 export default HotelSearchMap;
-
-const styles = StyleSheet.create({
-  list: {
-    padding: spacing.extraSmall,
-    gap: spacing.small,
-  },
-  button: {
-    padding: spacing.extraSmall,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    borderRadius: borderRadius.large,
-    backgroundColor: "orange",
-  },
-
-  buttonText: {
-    alignSelf: "center",
-    fontSize: fontSize.small,
-    fontFamily: "Rubik_500Medium",
-  },
-  text: {
-    fontFamily: "Rubik_400Regular",
-    letterSpacing: 0.25,
-  },
-});
