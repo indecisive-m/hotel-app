@@ -78,11 +78,13 @@ const NearbyStays = () => {
     fontSize: fontSize.extraLarge,
     paddingBottom: spacing.tiny,
     fontFamily: "CormorantGaramond_700Bold_Italic",
+    color: color.font,
   };
 
   const $text: TextStyle = {
     fontSize: fontSize.extraSmall,
     fontFamily: "Rubik_400Regular",
+    color: color.font,
   };
 
   const $list: ViewStyle = {
@@ -90,7 +92,7 @@ const NearbyStays = () => {
   };
 
   const $icon: TextStyle = {
-    color: color.accent400,
+    color: color.accent,
     fontSize: fontSize.huge,
   };
 

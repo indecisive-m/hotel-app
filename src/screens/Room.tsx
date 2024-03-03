@@ -89,7 +89,7 @@ const Room = ({ route, navigation }: Props) => {
   };
 
   const $priceBox: ViewStyle = {
-    backgroundColor: color.accent400,
+    backgroundColor: color.accent,
     opacity: 0.75,
     borderRadius: borderRadius.medium,
     paddingHorizontal: spacing.small,

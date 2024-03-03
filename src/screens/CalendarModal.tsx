@@ -88,17 +88,17 @@ const CalendarModal = observer(({ navigation }: Props) => {
     markedDates.map((day, index) => {
       if (index === 0) {
         marks[`${markedDates[0]}`] = {
-          color: color.accent400,
+          color: color.accent,
           startingDay: true,
         };
       } else if (index === markedDates.length - 1) {
         marks[`${markedDates[index]}`] = {
-          color: color.accent400,
+          color: color.accent,
           endingDay: true,
         };
       } else {
         marks[`${markedDates[index]}`] = {
-          color: color.accent400,
+          color: color.accent,
           opacity: 0.5,
           textColor: "black",
         };
@@ -117,7 +117,7 @@ const CalendarModal = observer(({ navigation }: Props) => {
       <View
         style={{
           height: 20,
-          backgroundColor: color.accent400,
+          backgroundColor: color.accent,
           borderTopRightRadius: borderRadius.medium,
           borderTopLeftRadius: borderRadius.medium,
           justifyContent: "center",

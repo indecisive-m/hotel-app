@@ -81,6 +81,7 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   const $list: ViewStyle = {
     padding: spacing.extraSmall,
     gap: spacing.small,
+    backgroundColor: color.neutral,
   };
 
   const $button: ViewStyle = {
@@ -89,18 +90,20 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
     alignItems: "center",
     width: "100%",
     borderRadius: borderRadius.large,
-    backgroundColor: color.accent400,
+    backgroundColor: color.accent,
   };
 
   const $buttonText: TextStyle = {
     alignSelf: "center",
     fontSize: fontSize.small,
     fontFamily: "Rubik_500Medium",
+    color: color.font,
   };
 
   const $text: TextStyle = {
     fontFamily: "Rubik_400Regular",
     letterSpacing: 0.25,
+    color: color.font,
   };
 
   const getZoomLevel = async () => {
@@ -149,7 +152,7 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
         style={{
           borderRadius: borderRadius.large,
           padding: spacing.small,
-          backgroundColor: "#e9d5b1",
+          backgroundColor: color.secondary,
           width: width / 2 - 15,
           height: 310,
           position: "relative",
@@ -165,7 +168,6 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
         </View>
         <View
           style={{
-            backgroundColor: "#e9d5b1",
             position: "absolute",
             top: width / 2 - 15,
             left: 0,
@@ -193,7 +195,7 @@ const HotelSearchMap = ({ navigation, route }: Props) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.neutral }}>
       <SearchDetails />
       {showMap ? (
         <>

@@ -14,12 +14,13 @@ const Error = ({ navigation }: Props) => {
     fontSize: fontSize.extraLarge,
     fontFamily: "Rubik_600SemiBold",
     marginBottom: spacing.small,
+    color: color.font,
   };
 
   const $secondaryText: TextStyle = {
     fontSize: fontSize.large,
     fontFamily: "Rubik_400Regular",
-    color: color.accent400,
+    color: color.accent,
   };
   return (
     <View style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}>

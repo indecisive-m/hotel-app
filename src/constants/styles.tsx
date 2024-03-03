@@ -38,9 +38,17 @@ export const borderRadius = {
 };
 
 export const lightTheme = {
-  accent400: "orange",
+  primary: "orange",
+  secondary: "white",
+  neutral: "#fff8f0",
+  accent: "#ffa500",
+  font: "#110000",
 };
 
 export const darkTheme = {
-  accent400: "blue",
+  primary: "#1d004e",
+  secondary: "#3b3645",
+  neutral: "#130C1C",
+  accent: "#9d88b2",
+  font: "#e5def2",
 };

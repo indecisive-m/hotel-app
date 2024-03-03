@@ -1,8 +1,11 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NativeStackScreenProps,
+  createNativeStackNavigator,
+} from "@react-navigation/native-stack";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, Pressable } from "react-native";
 
 import Settings from "./screens/Settings";
 import Explore from "./screens/Explore";
@@ -89,10 +92,13 @@ function HomeTabs() {
           headerTitleStyle: {
             fontFamily: "CormorantGaramond_700Bold",
             fontSize: fontSize.extraLarge,
+            color: color.font,
           },
           headerStyle: {
-            backgroundColor: color.accent400,
+            backgroundColor: color.neutral,
           },
+          headerShadowVisible: false,
+
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name="settings-outline"
@@ -112,8 +118,10 @@ export default function App() {
   const { fetchBearerKey } = useGetBearerKey();
   const [theme, setTheme] = useState<Theme>("light");
   const value = { theme, setTheme };
+  const color = theme === "dark" ? darkTheme : lightTheme;
 
   type Theme = "light" | "dark";
+
   useEffect(() => {
     async function prepare() {
       await SplashScreen.preventAutoHideAsync();
@@ -205,6 +213,17 @@ export default function App() {
                 options={{
                   presentation: "modal",
                   animation: "slide_from_bottom",
+                  headerShown: true,
+                  headerTitleStyle: {
+                    fontFamily: "CormorantGaramond_700Bold",
+                    fontSize: fontSize.extraLarge,
+                    color: color.font,
+                  },
+                  headerStyle: {
+                    backgroundColor: color.neutral,
+                  },
+
+                  headerShadowVisible: false,
                 }}
               />
             </Stack.Navigator>

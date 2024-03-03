@@ -15,6 +15,7 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { ThemeContext } from "constants/context";
 
 type Props = NativeStackScreenProps<StackParamList, "ReviewsModal">;
+
 const ReviewsModal = ({ route, navigation }: Props) => {
   const { reviews } = route.params;
   const { theme } = useContext(ThemeContext);
@@ -22,7 +23,7 @@ const ReviewsModal = ({ route, navigation }: Props) => {
 
   const $container: ViewStyle = {
     padding: spacing.medium,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: color.neutral,
   };
 
   const $text: TextStyle = {
@@ -31,7 +32,8 @@ const ReviewsModal = ({ route, navigation }: Props) => {
     lineHeight: fontSize.small * 1.4,
     letterSpacing: 0.4,
     padding: spacing.extraSmall,
-    backgroundColor: "white",
+    color: color.font,
+    backgroundColor: color.secondary,
   };
 
   const $name: TextStyle = {
@@ -39,11 +41,13 @@ const ReviewsModal = ({ route, navigation }: Props) => {
     fontFamily: "CormorantGaramond_700Bold",
     marginBottom: spacing.small,
     paddingHorizontal: spacing.extraSmall,
+    color: color.font,
   };
 
   const $date: TextStyle = {
     fontFamily: "Rubik_400Regular_Italic",
     fontSize: fontSize.small,
+    color: color.font,
   };
 
   const $dateContainer: ViewStyle = {
@@ -54,7 +58,7 @@ const ReviewsModal = ({ route, navigation }: Props) => {
 
   const $infoContainer: ViewStyle = {
     borderBottomWidth: 2,
-    borderBottomColor: color.accent400,
+    borderBottomColor: color.accent,
     marginBottom: spacing.medium,
     paddingBottom: spacing.extraSmall,
   };

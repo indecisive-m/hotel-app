@@ -61,13 +61,13 @@ const Hotel = ({ route, navigation }: Props) => {
   });
 
   const $container: ViewStyle = {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: color.neutral,
     padding: spacing.small,
     rowGap: spacing.medium,
   };
 
   const $addressContainer: ViewStyle = {
-    backgroundColor: "white",
+    backgroundColor: color.neutral,
     padding: spacing.small,
     borderRadius: borderRadius.medium,
     rowGap: spacing.small,
@@ -85,47 +85,53 @@ const Hotel = ({ route, navigation }: Props) => {
     flexDirection: "row",
     alignItems: "baseline",
     justifyContent: "space-between",
-    backgroundColor: "white",
+    backgroundColor: color.accent,
     borderTopRightRadius: borderRadius.medium,
     borderTopLeftRadius: borderRadius.medium,
     borderBottomWidth: spacing.micro,
-    borderBottomColor: color.accent400,
+    borderBottomColor: color.accent,
   };
 
   const $detailsItem: TextStyle = {
     fontFamily: "Rubik_400Regular",
     fontSize: fontSize.medium,
+    color: color.font,
   };
 
   const $headerText: TextStyle = {
     fontSize: fontSize.extraLarge,
-    fontFamily: "CormorantGaramond_600SemiBold",
+    fontFamily: "CormorantGaramond_700Bold",
+    color: color.font,
   };
 
   const $summary: TextStyle = {
     padding: spacing.small,
-    backgroundColor: color.accent400,
+    backgroundColor: color.secondary,
     fontSize: fontSize.small,
     fontFamily: "Rubik_400Regular",
     borderTopRightRadius: borderRadius.medium,
     borderTopLeftRadius: borderRadius.medium,
+    color: color.font,
   };
 
   const $hotelNameText: TextStyle = {
     fontSize: fontSize.extraLarge,
     fontFamily: "CormorantGaramond_700Bold",
     paddingHorizontal: spacing.medium,
+    color: color.font,
   };
 
   const $addressText: TextStyle = {
     fontSize: fontSize.small,
     marginTop: spacing.tiny,
     fontFamily: "Rubik_400Regular",
+    color: color.font,
   };
 
   const $phoneText: TextStyle = {
     fontSize: fontSize.small,
     fontFamily: "Rubik_400Regular_Italic",
+    color: color.font,
   };
 
   const $phoneContainer: ViewStyle = {
@@ -133,7 +139,7 @@ const Hotel = ({ route, navigation }: Props) => {
     alignItems: "center",
     gap: spacing.small,
     marginTop: spacing.small,
-    backgroundColor: color.accent400,
+    backgroundColor: color.secondary,
     padding: spacing.small,
     borderBottomLeftRadius: borderRadius.medium,
     borderBottomRightRadius: borderRadius.medium,
@@ -142,6 +148,7 @@ const Hotel = ({ route, navigation }: Props) => {
   const $ratingText: TextStyle = {
     fontSize: fontSize.medium,
     fontFamily: "Rubik_400Regular",
+    color: color.font,
   };
 
   const $map: ViewStyle = {
@@ -151,7 +158,7 @@ const Hotel = ({ route, navigation }: Props) => {
   };
 
   const $expandedContainer: ViewStyle = {
-    backgroundColor: "white",
+    backgroundColor: color.secondary,
     padding: spacing.small,
     marginTop: -spacing.medium,
     borderBottomLeftRadius: borderRadius.medium,
@@ -161,7 +168,7 @@ const Hotel = ({ route, navigation }: Props) => {
 
   const $flexRow: ViewStyle = {
     flexDirection: "row",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: color.neutral,
     borderRadius: borderRadius.small,
     alignItems: "center",
     gap: spacing.medium,
@@ -170,10 +177,10 @@ const Hotel = ({ route, navigation }: Props) => {
 
   const $icon: TextStyle = {
     width: "13%",
-    borderRightColor: color.accent400,
+    borderRightColor: color.accent,
     borderRightWidth: 2,
     fontSize: fontSize.large,
-    color: "orange",
+    color: color.accent,
   };
 
   const hotelName = data?.hotel?.name;
@@ -276,7 +283,7 @@ const Hotel = ({ route, navigation }: Props) => {
 
           <Text style={$addressText}>{places?.formattedAddress}</Text>
           <Pressable style={$phoneContainer}>
-            <FontAwesome name={"phone"} size={20} color="black" />
+            <FontAwesome name={"phone"} size={20} style={$icon} />
             <Text style={$phoneText}>{places?.internationalPhoneNumber}</Text>
           </Pressable>
         </View>
@@ -286,7 +293,7 @@ const Hotel = ({ route, navigation }: Props) => {
         onPress={() => setShowAmenities(!showAmenities)}
         style={$headerContainer}
       >
-        <Text style={$headerText}>Amenities</Text>
+        <Text style={[$headerText, { color: "black" }]}>Amenities</Text>
 
         <Ionicons
           name={showAmenities ? "chevron-up" : "chevron-down"}
@@ -348,7 +355,7 @@ const Hotel = ({ route, navigation }: Props) => {
           navigation.navigate("ReviewsModal", { reviews: places?.reviews })
         }
       >
-        <Text style={$headerText}>Reviews</Text>
+        <Text style={[$headerText, { color: "black" }]}>Reviews</Text>
         <Ionicons
           name={reviewsShown ? "chevron-up" : "chevron-forward"}
           size={24}

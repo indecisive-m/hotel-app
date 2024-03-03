@@ -98,10 +98,12 @@ const PopularStays = () => {
     fontSize: fontSize.extraLarge,
     paddingBottom: spacing.tiny,
     fontFamily: "CormorantGaramond_700Bold_Italic",
+    color: color.font,
   };
 
   const $text: TextStyle = {
     fontSize: fontSize.extraSmall,
+    color: color.font,
   };
 
   const $list: ViewStyle = {
@@ -109,7 +111,7 @@ const PopularStays = () => {
   };
 
   const $icon: TextStyle = {
-    color: color.accent400,
+    color: color.accent,
     fontSize: fontSize.huge,
   };
 

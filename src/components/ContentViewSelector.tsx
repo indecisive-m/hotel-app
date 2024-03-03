@@ -49,7 +49,7 @@ const ContentViewSelector = (props: {
           $selector,
           { borderEndWidth: 1, borderColor: "black" },
           props.showMap
-            ? { backgroundColor: color.accent400 }
+            ? { backgroundColor: color.accent }
             : { backgroundColor: "white" },
         ]}
       >
@@ -61,7 +61,7 @@ const ContentViewSelector = (props: {
         style={[
           $selector,
           !props.showMap
-            ? { backgroundColor: color.accent400 }
+            ? { backgroundColor: color.accent }
             : { backgroundColor: "white" },
         ]}
       >

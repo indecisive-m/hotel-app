@@ -100,7 +100,7 @@ const SearchForm = observer(() => {
 
   const $button: ViewStyle = {
     borderRadius: borderRadius.circle,
-    backgroundColor: color.accent400,
+    backgroundColor: color.accent,
     padding: spacing.small,
     justifyContent: "center",
     width: "100%",

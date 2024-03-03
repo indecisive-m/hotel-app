@@ -68,7 +68,7 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
   };
 
   const $priceBox: ViewStyle = {
-    backgroundColor: color.accent400,
+    backgroundColor: color.accent,
     paddingVertical: spacing.medium,
     gap: spacing.small,
     borderBottomLeftRadius: borderRadius.medium,
@@ -88,7 +88,7 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
 
   const $container: ViewStyle = {
     borderRadius: borderRadius.medium,
-    backgroundColor: "white",
+    backgroundColor: color.secondary,
     marginHorizontal: spacing.small,
     gap: spacing.tiny,
     marginTop: spacing.small,
@@ -177,3 +177,9 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
 };
 
 export default RoomDetailsCard;
+
+const styles = StyleSheet.create({
+  text: {
+    color: "#ffa500",
+  },
+});

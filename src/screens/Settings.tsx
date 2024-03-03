@@ -31,19 +31,15 @@ const Settings = observer(({ navigation }: Props) => {
   let color = theme === "dark" ? darkTheme : lightTheme;
   const [currentUnit, setCurrentUnit] = useState(unit.unit);
 
-  const $test: ViewStyle = {
-    height: 100,
-    width: 100,
-    backgroundColor: color.accent400,
-  };
-
   const $container: ViewStyle = {
     padding: spacing.medium,
     gap: spacing.medium,
+    backgroundColor: color.neutral,
+    flex: 1,
   };
 
   const $buttonContainer: ViewStyle = {
-    backgroundColor: "white",
+    backgroundColor: color.secondary,
     borderRadius: borderRadius.medium,
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -54,16 +50,19 @@ const Settings = observer(({ navigation }: Props) => {
   const $text: TextStyle = {
     fontFamily: "Rubik_400Regular",
     fontSize: fontSize.medium,
+    color: color.font,
   };
 
   const $headerText: TextStyle = {
     fontFamily: "CormorantGaramond_700Bold",
     fontSize: fontSize.extraLarge,
+    color: color.font,
   };
 
   const $helperText: TextStyle = {
     fontFamily: "Rubik_400Regular_Italic",
     fontSize: fontSize.small,
+    color: color.font,
   };
 
   const $button: ViewStyle = {
@@ -92,8 +91,8 @@ const Settings = observer(({ navigation }: Props) => {
           style={[
             $button,
             currentUnit === "KM"
-              ? { backgroundColor: color.accent400 }
-              : { backgroundColor: "white" },
+              ? { backgroundColor: color.accent }
+              : { backgroundColor: color.secondary },
           ]}
         >
           <Text style={$text}>KM</Text>
@@ -103,8 +102,8 @@ const Settings = observer(({ navigation }: Props) => {
           style={[
             $button,
             currentUnit === "MILE"
-              ? { backgroundColor: color.accent400 }
-              : { backgroundColor: "white" },
+              ? { backgroundColor: color.accent }
+              : { backgroundColor: color.secondary },
           ]}
         >
           <Text style={$text}>Mile</Text>
@@ -120,8 +119,8 @@ const Settings = observer(({ navigation }: Props) => {
           style={[
             $button,
             theme === "dark"
-              ? { backgroundColor: color.accent400 }
-              : { backgroundColor: "white" },
+              ? { backgroundColor: color.accent }
+              : { backgroundColor: color.secondary },
           ]}
         >
           <Text style={$text}>Dark</Text>
@@ -131,8 +130,8 @@ const Settings = observer(({ navigation }: Props) => {
           style={[
             $button,
             theme === "light"
-              ? { backgroundColor: color.accent400 }
-              : { backgroundColor: "white" },
+              ? { backgroundColor: color.accent }
+              : { backgroundColor: color.secondary },
           ]}
         >
           <Text style={$text}>Light</Text>
