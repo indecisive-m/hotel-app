@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { Button, StyleSheet, View, ScrollView, ViewStyle } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  View,
+  ScrollView,
+  ViewStyle,
+  Text,
+} from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, Hotel, HotelList, GeoCode } from "../constants/types";
 
@@ -36,6 +43,7 @@ const Explore = observer(({ navigation }: Props) => {
     <SafeAreaView style={$container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <SearchForm />
+
         <NearbyStays />
         <PopularStays />
 
@@ -49,7 +57,7 @@ const Explore = observer(({ navigation }: Props) => {
         </View>
       </ScrollView>
 
-      <StatusBar style="auto" />
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
     </SafeAreaView>
   );
 });
