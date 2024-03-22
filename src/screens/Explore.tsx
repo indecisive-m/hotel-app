@@ -1,12 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import {
-  Button,
-  StyleSheet,
-  View,
-  ScrollView,
-  ViewStyle,
-  Text,
-} from "react-native";
+import { Button, View, ScrollView, ViewStyle } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList, Hotel, HotelList, GeoCode } from "../constants/types";
 

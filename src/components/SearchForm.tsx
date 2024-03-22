@@ -1,7 +1,6 @@
 import {
   ActivityIndicator,
   Pressable,
-  StyleSheet,
   Text,
   TextInput,
   TextStyle,
@@ -24,7 +23,6 @@ import {
   lightTheme,
 } from "constants/styles";
 import { ThemeContext } from "constants/context";
-import { collectStoredAnnotations } from "mobx/dist/internal";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 type SearchFormNavigationProp = Props["navigation"];
