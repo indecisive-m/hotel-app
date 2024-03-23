@@ -28,9 +28,7 @@ import {
 } from "@expo/vector-icons";
 import MapView, { Marker, PROVIDER_GOOGLE, Animated } from "react-native-maps";
 
-import { SafeAreaView } from "react-native-safe-area-context";
 import useGetHotelInfo from "api/useGetHotelInfo";
-import useGetHotelPhotos from "api/useGetHotelPhotos";
 import RoomDetailsCard from "components/RoomDetailsCard";
 import {
   borderRadius,
@@ -203,7 +201,15 @@ const Hotel = ({ route, navigation }: Props) => {
     return (
       <ActivityIndicator
         size={"large"}
-        style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}
+        style={{
+          flex: 1,
+          flexBasis: 1,
+          justifyContent: "center",
+          alignSelf: "center",
+          width: "100%",
+          backgroundColor: color.neutral,
+        }}
+        color={color.font}
       />
     );
   }

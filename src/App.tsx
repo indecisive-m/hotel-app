@@ -1,7 +1,4 @@
-import {
-  NativeStackScreenProps,
-  createNativeStackNavigator,
-} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -70,6 +67,8 @@ function HomeTabs() {
         tabBarStyle: {
           backgroundColor: color.neutral,
           borderTopWidth: 0,
+          height: spacing.massive,
+          shadowColor: "transparent",
         },
         tabBarActiveTintColor: color.accent,
         tabBarInactiveTintColor: color.font,
@@ -77,6 +76,7 @@ function HomeTabs() {
         tabBarLabelStyle: {
           fontFamily: "CormorantGaramond_700Bold",
           fontSize: fontSize.small,
+          paddingBottom: spacing.extraSmall,
         },
       }}
     >

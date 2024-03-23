@@ -23,7 +23,16 @@ const Error = ({ navigation }: Props) => {
     color: color.accent,
   };
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignSelf: "center",
+        backgroundColor: color.neutral,
+        width: "100%",
+        padding: spacing.huge,
+      }}
+    >
       <Text style={$text}>No Details Available</Text>
       <Pressable onPress={() => navigation.goBack()}>
         <Text style={$secondaryText}>GO BACK</Text>

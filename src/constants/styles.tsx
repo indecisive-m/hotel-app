@@ -1,8 +1,3 @@
-import { observer } from "mobx-react-lite";
-import { useContext } from "react";
-import { store } from "store";
-import { ThemeContext } from "./context";
-
 export const roomSize = /\d\d[s][q][m]/gim;
 
 export const fontSize = {
