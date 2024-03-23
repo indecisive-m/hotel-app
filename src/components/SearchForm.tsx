@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TextInputProps,
   TextStyle,
   View,
   ViewStyle,
@@ -24,7 +25,6 @@ import {
   lightTheme,
 } from "constants/styles";
 import { ThemeContext } from "constants/context";
-import { collectStoredAnnotations } from "mobx/dist/internal";
 
 type Props = NativeStackScreenProps<StackParamList, "Explore">;
 type SearchFormNavigationProp = Props["navigation"];
@@ -74,32 +74,28 @@ const SearchForm = observer(() => {
   };
 
   const $inputSplit: TextStyle = {
-    borderBottomWidth: 1,
-    borderBottomColor: color.accent,
-    flex: 2,
-    color: color.font,
+    width: "50%",
+    borderWidth: 1,
+    borderRadius: borderRadius.large,
+    padding: spacing.extraSmall,
+    marginBottom: spacing.medium,
   };
 
   const $rowInput: ViewStyle = {
     flexDirection: "row",
-    columnGap: spacing.extraSmall,
   };
 
   const $text: TextStyle = {
     alignSelf: "center",
-    fontSize: fontSize.extraLarge,
-    fontFamily: "CormorantGaramond_700Bold",
-    color: color.font,
+    fontSize: fontSize.large,
+    fontWeight: "500",
   };
 
-  const $input: TextStyle = {
-    borderBottomWidth: 1,
-    paddingVertical: spacing.small,
+  const $input: ViewStyle = {
+    borderWidth: 1,
+    borderRadius: borderRadius.large,
+    padding: spacing.extraSmall,
     marginBottom: spacing.medium,
-    fontFamily: "Rubik_400Regular",
-    fontSize: fontSize.small,
-    borderBottomColor: color.accent,
-    color: color.font,
   };
 
   const $button: ViewStyle = {
@@ -110,68 +106,35 @@ const SearchForm = observer(() => {
     width: "100%",
   };
 
-  const $headerText: TextStyle = {
-    fontSize: fontSize.extraLarge,
-    fontFamily: "CormorantGaramond_700Bold",
-    color: color.font,
-  };
-
-  const $inputWrapper: ViewStyle = {
-    padding: spacing.small,
-  };
-
-  const $inputText: TextStyle = {
-    fontSize: fontSize.small,
-    fontFamily: "Rubik_400Regular",
-    color: color.font,
-  };
-
   return (
     <>
-      <View style={$inputWrapper}>
-        <Text style={$headerText}>Destination</Text>
-        <TextInput
-          placeholder="Where are you going?"
-          placeholderTextColor={color.accent}
-          style={$input}
-          value={inputText}
-          onChangeText={(text) => handleInputText(text)}
-        />
-        <Text style={$headerText}>Travel Dates</Text>
-        <Pressable style={$input} onPress={showModal}>
-          <Text style={$inputText}>
-            {dates.checkInDate} - {dates.checkOutDate}
-          </Text>
-        </Pressable>
-      </View>
+      <TextInput
+        placeholder="Where are you going?"
+        style={$input}
+        value={inputText}
+        onChangeText={(text) => handleInputText(text)}
+      />
+      <Pressable style={$input} onPress={showModal}>
+        <Text>
+          {dates.checkInDate} - {dates.checkOutDate}
+        </Text>
+      </Pressable>
       <View style={$rowInput}>
-        <View style={[$inputWrapper, { flex: 2 }]}>
-          <Text style={$headerText}>Adults</Text>
-          <TextInput
-            placeholder="How many adults"
-            placeholderTextColor={color.accent}
-            style={[$input, $inputSplit]}
-            keyboardType="number-pad"
-            onChangeText={(text) => hotel.setNumberOfAdults(Number(text))}
-          />
-        </View>
-        <View style={[$inputWrapper, { flex: 2 }]}>
-          <Text style={$headerText}>Rooms</Text>
-          <TextInput
-            placeholder="How many Rooms "
-            placeholderTextColor={color.accent}
-            style={[$input, $inputSplit]}
-            keyboardType="number-pad"
-            onChangeText={(text) => hotel.setNumberOfRooms(Number(text))}
-          />
-        </View>
+        <TextInput
+          placeholder="How many adults"
+          style={$inputSplit}
+          keyboardType="number-pad"
+          onChangeText={(text) => hotel.setNumberOfAdults(Number(text))}
+        />
+        <TextInput
+          placeholder="How many Rooms "
+          style={$inputSplit}
+          keyboardType="number-pad"
+          onChangeText={(text) => hotel.setNumberOfRooms(Number(text))}
+        />
       </View>
       <Pressable style={$button} onPress={() => handleGeoCode()}>
-        {loading ? (
-          <ActivityIndicator size={"large"} color={color.font} />
-        ) : (
-          <Text style={$text}>Search</Text>
-        )}
+        {loading ? <ActivityIndicator /> : <Text style={$text}>Search</Text>}
       </Pressable>
     </>
   );

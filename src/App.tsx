@@ -5,6 +5,7 @@ import {
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Text, StyleSheet, Pressable } from "react-native";
 
 import Settings from "./screens/Settings";
 import Explore from "./screens/Explore";
@@ -51,6 +52,7 @@ import {
 import * as SplashScreen from "expo-splash-screen";
 import { Provider, store } from "store";
 import ReviewsModal from "screens/ReviewsModal";
+import { observer } from "mobx-react-lite";
 import { ThemeContext } from "constants/context";
 import { darkTheme, fontSize, lightTheme, spacing } from "constants/styles";
 
@@ -65,21 +67,7 @@ function HomeTabs() {
   const { theme } = useContext(ThemeContext);
   const color = theme === "dark" ? darkTheme : lightTheme;
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: {
-          backgroundColor: color.neutral,
-          borderTopWidth: 0,
-        },
-        tabBarActiveTintColor: color.accent,
-        tabBarInactiveTintColor: color.font,
-
-        tabBarLabelStyle: {
-          fontFamily: "CormorantGaramond_700Bold",
-          fontSize: fontSize.small,
-        },
-      }}
-    >
+    <Tab.Navigator>
       <Tab.Screen
         name="Explore"
         component={Explore}
@@ -89,9 +77,11 @@ function HomeTabs() {
             <Ionicons
               name="search-outline"
               size={26}
-              color={focused ? color.accent : color.font}
+              color={focused ? "orange" : "#d3d3d3"}
             />
           ),
+          tabBarActiveTintColor: "orange",
+          tabBarInactiveTintColor: "#d3d3d3",
         }}
       />
       <Tab.Screen
@@ -113,9 +103,11 @@ function HomeTabs() {
             <Ionicons
               name="settings-outline"
               size={26}
-              color={focused ? color.accent : color.font}
+              color={focused ? "orange" : "#d3d3d3"}
             />
           ),
+          tabBarActiveTintColor: "orange",
+          tabBarInactiveTintColor: "#d3d3d3",
         }}
       />
     </Tab.Navigator>
