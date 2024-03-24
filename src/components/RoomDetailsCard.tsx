@@ -81,7 +81,7 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
   };
 
   const $priceText: TextStyle = {
-    color: "black",
+    color: color.font,
     fontSize: fontSize.small,
     fontFamily: "Rubik_600SemiBold",
   };
@@ -117,6 +117,7 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
   const $text: TextStyle = {
     fontFamily: "Rubik_400Regular",
     fontSize: spacing.medium,
+    color: color.font,
   };
 
   const $priceBtn: ViewStyle = {
@@ -128,10 +129,12 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
   const $totalPrice: TextStyle = {
     fontFamily: "Rubik_500Medium_Italic",
     fontSize: fontSize.extraSmall,
+    color: color.font,
   };
 
   return (
     <Pressable
+      style={{ backgroundColor: color.neutral }}
       onPress={() => handleRoomSearch(item.id, item.room.typeEstimated.bedType)}
     >
       <View style={$container}>
@@ -140,12 +143,12 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
         </View>
         <View style={$infoBox}>
           <View style={$row}>
-            <Ionicons name="bed" size={22} color="black" />
+            <Ionicons name="bed" size={22} color={color.font} />
             <Text style={$text}>{bed}</Text>
           </View>
           {item?.room?.description?.text.includes("Wireless" || "internet") ? (
             <View style={$row}>
-              <Ionicons name="wifi" size={26} color={"black"} />
+              <Ionicons name="wifi" size={26} color={color.font} />
               <Text style={$text}>Free WiFi</Text>
             </View>
           ) : null}
@@ -168,7 +171,7 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
           </Text>
           <View style={$priceBtn}>
             <Text style={$priceText}>Find out more</Text>
-            <AntDesign name="arrowright" size={22} color="black" />
+            <AntDesign name="arrowright" size={22} color={color.font} />
           </View>
         </View>
       </View>

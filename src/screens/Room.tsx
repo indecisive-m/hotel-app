@@ -19,7 +19,6 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useMst } from "store";
-import useGetHotelInfo from "api/useGetHotelInfo";
 import {
   borderRadius,
   darkTheme,
@@ -41,15 +40,18 @@ const Room = ({ route, navigation }: Props) => {
     borderRadius: borderRadius.medium,
     padding: spacing.small,
     gap: spacing.small,
-    backgroundColor: "white",
+    backgroundColor: color.secondary,
   };
 
   const $descriptionText: TextStyle = {
     fontSize: fontSize.small,
+    color: color.font,
   };
 
   const $disclaimerText: TextStyle = {
     fontSize: fontSize.small,
+    fontFamily: "Rubik_300Light_Italic",
+    color: color.font,
   };
 
   const $row: ViewStyle = {
@@ -64,7 +66,7 @@ const Room = ({ route, navigation }: Props) => {
     borderRadius: borderRadius.medium,
     padding: spacing.small,
     marginTop: spacing.small,
-    backgroundColor: "white",
+    backgroundColor: color.accent,
     justifyContent: "center",
     flexDirection: "row",
     alignSelf: "baseline",
@@ -74,23 +76,26 @@ const Room = ({ route, navigation }: Props) => {
   const $text: TextStyle = {
     fontSize: fontSize.small,
     letterSpacing: 0.25,
+    color: color.font,
+    fontFamily: "Rubik_400Regular",
   };
 
   const $container: ViewStyle = {
     padding: spacing.small,
     gap: spacing.large,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: color.neutral,
   };
 
   const $title: TextStyle = {
     fontWeight: "bold",
     fontSize: fontSize.medium,
     textDecorationLine: "underline",
+    fontFamily: "CormorantGaramond_700Bold",
+    color: color.font,
   };
 
   const $priceBox: ViewStyle = {
     backgroundColor: color.accent,
-    opacity: 0.75,
     borderRadius: borderRadius.medium,
     paddingHorizontal: spacing.small,
     paddingVertical: spacing.small,
@@ -107,8 +112,10 @@ const Room = ({ route, navigation }: Props) => {
 
   const $buttonText: TextStyle = {
     alignSelf: "center",
-    fontSize: fontSize.extraSmall,
+    fontSize: fontSize.extraLarge,
+    fontFamily: "CormorantGaramond_700Bold",
     fontWeight: "500",
+    color: color.font,
   };
 
   const { data, isLoading, status, isSuccess, refetch } = useQuery({
@@ -135,8 +142,15 @@ const Room = ({ route, navigation }: Props) => {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: color.neutral,
+        }}
+      >
+        <ActivityIndicator size={"large"} color={color.font} />
       </View>
     );
   }
@@ -151,28 +165,33 @@ const Room = ({ route, navigation }: Props) => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView style={{ backgroundColor: color.neutral }}>
       <ImageGallery />
       <View style={$container}>
         <View style={$box}>
           <View style={$row}>
-            <Ionicons name="bed" size={22} color="black" />
+            <Ionicons name="bed" size={22} color={color.font} />
             <Text style={$text}>{bed}</Text>
           </View>
           <View style={$row}>
-            <MaterialIcons name="person" size={24} color="black" />
+            <MaterialIcons name="person" size={24} color={color.font} />
+
             <Text style={$text}>{guests}</Text>
           </View>
 
           {roomDescription?.includes("Wireless" || "internet") ? (
             <View style={$row}>
-              <Ionicons name="wifi" size={22} color={"black"} />
+              <Ionicons name="wifi" size={22} color={color.font} />
               <Text style={$text}>Free WiFi</Text>
             </View>
           ) : null}
           {roomDescription?.match(roomSizeRegEx) ? (
             <View style={$row}>
-              <SimpleLineIcons name="size-fullscreen" size={18} color="black" />
+              <SimpleLineIcons
+                name="size-fullscreen"
+                size={18}
+                color={color.font}
+              />
               <Text style={$text}>
                 {roomDescription?.match(roomSizeRegEx)[0]}
               </Text>
@@ -215,7 +234,7 @@ const Room = ({ route, navigation }: Props) => {
                 }
 
                 return (
-                  <Text key={idx}>
+                  <Text style={$text} key={idx}>
                     {objectKey}: {value}
                   </Text>
                 );
@@ -225,7 +244,7 @@ const Room = ({ route, navigation }: Props) => {
           <Text style={$disclaimerText}>All prices in {currency}</Text>
         </View>
         <LinearGradient
-          colors={["#dc4d01", "orange"]}
+          colors={["#dc4d01", color.accent]}
           start={{ x: 0.9, y: 0.1 }}
           end={{ x: 0.05, y: 0.5 }}
           style={$button}

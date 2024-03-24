@@ -24,7 +24,7 @@ const ContentViewSelector = (props: {
     position: "absolute",
     bottom: 20,
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: color.font,
     borderRadius: borderRadius.large,
     overflow: "hidden",
   };
@@ -39,6 +39,7 @@ const ContentViewSelector = (props: {
   const $text: TextStyle = {
     fontFamily: "Rubik_400Regular",
     letterSpacing: 0.25,
+    color: color.font,
   };
 
   return (
@@ -47,13 +48,13 @@ const ContentViewSelector = (props: {
         onPress={() => props.setShowMap(true)}
         style={[
           $selector,
-          { borderEndWidth: 1, borderColor: "black" },
+          { borderEndWidth: 1, borderColor: color.font },
           props.showMap
             ? { backgroundColor: color.accent }
-            : { backgroundColor: "white" },
+            : { backgroundColor: color.secondary },
         ]}
       >
-        <Entypo name="map" size={18} color={"black"} />
+        <Entypo name="map" size={18} color={color.font} />
         <Text style={$text}>Map View</Text>
       </Pressable>
       <Pressable
@@ -62,10 +63,10 @@ const ContentViewSelector = (props: {
           $selector,
           !props.showMap
             ? { backgroundColor: color.accent }
-            : { backgroundColor: "white" },
+            : { backgroundColor: color.secondary },
         ]}
       >
-        <Entypo name="list" size={18} color={"black"} />
+        <Entypo name="list" size={18} color={color.font} />
         <Text style={$text}>List View</Text>
       </Pressable>
     </View>

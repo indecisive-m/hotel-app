@@ -3,8 +3,6 @@ import {
   FlatList,
   ListRenderItem,
   Pressable,
-  ScrollView,
-  StyleSheet,
   Text,
   Image,
   View,
@@ -12,9 +10,9 @@ import {
   ViewStyle,
   TextStyle,
 } from "react-native";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { StackParamList, OffersList, Offers } from "../constants/types";
+import { StackParamList } from "../constants/types";
 import { QueryClient, useQueries, useQuery, useQueryClient } from "react-query";
 import useGetHotelDetails from "api/useGetHotelDetails";
 
@@ -372,7 +370,7 @@ const Hotel = ({ route, navigation }: Props) => {
   );
 
   return (
-    <>
+    <View style={{ backgroundColor: color.neutral, flex: 1 }}>
       <FlatList
         data={hotelInfo.data?.photoUris}
         horizontal={true}
@@ -388,7 +386,7 @@ const Hotel = ({ route, navigation }: Props) => {
         scrollEnabled={true}
         ListHeaderComponent={headerComponent}
       />
-    </>
+    </View>
   );
 };
 

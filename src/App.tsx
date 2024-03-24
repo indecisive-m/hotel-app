@@ -50,6 +50,7 @@ import { Provider, store } from "store";
 import ReviewsModal from "screens/ReviewsModal";
 import { ThemeContext } from "constants/context";
 import { darkTheme, fontSize, lightTheme, spacing } from "constants/styles";
+import BackButton from "components/BackButton";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -127,7 +128,6 @@ export default function App() {
   const [theme, setTheme] = useState<Theme>("light");
   const value = { theme, setTheme };
   const color = theme === "dark" ? darkTheme : lightTheme;
-
   type Theme = "light" | "dark";
 
   useEffect(() => {
@@ -177,7 +177,19 @@ export default function App() {
       <Provider value={store}>
         <QueryClientProvider client={queryClient}>
           <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator
+              screenOptions={{
+                headerStyle: {
+                  backgroundColor: color.neutral,
+                },
+                headerTitleStyle: {
+                  color: color.font,
+                  fontFamily: "CormorantGaramond_700Bold",
+                  fontSize: fontSize.large,
+                },
+                headerLeft: () => <BackButton />,
+              }}
+            >
               <Stack.Screen
                 name="Explore"
                 component={HomeTabs}
