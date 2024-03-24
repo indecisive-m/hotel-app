@@ -154,7 +154,11 @@ const RoomDetailsCard: React.FC<item> = ({ item }) => {
           ) : null}
           {item?.room?.description?.text.match(roomSize) ? (
             <View style={$row}>
-              <SimpleLineIcons name="size-fullscreen" size={18} color="black" />
+              <SimpleLineIcons
+                name="size-fullscreen"
+                size={18}
+                color={color.font}
+              />
               <Text style={$text}>
                 {item?.room?.description?.text?.match(roomSize)?.[0]}
               </Text>

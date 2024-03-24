@@ -9,6 +9,7 @@ import {
   useWindowDimensions,
   ViewStyle,
   TextStyle,
+  FlatListProps,
 } from "react-native";
 import React, { useContext, useRef, useState } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -24,7 +25,7 @@ import {
   MaterialCommunityIcons,
   Entypo,
 } from "@expo/vector-icons";
-import MapView, { Marker, PROVIDER_GOOGLE, Animated } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 import useGetHotelInfo from "api/useGetHotelInfo";
 import RoomDetailsCard from "components/RoomDetailsCard";
@@ -36,6 +37,13 @@ import {
   spacing,
 } from "constants/styles";
 import { ThemeContext } from "constants/context";
+import Animated, {
+  interpolate,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useScrollViewOffset,
+} from "react-native-reanimated";
+import BackButton from "components/BackButton";
 
 type Props = NativeStackScreenProps<StackParamList, "Hotel">;
 
@@ -50,11 +58,15 @@ const Hotel = ({ route, navigation }: Props) => {
   const queryClient = useQueryClient();
 
   const mapViewRef = useRef<MapView>(null);
+  const scrollRef = useAnimatedRef<Animated.FlatList>();
+  const scrollOffset = useScrollViewOffset(scrollRef);
 
   const { data, isLoading, status, isSuccess, refetch } = useQuery({
     queryKey: ["hotel", hotelId],
     queryFn: () => useGetHotelDetails(hotelId, false),
   });
+
+  const IMG_HEIGHT = width;
 
   const $container: ViewStyle = {
     backgroundColor: color.neutral,
@@ -179,6 +191,27 @@ const Hotel = ({ route, navigation }: Props) => {
     color: color.accent,
   };
 
+  const imageAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            scrollOffset.value,
+            [-IMG_HEIGHT, 0, IMG_HEIGHT],
+            [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75],
+          ),
+        },
+        {
+          scale: interpolate(
+            scrollOffset.value,
+            [-IMG_HEIGHT, 0, IMG_HEIGHT],
+            [2, 1, 1],
+          ),
+        },
+      ],
+    };
+  });
+
   const hotelName = data?.hotel?.name;
 
   const hotelInfo = useQuery({
@@ -212,24 +245,19 @@ const Hotel = ({ route, navigation }: Props) => {
     );
   }
 
-  if (isSuccess) {
-    // navigation.setOptions({
-    //   headerShown: true,
-    //   title: `${data?.hotel?.name}`,
-    // });
-  }
-
   const renderedImages: ListRenderItem<string> = ({ item }) => {
     return (
       <Image
         source={{ uri: item }}
         key={item}
-        style={{
-          height: width,
-          width: width,
-          resizeMode: "cover",
-          overflow: "hidden",
-        }}
+        style={[
+          {
+            height: width,
+            width: width,
+            resizeMode: "cover",
+            overflow: "hidden",
+          },
+        ]}
       />
     );
   };
@@ -258,7 +286,7 @@ const Hotel = ({ route, navigation }: Props) => {
         <Text style={$summary}>{places?.editorialSummary.text}</Text>
         <View>
           <Pressable>
-            <Animated
+            <MapView
               provider={PROVIDER_GOOGLE}
               ref={mapViewRef}
               camera={{
@@ -282,7 +310,7 @@ const Hotel = ({ route, navigation }: Props) => {
                   longitude: data?.hotel?.longitude,
                 }}
               />
-            </Animated>
+            </MapView>
           </Pressable>
 
           <Text style={$addressText}>{places?.formattedAddress}</Text>
@@ -370,14 +398,18 @@ const Hotel = ({ route, navigation }: Props) => {
   );
 
   return (
-    <View style={{ backgroundColor: color.neutral, flex: 1 }}>
-      <FlatList
+    <Animated.ScrollView
+      ref={scrollRef}
+      scrollEventThrottle={16}
+      style={{ backgroundColor: color.neutral, flex: 1 }}
+    >
+      <Animated.FlatList
         data={hotelInfo.data?.photoUris}
         horizontal={true}
         pagingEnabled={true}
         showsHorizontalScrollIndicator={false}
         renderItem={renderedImages}
-        style={{ flex: 1 }}
+        style={[{ flex: 1 }, imageAnimatedStyle]}
       />
       <FlatList
         data={data?.data}
@@ -386,7 +418,7 @@ const Hotel = ({ route, navigation }: Props) => {
         scrollEnabled={true}
         ListHeaderComponent={headerComponent}
       />
-    </View>
+    </Animated.ScrollView>
   );
 };
 

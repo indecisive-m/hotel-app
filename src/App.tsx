@@ -198,7 +198,10 @@ export default function App() {
               <Stack.Screen
                 name="Hotel"
                 component={Hotel}
-                options={{ headerShown: false }}
+                options={{
+                  headerTitle: "",
+                  headerShadowVisible: false,
+                }}
               />
               <Stack.Screen
                 name="Room"
